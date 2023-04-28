@@ -2,3 +2,6 @@ venv
 
 /costumestore/costumestore/.env
 /costumestore/costumestore/__pycache__
+
+/costumestore/website/__pycache__
+/costumestore/website/migrations

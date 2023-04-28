@@ -1,0 +1,56 @@
+<!-- Header desktop -->
+<div class="container-menu-desktop">
+  <!-- Topbar -->
+  <div class="top-bar">
+    <div class="content-topbar flex-sb-m h-full container">
+      <div class="left-top-bar">Free shipping for standard order over ₹100</div>
+      <div class="right-top-bar flex-w h-full">
+        <a href="#" class="flex-c-m trans-04 p-lr-25"> EN </a>
+        <a href="{% url 'customer_auth_page' %}" class="flex-c-m trans-04 p-lr-25"> Sign Up | Login</a>
+      </div>
+    </div>
+  </div>
+  <!-- Navbar -->
+  <div class="wrap-menu-desktop">
+    <nav class="limiter-menu-desktop container">
+      <!-- Logo desktop -->
+      <a href="{% url 'home_page' %}" class="logo">
+        <h5 class="mr-2 font-weight-bold text-dark">COSTUME</h5>
+        <h5 class="text-dark">STORE</h5>
+      </a>
+
+      <!-- Menu desktop -->
+      <div class="menu-desktop">
+        <ul class="main-menu">
+          <li class="active-menu">
+            <a href="{% url 'home_page' %}">Home</a>
+          </li>
+          <li>
+            <a href="{% url 'shop_page' %}">Shop</a>
+          </li>
+          <li>
+            <a href="{% url 'contact_page' %}">Contact</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Icon header -->
+      <div class="wrap-icon-header flex-w flex-r-m">
+        <a
+          class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+          data-notify="2"
+          href="{% url 'cart_page' %}"
+        >
+          <i class="zmdi zmdi-shopping-cart"></i>
+        </a>
+        <a
+          href="#"
+          class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
+          data-notify="0"
+        >
+          <i class="zmdi zmdi-favorite-outline"></i>
+        </a>
+      </div>
+    </nav>
+  </div>
+</div>
