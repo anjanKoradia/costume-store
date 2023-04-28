@@ -5,3 +5,6 @@ venv
 
 /costumestore/website/__pycache__
 /costumestore/website/migrations
+
+/costumestore/authentication/__pycache__
+/costumestore/authentication/migrations

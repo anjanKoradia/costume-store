@@ -1,0 +1,13 @@
+.container {
+  max-width: 1380px;
+}
+
+.signUp_container,
+.login_container {
+  height: 100vh;
+  background-color: whitesmoke;
+}
+
+.signUp_container .container .row .card {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}

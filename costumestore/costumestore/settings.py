@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 # load env variables
 load_dotenv()
 
+AUTH_USER_MODEL = 'authentication.Customer'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,7 +32,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "website"
+    "website",
+    "authentication"
 ]
 
 MIDDLEWARE = [

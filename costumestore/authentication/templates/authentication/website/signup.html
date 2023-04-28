@@ -1,0 +1,87 @@
+{% extends "authentication/base.html" %} 
+{% load static %} 
+{% block auth_body %}
+
+<section class="signUp_container">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-9 col-lg-7 col-xl-4">
+        <!-- <% if(messages.error){ %>
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          <%= messages.error %>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        <% } %> -->
+        <div class="card">
+          <div class="card-body p-5">
+            <div class="title mb-5">
+              <h4>Join Costume Store</h4>
+              <p>Enter your details and join with us.</p>
+            </div>
+            <form method="POST" action="/authentication/signup/step2">
+              <div class="mb-3">
+                <label for="inputName" class="form-label">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control is-invalid"
+                  id="inputName"
+                  placeholder="Jone Doe"
+                  required
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  Please enter a name.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="inputPassword" class="form-label"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  class="form-control"
+                  id="inputPassword"
+                  placeholder="Min 8 chr, 1 letter & 1 number"
+                  required
+                />
+                <div id="inputPasswordFeedback" class="invalid-feedback">
+                  8 characters or longer. Combine upper and lowercase letters
+                  and numbers.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="inputCPassword" class="form-label"
+                  >Confirm Password</label
+                >
+                <input
+                  type="password"
+                  name="cpassword"
+                  class="form-control is-invalid"
+                  id="inputCPassword"
+                  placeholder="Min 8 chr, 1 letter & 1 number"
+                  required
+                />
+                <div id="inputCPasswordFeedback" class="invalid-feedback">
+                  Please enter valid password
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success w-100">
+                Create Account Now
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock auth_body %}

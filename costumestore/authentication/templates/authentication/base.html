@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Costume Store</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'images/icons/favicon.png' %}"
+    />
+    <!-- Bootstrap CSS v4.0 -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}" />
+  </head>
+  <body>
+    {% block auth_body %} {% endblock auth_body %}
+
+    <!-- jQuery -->
+    <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+    <!-- Bootstrap JS v4.0 -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
