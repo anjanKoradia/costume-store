@@ -1,22 +1,12 @@
-{% extends "authentication/base.html" %} {% load static %} {% block auth_body %}
+{% extends "authentication/base.html" %} 
+{% load static %} 
+{% block auth_body %}
 
 <section class="signUp_container">
   <div class="container h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <!-- <% if(messages.error){ %>
-        <div
-          class="alert alert-danger alert-dismissible fade show"
-          role="alert"
-        >
-          <%= messages.error %>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-        </div>
-        <% } %>  -->
+    <div
+      class="row d-flex flex-column justify-content-center align-items-center h-100"
+    >
       <div class="card">
         <div class="card-body p-5">
           <div class="title mb-5">
@@ -25,27 +15,26 @@
           </div>
           <form
             method="POST"
-            action="/authentication/signup/step1"
-            id="email_form"
+            action="{% url 'auth' %}"
+            novalidate
           >
+            {% csrf_token %}
             <div class="mb-3">
               <label for="inputEmail" class="form-label">Email address</label>
               <input
                 type="email"
                 name="email"
-                class="form-control"
+                class="form-control {% if messages %} is-invalid {% endif %}"
                 id="inputEmail"
                 placeholder="example@xyz.com"
               />
-            </div>
-            <div class="form-check my-4">
-              <input
-                class="form-check-input ml-0"
-                type="checkbox"
-                name="tAc"
-                id="tAc"
-              />
-              <label class="form-check-label" for="tAc"> Remember me </label>
+              <div id="inputEmailFeedback" class="invalid-feedback">
+                {% if messages %} 
+                  {% for message in messages %}
+                    {{message}}
+                  {% endfor %} 
+                {% endif %}
+              </div>
             </div>
             <button type="submit" class="btn btn-success w-100">Next</button>
           </form>

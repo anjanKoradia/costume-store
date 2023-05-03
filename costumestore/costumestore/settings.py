@@ -1,11 +1,11 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.contrib import messages
 
 # load env variables
 load_dotenv()
 
-AUTH_USER_MODEL = 'authentication.Customer'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "website",
-    "authentication"
+    "authentication",
 ]
 
 MIDDLEWARE = [
@@ -46,7 +46,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
 ROOT_URLCONF = "costumestore.urls"
+
+AUTH_USER_MODEL = 'authentication.User'
 
 TEMPLATES = [
     {
@@ -65,7 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "costumestore.wsgi.application"
-
+# breakpoint()
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -80,6 +86,7 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -119,5 +126,6 @@ STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
