@@ -15,6 +15,7 @@ class CustomerSignupValidator(Validator):
     name = "required"
     password = "required|password:high"
     confirm_pass = "same:password"
+    role = "required"
 
     message = {
         "name": {
@@ -27,4 +28,5 @@ class CustomerSignupValidator(Validator):
             ),
         },
         "confirm_pass": {"same": ("Password dose not matched")},
+        "role": {"required": ("Role is required")},
     }

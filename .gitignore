@@ -8,3 +8,6 @@ venv
 
 /costumestore/authentication/__pycache__
 /costumestore/authentication/migrations
+
+/costumestore/accounts/__pycache__
+/costumestore/accounts/migrations

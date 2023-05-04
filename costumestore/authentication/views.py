@@ -48,6 +48,7 @@ class Login(View):
             return redirect(url + "?email=" + email)
 
         user = authenticate(req, email=email, password=password)
+            
         if not user:
             messages.error(req, "Invalid Password")
             url = reverse("login")
@@ -76,10 +77,11 @@ class Signup(View):
         name = req.POST.get("name")
         password = req.POST.get("password")
         cpassword = req.POST.get("cpassword")
+        role = req.POST.get("role")
 
         # validate user input data
         validator = CustomerSignupValidator(
-            {"name": name, "password": password, "confirm_pass": cpassword}
+            {"name": name, "password": password, "confirm_pass": cpassword, "role": role}
         )
         status = validator.validate()
 
@@ -95,12 +97,24 @@ class Signup(View):
             user = User.objects.create_user(
                 email=email,
                 password=password,
-                name = name
+                name = name,
+                role = role
             )
             login(req, user)
             return redirect("home_page")
-        except:
-            raise Exception("Something went wrong")
+        except Exception as e:
+            print(e.message)
+
+def activate_user(req, email_token):
+    try:
+        user = User.objects.get(email_token=email_token)
+        user.is_active = True
+        user.save()
+        login(req, user)
+        return redirect('/')
+    
+    except Exception as e:
+        return print(e)
 
 
 def logout_user(req):
