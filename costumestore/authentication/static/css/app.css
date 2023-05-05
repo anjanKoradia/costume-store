@@ -1,13 +1,31 @@
 .container {
-  max-width: 1380px;
-}
+    max-width: 1380px;
+  }
+  
+  .signUp_container,
+  .login_container ,
+  .success_page_container {
+    height: 100vh;
+    background-color: whitesmoke;
+  }
+  
+  .signUp_container .container .row .card {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  }
 
-.signUp_container,
-.login_container {
-  height: 100vh;
-  background-color: whitesmoke;
-}
+  /* Success Page Css */
+  .success_page_container .card {
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    width: 500px;
+  }
 
-.signUp_container .container .row .card {
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
+  .success_page_container h1 {
+    color: #28a745;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+   .success_page_container p {
+    font-size:1.2rem;
+    margin: 0;
+  }

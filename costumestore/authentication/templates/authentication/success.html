@@ -1,0 +1,18 @@
+{% extends "authentication/base.html" %} 
+{% load static %} 
+{% block auth_body %}
+
+<section
+  class="success_page_container d-flex align-items-center justify-content-center"
+>
+  <div class="card p-5">
+    <img class="mb-4" src="{% static 'images/mail_sent.svg' %}" alt="">
+    <h1>Success</h1>
+    <p>
+      Your account has been created successfully. Kindly check your mail for activation !
+    </p>
+    <a href="{% url 'home_page' %}" class="btn btn-success mt-4">Go To Home</a>
+  </div>
+</section>
+
+{% endblock auth_body %}

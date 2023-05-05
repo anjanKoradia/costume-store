@@ -6,113 +6,108 @@ from django.urls import reverse
 from django.views import View
 from .models import User
 
-
 class Auth(View):
     def get(self, req):
         if req.user.is_authenticated:
             return redirect("home_page")
 
-        return render(req, "authentication/website/auth.html")
+        response = render(req, "authentication/auth.html")
+        response["cache-control"] = "no-cache, no-store, must-revalidate"
+        return response
 
     def post(self, req):
         email = req.POST.get("email")
 
         if not is_valid_email(email):
             messages.error(req, "Please enter a valid email !!")
-            return redirect("customer_auth")
+            return redirect("auth")
 
         exists = User.objects.filter(email=email).exists()
 
         if exists:
-            url = reverse("login")
+            response = render(req, "authentication/login.html", context={"email": email})
         else:
-            url = reverse("signup")
+            response = render(req, "authentication/signup.html", context={"email": email})
 
+        response["cache-control"] = "no-cache, no-store, must-revalidate"
+        return response
+
+def login_user(req):
+    email = req.POST.get("email")
+    password = req.POST.get("password")
+
+    if not password:
+        messages.error(req, "Password is required")
+        url = reverse("login")
         return redirect(url + "?email=" + email)
 
+    user = authenticate(req, email=email, password=password)
 
-class Login(View):
-    def get(self, req):
-        if req.user.is_authenticated:
-            return redirect("home_page")
+    if not user:
+        messages.error(req, "Invalid Password")
+        url = reverse("login")
+        return redirect(url + "?email=" + email)
 
-        return render(req, "authentication/website/login.html")
+    login(req, user)
 
-    def post(self, req):
-        email = req.POST.get("email")
-        password = req.POST.get("password")
-
-        if not password:
-            messages.error(req, "Password is required")
-            url = reverse("login")
-            return redirect(url + "?email=" + email)
-
-        user = authenticate(req, email=email, password=password)
-            
-        if not user:
-            messages.error(req, "Invalid Password")
-            url = reverse("login")
-            return redirect(url + "?email=" + email)
-
-        login(req, user)
-        
-        if user.role == 'admin':
-            return redirect(reverse('admin:index'))
-        elif user.role == 'vendor':
-            return redirect("home_page")
-        
+    if user.role == "admin":
+        return redirect(reverse("admin:index"))
+    elif user.role == "vendor":
         return redirect("home_page")
-        
-        
 
-class Signup(View):
-    def get(self, req):
-        if req.user.is_authenticated:
-            return redirect("home_page")
+    return redirect("home_page")
 
-        return render(req, "authentication/website/signup.html")
+def register_user(req):
+    email = req.POST.get("email")
+    name = req.POST.get("name")
+    password = req.POST.get("password")
+    cpassword = req.POST.get("cpassword")
+    role = req.POST.get("role")
 
-    def post(self, req):
-        email = req.POST.get("email")
-        name = req.POST.get("name")
-        password = req.POST.get("password")
-        cpassword = req.POST.get("cpassword")
-        role = req.POST.get("role")
+    # validate user input data
+    validator = CustomerSignupValidator(
+        {
+            "name": name,
+            "password": password,
+            "confirm_pass": cpassword,
+            "role": role,
+        }
+    )
+    status = validator.validate()
 
-        # validate user input data
-        validator = CustomerSignupValidator(
-            {"name": name, "password": password, "confirm_pass": cpassword, "role": role}
-        )
-        status = validator.validate()
-
-        if not status:
-            error = validator.get_message_plain()
-            for field in error:
-                messages.error(req, error[field][0], field)
+    if not status:
+        error = validator.get_message_plain()
+        for field in error:
+            messages.error(req, error[field][0], field)
 
             url = reverse("signup")
             return redirect(url + "?email=" + email)
 
         try:
-            user = User.objects.create_user(
-                email=email,
-                password=password,
-                name = name,
-                role = role
+            User.objects.create_user(
+                email=email, password=password, name=name, role=role
             )
-            login(req, user)
-            return redirect("home_page")
+
+            response = render(req, "authentication/success.html")
+            response['cache-control'] = 'no-cache, no-store, must-revalidate'
+            return response
         except Exception as e:
-            print(e.message)
+            print(e)
+
 
 def activate_user(req, email_token):
     try:
         user = User.objects.get(email_token=email_token)
+        if not user:
+            messages.error(req, "Invalid Token")
+            return redirect("auth")
+        
         user.is_active = True
         user.save()
         login(req, user)
-        return redirect('/')
-    
+        messages.success(req, "Login successful")
+        return redirect("/")
+
     except Exception as e:
         return print(e)
 
