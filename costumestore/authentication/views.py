@@ -53,7 +53,7 @@ def login_user(req):
     if user.role == "admin":
         return redirect(reverse("admin:index"))
     elif user.role == "vendor":
-        return redirect("home_page")
+        return redirect("dashboard")
 
     return redirect("home_page")
 
