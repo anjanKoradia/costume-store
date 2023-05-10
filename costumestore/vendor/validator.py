@@ -1,23 +1,37 @@
 from validator import Validator
 
 
-class CustomerSignupValidator(Validator):
+class ProductDetailsValidator(Validator):
     name = "required"
-    colors = "required"
-    password = "required|password:high"
-    confirm_pass = "same:password"
-    role = "required"
+    category = "required"
+    rating = "required|pos_integer"
+    price = "required|pos_integer"
+    discount = "required|pos_integer"
+    stock = "required|pos_integer"
+    description = "required"
+    images = "required"
 
     message = {
         "name": {
-            "required": ("Name is required"),
+            "required": ("Product name is required"),
         },
-        "password": {
-            "required": ("Password is required"),
-            "password": (
-                "7 characters or longer. Combine upper and lower case letters, special characters and digit."
-            ),
+        "category": {"required": ("Category required")},
+        "rating": {
+            "required": ("Rating required"),
+            "pos_integer": ("Rating must be a positive integer"),
         },
-        "confirm_pass": {"same": ("Password dose not matched")},
-        "role": {"required": ("Role is required")},
+        "price": {
+            "required": ("Price required"),
+            "pos_integer": ("Price must be a positive integer"),
+        },
+        "discount": {
+            "required": ("Discount required"),
+            "pos_integer": ("Discount must be a positive integer"),
+        },
+        "stock": {
+            "required": ("Stock required"),
+            "pos_integer": {"Stock must be a positive integer"},
+        },
+        "description": {"required": ("Description required")},
+        "images": {"required":{"Image required"}}
     }
