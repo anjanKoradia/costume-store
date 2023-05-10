@@ -11,3 +11,6 @@ venv
 
 /costumestore/vendor/__pycache__
 /costumestore/vendor/migrations
+
+/costumestore/accounts/__pycache__
+/costumestore/accounts/migrations

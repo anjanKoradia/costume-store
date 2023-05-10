@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "website",
     "authentication",
     "vendor",
+    "accounts",
 ]
 
 MIDDLEWARE = [

@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from .manager import CustomUserManager
 from django.dispatch import receiver
 from django.db import models
+from accounts.models import Vendor
 import uuid
 
 
@@ -44,6 +45,9 @@ def create_profile(sender, instance, created, **kwargs):
             user.save()
             
             send_account_activation_email(instance.name,instance.email,email_token)
+        
+        if created and instance.role == 'vendor':
+            Vendor.objects.create(user=instance)
             
     except Exception as e:
         print(e)
