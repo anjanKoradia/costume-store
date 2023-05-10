@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import Vendor
 import uuid
 import os
 
@@ -21,6 +22,7 @@ class ProductImage(models.Model):
 
 class Product(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    vendor = models.ForeignKey(Vendor,on_delete=models.CASCADE, related_name="Product")
     name = models.CharField(max_length=100)
     colors = models.CharField(max_length=100, null=True, blank=True)
     dimension = models.CharField(max_length=100, null=True, blank=True)
