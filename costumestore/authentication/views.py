@@ -83,16 +83,16 @@ def register_user(req):
             url = reverse("signup")
             return redirect(url + "?email=" + email)
 
-        try:
-            User.objects.create_user(
-                email=email, password=password, name=name, role=role
-            )
+    try:
+        User.objects.create_user(
+            email=email, password=password, name=name, role=role
+        )
 
-            response = render(req, "authentication/success.html")
-            response['cache-control'] = 'no-cache, no-store, must-revalidate'
-            return response
-        except Exception as e:
-            print(e)
+        response = render(req, "authentication/success.html")
+        response['cache-control'] = 'no-cache, no-store, must-revalidate'
+        return response
+    except Exception as e:
+        print(e)
 
 
 def activate_user(req, email_token):
