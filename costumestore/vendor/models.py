@@ -1,5 +1,8 @@
-from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from accounts.models import Vendor
+from django.conf import settings
+from django.db import models
 import uuid
 import os
 
@@ -40,3 +43,17 @@ class Product(models.Model):
         db_table = "products"
         verbose_name = "Product"
         verbose_name_plural = "Products"
+
+# delete product images from folder
+@receiver(post_delete, sender=ProductImage)
+def delete_saved_images(sender, instance, *args, **kwargs):
+    try:
+        path = os.path.join(settings.MEDIA_ROOT,"images")
+        
+        images = os.listdir(path)
+        for image in images:
+            if image.find(str(instance.image).split("/")[1]):
+                os.remove(os.path.join(path,image))
+            
+    except Exception as e:
+        print(e)

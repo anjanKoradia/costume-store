@@ -35,6 +35,7 @@ class User(AbstractUser):
         verbose_name_plural = "Users"
 
 
+# signal to create vendor profile and to send account activation email
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     try:
