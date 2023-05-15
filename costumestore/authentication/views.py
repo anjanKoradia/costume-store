@@ -38,15 +38,13 @@ def login_user(req):
 
     if not password:
         messages.error(req, "Password is required")
-        url = reverse("login")
-        return redirect(url + "?email=" + email)
+        return render(req, "authentication/login.html", context={"email": email})
 
     user = authenticate(req, email=email, password=password)
 
     if not user:
         messages.error(req, "Invalid Password")
-        url = reverse("login")
-        return redirect(url + "?email=" + email)
+        return render(req, "authentication/login.html", context={"email": email})
 
     login(req, user)
 
