@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from .validator import ProductDetailsValidator
 from django.shortcuts import render, redirect
-from .models import Product, ProductImage
+from .models import Product, ProductImage, Vendor
 from django.contrib import messages
 from django.views import View
 
@@ -28,7 +28,7 @@ class Add_Product(View):
         stock = req.POST.get("stock")
         description = req.POST.get("description")
         images = req.FILES.getlist("images")
-
+        
         validator = ProductDetailsValidator(
             {
                 "name": name,
@@ -51,7 +51,10 @@ class Add_Product(View):
                 return redirect("add_product")
 
         try:
+            vendor = Vendor.objects.get(user=req.user)
+            
             product = Product.objects.create(
+                vendor = vendor,
                 name=name,
                 colors=colors,
                 dimension=dimension,
