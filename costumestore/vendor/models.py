@@ -13,29 +13,19 @@ def get_file_path(instance, filename):
     return os.path.join("images/", filename)
 
 
-class ProductImage(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    image = models.ImageField(upload_to=get_file_path)
-
-    class Meta:
-        db_table = "product_images"
-        verbose_name = "ProductImage"
-        verbose_name_plural = "Product-Images"
-
-
 class Product(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    vendor = models.ForeignKey(Vendor,on_delete=models.CASCADE, related_name="Product")
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="Product")
     name = models.CharField(max_length=100)
     colors = models.CharField(max_length=100, null=True, blank=True)
     dimension = models.CharField(max_length=100, null=True, blank=True)
     category = models.CharField(max_length=100)
     subcategory = models.CharField(max_length=100, null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    rating = models.IntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=0)
     discount = models.IntegerField(default=0)
     stock = models.IntegerField(default=1)
     description = models.TextField()
-    images = models.ManyToManyField(ProductImage)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -44,16 +34,30 @@ class Product(models.Model):
         verbose_name = "Product"
         verbose_name_plural = "Products"
 
+
+class ProductImage(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="ProductImages"
+    )
+    image = models.ImageField(upload_to=get_file_path)
+
+    class Meta:
+        db_table = "product_images"
+        verbose_name = "ProductImage"
+        verbose_name_plural = "Product-Images"
+
+
 # delete product images from folder
 @receiver(post_delete, sender=ProductImage)
 def delete_saved_images(sender, instance, *args, **kwargs):
     try:
-        path = os.path.join(settings.MEDIA_ROOT,"images")
-        
+        path = os.path.join(settings.MEDIA_ROOT, "images")
+
         images = os.listdir(path)
         for image in images:
             if image.find(str(instance.image).split("/")[1]):
-                os.remove(os.path.join(path,image))
-            
+                os.remove(os.path.join(path, image))
+
     except Exception as e:
         print(e)
