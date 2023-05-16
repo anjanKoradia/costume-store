@@ -131,18 +131,27 @@ class Edit_Product(View):
                 return redirect(reverse("edit_product", args={id}))
 
         try:
-            Product.objects.update(
-                name=name,
-                colors=colors,
-                dimension=dimension,
-                category=category,
-                subcategory=subcategory,
-                rating=rating,
-                price=price,
-                discount=discount,
-                stock=stock,
-                description=description,
+            product = Product.objects.update_or_create(
+               id=id,
+               defaults={
+                    "name":name,
+                    "colors":colors,
+                    "dimension":dimension,
+                    "category":category,
+                    "subcategory":subcategory,
+                    "rating":rating,
+                    "price":price,
+                    "discount":discount,
+                    "stock":stock,
+                    "description":description,
+               }
             )
+            
+            if images:
+                ProductImage.objects.filter(product = product[0]).delete()
+
+                for img in images:
+                    ProductImage.objects.create(product=product[0], image=img)
             
 
         except Exception as e:

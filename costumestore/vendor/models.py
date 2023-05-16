@@ -56,7 +56,7 @@ def delete_saved_images(sender, instance, *args, **kwargs):
 
         images = os.listdir(path)
         for image in images:
-            if image.find(str(instance.image).split("/")[1]):
+            if image.find(str(instance.image).split("/")[1]) == 0:
                 os.remove(os.path.join(path, image))
 
     except Exception as e:
