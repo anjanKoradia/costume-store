@@ -33,13 +33,15 @@ import uuid
 class Vendor(models.Model):
     id = models.UUIDField(default=uuid.uuid4(),primary_key=True, editable=False)
     user = models.OneToOneField('authentication.User', on_delete=models.CASCADE, related_name="vendors")
-    shop_name = models.CharField(max_length=50, null=True, blank=True)
-    gst_number = models.CharField(max_length=50, null=True, blank=True)
+    shop_name = models.CharField(max_length=100, null=True, blank=True)
     aadhar_number = models.CharField(max_length=12, null=True, blank=True)
     aadhar_image = models.ImageField(null=True, blank=True)
     pancard_number = models.CharField(max_length=10,null=True, blank=True)
     pancard_image = models.ImageField(null=True, blank=True)
+    gst_number = models.CharField(max_length=15, null=True, blank=True)
     business_license = models.ImageField(null=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    is_document_added = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     
