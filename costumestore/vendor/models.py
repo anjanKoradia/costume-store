@@ -15,7 +15,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=0)
     discount = models.IntegerField(default=0)
     stock = models.IntegerField(default=1)
-    images = ArrayField(models.URLField(blank=True, null=True))
+    images = ArrayField(models.JSONField())
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

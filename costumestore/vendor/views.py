@@ -1,11 +1,13 @@
+from .validator import ProductDetailsValidator,validate_data
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
-from .models import Product, Vendor
-from .validator import ProductDetailsValidator
 from django.shortcuts import render, redirect
+from .models import Product, Vendor
 from django.contrib import messages
 from django.urls import reverse
 from django.views import View
+import cloudinary.uploader
+from .forms import ProductDetails
 
 
 def is_vendor(user):
@@ -15,7 +17,7 @@ def is_vendor(user):
 @user_passes_test(is_vendor, login_url="home_page")
 def dashboard(req):
     vendor = Vendor.objects.get(user=req.user)
-    products = Product.objects.filter(vendor=vendor).order_by("updated_at").reverse()
+    products = Product.objects.filter(vendor=vendor).order_by("updated_at").reverse()[:10]
 
     return render(req, "vendor/dashboard.html", context={"products": products})
 
@@ -26,58 +28,42 @@ class Add_Product(View):
         return render(req, "vendor/add_product.html")
 
     def post(self, req):
-        name = req.POST.get("name")
-        colors = req.POST.get("colors")
-        dimension = req.POST.get("dimensions")
-        category = req.POST.get("category")
-        subcategory = req.POST.get("subcategory")
-        rating = req.POST.get("rating")
-        price = req.POST.get("price")
-        discount = req.POST.get("discount")
-        stock = req.POST.get("stock")
-        description = req.POST.get("description")
         images = req.FILES.getlist("images")
-
-        validator = ProductDetailsValidator(
-            {
-                "name": name,
-                "category": category,
-                "rating": rating,
-                "price": price,
-                "discount": discount,
-                "stock": stock,
-                "description": description,
-                "images": images,
-            }
-        )
-
-        status = validator.validate()
-        if not status:
-            error = validator.get_message_plain()
-            for field in error:
-                messages.error(req, error[field][0], field)
-
-                return redirect("add_product")
-
+        form = ProductDetails(req.POST)
+        
+        if not form.is_valid():
+            errors = {}
+            for field in form:
+                if field.errors:
+                    errors[field.name] = field.errors[0]
+            return render(req, "vendor/add_product.html", {"errors": errors})
+        
+        data = form.cleaned_data
+                
         try:
             vendor = Vendor.objects.get(user=req.user)
 
-            product = Product.objects.create(
+            images_url = []
+            for image in images:
+                result = cloudinary.uploader.upload(image, folder=vendor.shop_name+'/products',tags=[category,subcategory])
+                result_dict = {"url": result["url"], "public_id": result["public_id"]}
+                images_url.append(result_dict)
+            
+            
+            Product.objects.create(
                 vendor=vendor,
-                name=name,
-                colors=colors,
-                dimension=dimension,
-                category=category,
-                subcategory=subcategory,
-                rating=rating,
-                price=price,
-                discount=discount,
-                stock=stock,
-                description=description,
+                name=data["name"],
+                colors=data["colors"],
+                dimension=data["dimension"],
+                category=data["category"],
+                subcategory=data["subcategory"],
+                rating=data["rating"],
+                price=data["price"],
+                discount=data["discount"],
+                stock=data["stock"],
+                description=data["description"],
+                images=images_url,
             )
-
-            # for img in images:
-            #     ProductImage.objects.create(product=product, image=img)
 
         except Exception as e:
             print(e)
@@ -89,8 +75,7 @@ class Add_Product(View):
 class Edit_Product(View):
     def get(self, req, id):
         product = Product.objects.get(pk=id)
-        # images = ProductImage.objects.filter(product=product)
-
+        
         return render(
             req,
             "vendor/edit_product.html",
@@ -131,7 +116,17 @@ class Edit_Product(View):
                 return redirect(reverse("edit_product", args={id}))
 
         try:
-            product = Product.objects.update_or_create(
+            vendor = Vendor.objects.get(user=req.user)
+            old_product = Product.objects.get(id=id)
+            
+            # store new images in cloudinary
+            images_url = []
+            for image in images:
+                result = cloudinary.uploader.upload(image, folder=vendor.shop_name+'/products',tags=[category,subcategory])
+                result_dict = {"url": result["url"], "public_id": result["public_id"]}
+                images_url.append(result_dict)
+            
+            Product.objects.update_or_create(
                id=id,
                defaults={
                     "name":name,
@@ -143,16 +138,14 @@ class Edit_Product(View):
                     "price":price,
                     "discount":discount,
                     "stock":stock,
+                    "images":images_url,
                     "description":description,
                }
             )
             
-            # if images:
-            #     ProductImage.objects.filter(product = product[0]).delete()
-
-            #     for img in images:
-            #         ProductImage.objects.create(product=product[0], image=img)
-            
+            # delete old images from cloudinary
+            for image in old_product.images:
+                cloudinary.uploader.destroy(image["public_id"])
 
         except Exception as e:
             print(e)

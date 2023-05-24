@@ -1,82 +1,97 @@
-{% extends "vendor/base.html" %} 
-{% load static %} 
-{% block vendor_body %}
+{% extends "vendor/base.html" %} {% load static %} {% block vendor_body %}
 
 <section class="add_product_container p-4">
   <div class="heading">
     <h2>Add Product</h2>
   </div>
-  <form action="{% url 'add_product' %}" method="POST" class="mt-5" enctype="multipart/form-data" novalidate>
+  <form
+    action="{% url 'add_product' %}"
+    method="POST"
+    class="mt-5"
+    enctype="multipart/form-data"
+    novalidate
+  >
     {% csrf_token %}
     <div class="form-row">
       <div class="form-group col-md-6 col-lg-4">
         <label for="name">Name</label>
-        <input type="text" name="name" class="form-control" id="name" placeholder="Enter product name" />
+        <input
+          type="text"
+          name="name"
+          class="form-control {% if errors and errors.name %} is-invalid {% endif %}"
+          id="name"
+          placeholder="Enter product name"
+        />
         <div class="invalid-feedback">
-          {% if messages %} 
-            {% for message in messages %} 
-                {{message}} 
-            {% endfor %}
+          {% if errors and errors.name %} 
+            {{errors.name}}
           {% endif %}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="colors">Colors</label>
-        <input type="text" name="colors" class="form-control" id="colors" placeholder="Enter product colors"
+        <input
+          type="text"
+          name="colors"
+          class="form-control"
+          id="colors"
+          placeholder="Enter product colors"
         />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="dimensions">Dimensions</label>
-        <input type="text" name="dimensions" class="form-control" min="0" max="100" id="dimensions" placeholder="Enter product dimension" />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
+        <input
+          type="text"
+          name="dimensions"
+          class="form-control"
+          min="0"
+          max="100"
+          id="dimensions"
+          placeholder="Enter product dimension"
+        />
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="category">Category</label>
-        <select id="inputState" class="form-control" name="category" defaultValue="Select Category">
-          <option>Choose...</option>
-          <option>...</option>
+        <select
+          id="inputState"
+          class="form-control {% if errors and errors.category %} is-invalid {% endif %}"
+          name="category"
+        >
+          <option selected disabled>Select Category</option>
+          <option value="women">Women</option>
+          <option value="men">Men</option>
         </select>
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.category %} 
+            {{errors.category}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="subcategory">Sub-Category</label>
-        <input type="text" name="subcategory" class="form-control" id="subcategory" placeholder="Enter sub-category" />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
+        <input
+          type="text"
+          name="subcategory"
+          class="form-control"
+          id="subcategory"
+          placeholder="Enter sub-category"
+        />
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="rating">Rating</label>
-        <input type="number" name="rating" class="form-control" id="rating" min="0" max="5" placeholder="Enter rating" />
+        <input
+          type="number"
+          name="rating"
+          class="form-control {% if errors and errors.rating %} is-invalid {% endif %}"
+          id="rating"
+          min="0"
+          max="5"
+          placeholder="Enter rating"
+        />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.rating %} 
+            {{errors.rating}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
@@ -84,16 +99,14 @@
         <input
           type="text"
           name="price"
-          class="form-control"
+          class="form-control {% if errors and errors.price %} is-invalid {% endif %}"          
           id="price"
           placeholder="Enter product price"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.price %} 
+            {{errors.price}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
@@ -101,44 +114,43 @@
         <input
           type="number"
           name="discount"
-          class="form-control"
+          class="form-control {% if errors and errors.discount %} is-invalid {% endif %}"
           id="discount"
           placeholder="Enter discount"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.discount %} 
+            {{errors.discount}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="stock">Stock</label>
         <input
+          name="stock"
           type="number"
           placeholder="Enter the stock of the product"
-          class="form-control"
+          class="form-control {% if errors and errors.stock %} is-invalid {% endif %}"          
           id="stock"
-          name="stock"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.stock %} 
+            {{errors.stock}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-sm-12">
         <label for="description">Description</label>
-        <textarea name="description" class="form-control" id="description" rows="6"></textarea>
+        <textarea
+          name="description"
+          class="form-control {% if errors and errors.description %} is-invalid {% endif %}"
+          id="description"
+          rows="6"
+        ></textarea>
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.description %} 
+            {{errors.description}}
+          {% endif %}
         </div>
       </div>
       <div class="form-group col-sm-12">
@@ -146,17 +158,15 @@
         <input
           type="file"
           name="images"
-          class="form-control"
+          class="form-control {% if errors and errors.images %} is-invalid {% endif %}"
           id="images"
           accept="image/*"
           multiple
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {% if errors and errors.images %}
+            {{errors.images}}
+          {% endif %}
         </div>
       </div>
     </div>

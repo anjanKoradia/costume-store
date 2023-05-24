@@ -1,35 +1,58 @@
-from validator import Validator
+from cerberus import Validator
+
+ProductDetailsValidator = {
+    "name": {
+        "type": "string",
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "category": {
+        "type": "string",
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "rating": {
+        "type": "float",
+        "min": 0,
+        "max": 5,
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "price": {
+        "type": "integer",
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "discount": {
+        "type": "integer",
+        "min": 0,
+        "max": 100,
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "stock": {
+        "type": "integer",
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+    "description": {
+        "type": "string",
+        "required": True,
+        "empty": False,
+        "nullable": False,
+    },
+}
 
 
-class ProductDetailsValidator(Validator):
-    name = "required"
-    category = "required"
-    rating = "required|digits"
-    price = "required|digits"
-    discount = "required|digits"
-    stock = "required|digits"
-    description = "required"
+def validate_data(schema, fields):
+    v = Validator(schema)
+    v.validate(fields)
+    errors = v.errors
 
-    message = {
-        "name": {
-            "required": ("Product name is required"),
-        },
-        "category": {"required": ("Category required")},
-        "rating": {
-            "required": ("Rating required"),
-            "digits": ("Rating must be a positive integer"),
-        },
-        "price": {
-            "required": ("Price required"),
-            "digits": ("Price must be a positive integer"),
-        },
-        "discount": {
-            "required": ("Discount required"),
-            "digits": ("Discount must be a positive integer"),
-        },
-        "stock": {
-            "required": ("Stock required"),
-            "digits": {"Stock must be a positive integer"},
-        },
-        "description": {"required": ("Description required")},
-    }
+    return errors

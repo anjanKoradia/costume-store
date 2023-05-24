@@ -157,9 +157,9 @@
       </div>
       <div class="images">
         <div class="row">
-          {% for img in images %}
+          {% for img in product.images %}
             <div class="col-sm-6 my-3">
-              <img width="160" src="{% static img.image %}" alt="">
+              <img width="160" src="{{ img.url }}" alt="">
             </div>
           {% endfor %}
         </div>
