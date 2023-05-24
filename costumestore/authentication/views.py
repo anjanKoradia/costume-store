@@ -85,6 +85,7 @@ def register_user(req):
         User.objects.create_user(
             email=email, password=password, name=name, role=role
         )
+        
 
         response = render(req, "authentication/success.html")
         response['cache-control'] = 'no-cache, no-store, must-revalidate'

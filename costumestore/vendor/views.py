@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
-from .models import Product, ProductImage, Vendor
+from .models import Product, Vendor
 from .validator import ProductDetailsValidator
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -76,8 +76,8 @@ class Add_Product(View):
                 description=description,
             )
 
-            for img in images:
-                ProductImage.objects.create(product=product, image=img)
+            # for img in images:
+            #     ProductImage.objects.create(product=product, image=img)
 
         except Exception as e:
             print(e)
@@ -89,12 +89,12 @@ class Add_Product(View):
 class Edit_Product(View):
     def get(self, req, id):
         product = Product.objects.get(pk=id)
-        images = ProductImage.objects.filter(product=product)
+        # images = ProductImage.objects.filter(product=product)
 
         return render(
             req,
             "vendor/edit_product.html",
-            context={"product": product, "images": images},
+            context={"product": product},
         )
 
     def post(self, req, id):
@@ -147,11 +147,11 @@ class Edit_Product(View):
                }
             )
             
-            if images:
-                ProductImage.objects.filter(product = product[0]).delete()
+            # if images:
+            #     ProductImage.objects.filter(product = product[0]).delete()
 
-                for img in images:
-                    ProductImage.objects.create(product=product[0], image=img)
+            #     for img in images:
+            #         ProductImage.objects.create(product=product[0], image=img)
             
 
         except Exception as e:

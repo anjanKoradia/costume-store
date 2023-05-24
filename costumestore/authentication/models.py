@@ -45,10 +45,10 @@ def create_profile(sender, instance, created, **kwargs):
             user.email_token = email_token
             user.save()
             
-            send_account_activation_email(instance.name,instance.email,email_token)
-        
-        if created and instance.role == 'vendor':
-            Vendor.objects.create(user=instance)
+            # send_account_activation_email(instance.name,instance.email,email_token)
+            if created and instance.role == 'vendor':
+                Vendor.objects.create(user=instance)
+
             
     except Exception as e:
         print(e)

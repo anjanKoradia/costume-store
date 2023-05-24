@@ -14,3 +14,5 @@ venv
 
 /costumestore/accounts/__pycache__
 /costumestore/accounts/migrations
+
+/costumestore/scripts/__pycache__

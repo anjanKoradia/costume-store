@@ -4,4 +4,4 @@ from .models import Vendor
 
 @admin.register(Vendor)
 class Vendor(admin.ModelAdmin):
-    list_display = ["id"]
+    list_display = ["id","shop_name"]
