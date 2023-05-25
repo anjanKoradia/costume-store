@@ -19,3 +19,34 @@ toggle.onclick = function () {
   navigation.classList.toggle("active");
   main.classList.toggle("active");
 };
+
+// access cookies
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + '=')) {
+      return cookie.substring(name.length + 1);
+    }
+  }
+  
+  return null;
+}
+
+// delete product
+function delete_product(id) {
+  flag =  confirm("Are you sure you want delete this product ?");
+
+  if(flag){
+    fetch(`/vendor/delete/${id}/`,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+    }).then(() => {
+      window.location.href = "/vendor"
+    })
+  }
+}

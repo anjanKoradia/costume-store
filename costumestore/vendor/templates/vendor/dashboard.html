@@ -55,7 +55,7 @@
   <div class="recentOrders">
     <div class="cardHeader">
       <h2>Recent Products</h2>
-      <a href="#" class="btn">View All</a>
+      <a href="{% url 'store' %}" class="btn">View All</a>
     </div>
     <table>
       <thead>
@@ -80,7 +80,7 @@
               <a href="{% url 'edit_product' id=product.id %}" class="btn btn-dark">
                 <ion-icon name="create-outline"></ion-icon>
               </a>
-              <button class="btn btn-danger">
+              <button class="btn btn-danger" id="delete_product" onclick="delete_product('{{product.id}}')" >
                 <ion-icon name="trash-outline"></ion-icon>
               </button>
             </td>

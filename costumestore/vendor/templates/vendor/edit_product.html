@@ -2,81 +2,91 @@
 {% load static %} 
 {% block vendor_body %}
 
-<section class="add_product_container p-4">
-  <div class="heading">
+<section class="edit_product_container p-4">
+  <div class="cardHeader mb-4">
     <h2>Edit Product</h2>
   </div>
-  <form action="{% url 'edit_product' id=product.id %}" method="POST" class="mt-5" enctype="multipart/form-data" novalidate>
+  <form
+    action="{% url 'edit_product' id=product.id %}"
+    method="POST"
+    class="mt-5"
+    enctype="multipart/form-data"
+    novalidate
+  >
     {% csrf_token %}
     <div class="form-row">
       <div class="form-group col-md-6 col-lg-4">
         <label for="name">Name</label>
-        <input type="text" value="{{product.name}}" name="name" class="form-control" id="name" placeholder="Enter product name" />
-        <div class="invalid-feedback">
-          {% if messages %} 
-            {% for message in messages %} 
-                {{message}} 
-            {% endfor %}
-          {% endif %}
-        </div>
+        <input
+          type="text"
+          value="{{product.name}}"
+          name="name"
+          class="form-control {% if errors.name %} is-invalid {% endif %}"
+          id="name"
+          placeholder="Enter product name"
+        />
+        <div class="invalid-feedback">{{errors.name}}</div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="colors">Colors</label>
-        <input type="text" value="{{product.colors}}" name="colors" class="form-control" id="colors" placeholder="Enter product colors"
+        <input
+          type="text"
+          value="{{product.colors}}"
+          name="colors"
+          class="form-control"
+          id="colors"
+          placeholder="Enter product colors"
         />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="dimensions">Dimensions</label>
-        <input type="text" value="{{product.dimension}}" name="dimensions" class="form-control" min="0" max="100" id="dimensions" placeholder="Enter product dimension" />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
+        <input
+          type="text"
+          value="{{product.dimension}}"
+          name="dimensions"
+          class="form-control"
+          min="0"
+          max="100"
+          id="dimensions"
+          placeholder="Enter product dimension"
+        />
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="category">Category</label>
-        <select id="inputState" class="form-control" name="category">
-          <option>Choose...</option>
-          <option>...</option>
+        <select id="inputState" class="form-control {% if errors.category %} is-invalid {% endif %}" name="category">
+          <option selected disabled>Select Category</option>
+          <option value="men" {% if 'men' in product.category %} selected {% endif %}>Men</option>
+          <option value="women" {% if 'women' in product.category %} selected {% endif %}>Women</option>
         </select>
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.category}}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="subcategory">Sub-Category</label>
-        <input type="text" value="{{product.subcategory}}" name="subcategory" class="form-control" id="subcategory" placeholder="Enter sub-category" />
-        <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
-        </div>
+        <input
+          type="text"
+          value="{{product.subcategory}}"
+          name="subcategory"
+          class="form-control"
+          id="subcategory"
+          placeholder="Enter sub-category"
+        />
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="rating">Rating</label>
-        <input type="number" value="{{product.rating}}" name="rating" class="form-control" id="rating" min="0" max="5" placeholder="Enter rating" />
+        <input
+          type="text"
+          value="{{product.rating}}"
+          name="rating"
+          class="form-control {% if errors.rating %} is-invalid {% endif %}"
+          id="rating"
+          min="0"
+          max="5"
+          placeholder="Enter rating"
+        />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.rating}}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
@@ -85,65 +95,54 @@
           type="text"
           name="price"
           value="{{product.price}}"
-          class="form-control"
+          class="form-control {% if errors.price %} is-invalid {% endif %}"          
           id="price"
           placeholder="Enter product price"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.price}}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="discount">Discount</label>
         <input
-          type="number"
+          type="text"
           name="discount"
           value="{{product.discount}}"
-          class="form-control"
+          class="form-control {% if errors.discount %} is-invalid {% endif %}"
           id="discount"
           placeholder="Enter discount"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.discount}}
         </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="stock">Stock</label>
         <input
-          type="number"
+          type="text"
           value="{{product.stock}}"
           placeholder="Enter the stock of the product"
-          class="form-control"
+          class="form-control {% if errors.stock %} is-invalid {% endif %}"          
           id="stock"
           name="stock"
         />
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.stock}}
         </div>
       </div>
       <div class="form-group col-sm-12">
         <label for="description">Description</label>
-        <textarea name="description" class="form-control" id="description" rows="6">{{product.description}}</textarea>
+        <textarea
+          name="description"
+          class="form-control {% if errors.description %} is-invalid {% endif %}"
+          id="description"
+          rows="6"
+        >{{product.description}}</textarea>
         <div class="invalid-feedback">
-            {% if messages %} 
-                {% for message in messages %} 
-                    {{message}} 
-                {% endfor %}
-            {% endif %}
+          {{errors.description}}
         </div>
-      </div>  
+      </div>
       <div class="form-group col-sm-12">
         <label for="images">Images</label>
         <input
@@ -158,9 +157,9 @@
       <div class="images">
         <div class="row">
           {% for img in product.images %}
-            <div class="col-sm-6 my-3">
-              <img width="160" src="{{ img.url }}" alt="">
-            </div>
+          <div class="col-sm-6 my-3">
+            <img width="160" src="{{ img.url }}" alt="" />
+          </div>
           {% endfor %}
         </div>
       </div>
