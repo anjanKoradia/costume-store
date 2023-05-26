@@ -10,8 +10,13 @@ from .models import User
 class Auth(View):
     def get(self, req):
         if req.user.is_authenticated:
-            return redirect("home_page")
+            if req.user.role == "admin":
+                return redirect(reverse("admin:index"))
+            elif req.user.role == "vendor":
+                return redirect("dashboard")
 
+            return redirect("home_page")
+            
         response = render(req, "authentication/auth.html")
         return response
 
