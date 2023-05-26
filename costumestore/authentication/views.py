@@ -6,13 +6,13 @@ from django.urls import reverse
 from django.views import View
 from .models import User
 
+
 class Auth(View):
     def get(self, req):
         if req.user.is_authenticated:
             return redirect("home_page")
 
         response = render(req, "authentication/auth.html")
-        response["cache-control"] = "no-cache, no-store, must-revalidate"
         return response
 
     def post(self, req):
@@ -25,12 +25,17 @@ class Auth(View):
         exists = User.objects.filter(email=email).exists()
 
         if exists:
-            response = render(req, "authentication/login.html", context={"email": email})
+            response = render(
+                req, "authentication/login.html", context={"email": email}
+            )
         else:
-            response = render(req, "authentication/signup.html", context={"email": email})
+            response = render(
+                req, "authentication/signup.html", context={"email": email}
+            )
 
         response["cache-control"] = "no-cache, no-store, must-revalidate"
         return response
+
 
 def login_user(req):
     email = req.POST.get("email")
@@ -55,6 +60,7 @@ def login_user(req):
 
     return redirect("home_page")
 
+
 def register_user(req):
     email = req.POST.get("email")
     name = req.POST.get("name")
@@ -74,18 +80,24 @@ def register_user(req):
     status = validator.validate()
 
     if not status:
-        error = validator.get_message_plain()
-        for field in error:
-            messages.error(req, error[field][0], field)
+        validator_errors = validator.get_message_plain()
+        errors = {}
+        
+        for e in validator_errors:
+            errors[e] = validator_errors.get(e)[0]
 
-            url = reverse("signup")
-            return redirect(url + "?email=" + email)
+        response = render(
+            req,
+            "authentication/signup.html",
+            {"email": email, "name": name, "errors": errors},
+        )
+        response["cache-control"] = "no-cache, no-store, must-revalidate"
+        return response
 
     try:
         User.objects.create_user(
             email=email, password=password, name=name, role=role
         )
-        
 
         response = render(req, "authentication/success.html")
         response['cache-control'] = 'no-cache, no-store, must-revalidate'
@@ -100,7 +112,7 @@ def activate_user(req, email_token):
         if not user:
             messages.error(req, "Invalid Token")
             return redirect("auth")
-        
+
         user.is_active = True
         user.save()
         login(req, user)
