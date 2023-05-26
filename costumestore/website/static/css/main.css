@@ -61,6 +61,22 @@
 /*//////////////////////////////////////////////////////////////////
 [ RS PLUGIN ]*/
 
+.page-link {
+  color: #999999;
+}
+.page-item.active .page-link {
+  background-color: #999999;
+  border-color: #999999;
+}
+
+.block2-txt-child1 {
+  overflow: hidden;
+}
+.block2-txt-child1 .product_name {
+  color: black !important;
+  white-space: nowrap;
+}
+
 /*------------------------------------------------------------------
 [ Bootstrap ]*/
 .container {
@@ -2027,8 +2043,19 @@ input.num-product::-webkit-inner-spin-button {
 
 /*//////////////////////////////////////////////////////////////////
 [ Block2 ]*/
+.isotope-item .block2 {
+  padding: 1rem;
+  background-color: whitesmoke;
+}
+
 .block2-pic {
   position: relative;
+  background-color: white;
+}
+
+.block2-pic img {
+  height: 300px;
+  object-fit: contain;
 }
 
 .block2-btn {
