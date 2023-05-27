@@ -72,10 +72,26 @@
 .block2-txt-child1 {
   overflow: hidden;
 }
-.block2-txt-child1 .product_name {
+.block2-txt-child1 .product_name ,.sec-relate-product .product_name {
   color: black !important;
   white-space: nowrap;
 }
+
+.isotope-item:hover .block2-txt-child1 .product_name,
+.isotope-item:hover .sec-relate-product .product_name  {
+  color: #6774d5 !important;
+}
+
+.product_details_page .sec-product-detail .slick-active img{
+  height: 120px;
+  object-fit: contain;
+}
+
+.product_details_page .sec-product-detail .product_img img {
+  height: 700px;
+  object-fit: contain;
+}
+
 
 /*------------------------------------------------------------------
 [ Bootstrap ]*/
