@@ -33,19 +33,14 @@
                 <input
                   type="text"
                   name="name"
-                  class="form-control {% if messages %} {% for message in messages %} {% if 'name' in message.tags %} is-invalid {% endif %} {% endfor %} {% endif %}"
+                  value="{{name}}"
+                  class="form-control {% if errors.name %} is-invalid {% endif %}"
                   id="inputName"
                   placeholder="First Last"
                   required
                 />
                 <div id="inputNameFeedback" class="invalid-feedback">
-                  {% if messages %} 
-                    {% for message in messages %} 
-                      {% if "name" in message.tags %}
-                        {{message}}
-                      {% endif %}
-                    {%endfor %} 
-                  {% endif %}
+                  {{ errors.name }}
                 </div>
               </div>
               <div class="mb-3">
@@ -55,19 +50,13 @@
                 <input
                   type="password"
                   name="password"
-                  class="form-control {% if messages %} {% for message in messages %} {% if 'password' in message.tags %} is-invalid {% endif %} {% endfor %} {% endif %}"
+                  class="form-control {% if errors.password %} is-invalid {% endif %}"
                   id="inputPassword"
                   placeholder="Min 8 chr, 1 letter & 1 number"
                   required
                 />
                 <div id="inputPasswordFeedback" class="invalid-feedback">
-                  {% if messages %} 
-                    {% for message in messages %} 
-                      {% if "password" in message.tags %}
-                        {{message}}
-                      {% endif %}
-                    {%endfor %} 
-                  {% endif %}
+                  {{errors.password}}
                 </div>
               </div>
               <div class="mb-3">
@@ -77,35 +66,23 @@
                 <input
                   type="password"
                   name="cpassword"
-                  class="form-control {% if messages %} {% for message in messages %} {% if 'confirm_pass' in message.tags %} is-invalid {% endif %} {% endfor %} {% endif %}"
+                  class="form-control {% if errors.confirm_pass %} is-invalid {% endif %}"
                   id="inputCPassword"
                   placeholder="Min 8 chr, 1 letter & 1 number"
                   required
                 />
                 <div id="inputCPasswordFeedback" class="invalid-feedback">
-                  {% if messages %} 
-                    {% for message in messages %} 
-                      {% if "confirm_pass" in message.tags %}
-                        {{message}}
-                      {% endif %}
-                    {%endfor %} 
-                  {% endif %}
+                  {{errors.confirm_pass}}
                 </div>
               </div>
               <div class="mb-3">
                 <label for="role">Role</label>
-                <select name="role" class="form-control {% if messages %} {% for message in messages %} {% if 'role' in message.tags %} is-invalid {% endif %} {% endfor %} {% endif %}" id="role">
-                  <option value="customer">Customer</option>
+                <select name="role" class="form-control {% if errors.role %} is-invalid {% endif %}" id="role">
+                  <option value="customer" selected>Customer</option>
                   <option value="vendor">Vendor</option>
                 </select>
                 <div id="inputRoleFeedback" class="invalid-feedback">
-                  {% if messages %} 
-                    {% for message in messages %} 
-                      {% if "role" in message.tags %}
-                        {{message}}
-                      {% endif %}
-                    {%endfor %} 
-                  {% endif %}
+                  {{errors.role}}
                 </div>
               </div>
               <button type="submit" class="btn btn-success w-100">
