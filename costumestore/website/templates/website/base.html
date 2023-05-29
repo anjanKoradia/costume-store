@@ -103,7 +103,7 @@
   <body>
     {% include 'website/header/header.html' %} 
     {% block body %} {% endblock body%}
-
+    {% include "website/footer.html" %}
     <!-- jQuery v3.2.1 -->
     <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 
@@ -192,21 +192,6 @@
 
           $(this).addClass("js-addedwish-detail");
           $(this).off("click");
-        });
-      });
-
-      /*---------------------------------------------*/
-
-      $(".js-addcart-detail").each(function () {
-        var nameProduct = $(this)
-          .parent()
-          .parent()
-          .parent()
-          .parent()
-          .find(".js-name-detail")
-          .html();
-        $(this).on("click", function () {
-          swal(nameProduct, "is added to cart !", "success");
         });
       });
     </script>

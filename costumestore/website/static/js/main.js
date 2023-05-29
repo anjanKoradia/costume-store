@@ -1,6 +1,12 @@
 (function ($) {
   "use strict";
 
+  $(".shop_nav a").each(function(){
+    if (window.location.href.includes($(this).attr('href'))) {
+      $(this).addClass('how-active1');
+    }
+  })
+
   /*[ Load page ]
     ===========================================================*/
   $(".animsition").animsition({

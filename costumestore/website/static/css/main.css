@@ -61,6 +61,42 @@
 /*//////////////////////////////////////////////////////////////////
 [ RS PLUGIN ]*/
 
+.page-link {
+  color: #999999;
+}
+.page-item.active .page-link {
+  background-color: #999999;
+  border-color: #999999;
+}
+
+.block2-txt-child1 {
+  overflow: hidden;
+}
+.block2-txt-child1 .product_name ,.sec-relate-product .product_name {
+  color: black !important;
+  white-space: nowrap;
+}
+
+.isotope-item:hover .block2-txt-child1 .product_name,
+.isotope-item:hover .sec-relate-product .product_name  {
+  color: #6774d5 !important;
+}
+
+.product_details_page .sec-product-detail .slick-active img{
+  height: 120px;
+  object-fit: contain;
+}
+
+.product_details_page .sec-product-detail .product_img img {
+  height: 700px;
+  object-fit: contain;
+}
+
+.table-shopping-cart .table_row .how-itemcart1 img{
+  height: 100px;
+  object-fit: contain;
+}
+
 /*------------------------------------------------------------------
 [ Bootstrap ]*/
 .container {
@@ -1898,7 +1934,7 @@ input.num-product::-webkit-inner-spin-button {
 .table-shopping-cart {
   border-collapse: collapse;
   width: 100%;
-  min-width: 680px;
+  min-width: 780px;
 }
 
 .table-shopping-cart tr {
@@ -1912,26 +1948,37 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .table-shopping-cart .column-2 {
-  width: 220px;
   font-size: 15px;
+  width: 220px;
 }
 
 .table-shopping-cart .column-3 {
   width: 120px;
   font-size: 16px;
+  white-space: nowrap;
+  padding-left: 1rem;
 }
 
 .table-shopping-cart .column-4 {
-  width: 145px;
-  text-align: right;
+  width: 120px;
+  font-size: 16px;
 }
 
 .table-shopping-cart .column-5 {
-  width: 172px;
+  width: 120px;
+  font-size: 16px;
+}
+.table-shopping-cart .column-6 {
+  width: 145px;
+  text-align: right;
+}
+.table-shopping-cart .column-7 {
   padding-right: 50px;
+  width: 172px;
   text-align: right;
   font-size: 16px;
 }
+
 
 .table-shopping-cart .table_row {
   height: 185px;
@@ -2027,8 +2074,19 @@ input.num-product::-webkit-inner-spin-button {
 
 /*//////////////////////////////////////////////////////////////////
 [ Block2 ]*/
+.isotope-item .block2 {
+  padding: 1rem;
+  background-color: whitesmoke;
+}
+
 .block2-pic {
   position: relative;
+  background-color: white;
+}
+
+.block2-pic img {
+  height: 300px;
+  object-fit: contain;
 }
 
 .block2-btn {
