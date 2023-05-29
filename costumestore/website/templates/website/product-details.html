@@ -1,6 +1,4 @@
-{% extends 'website/base.html' %} 
-{% load static %} 
-{% block body %}
+{% extends 'website/base.html' %} {% load static %} {% block body %}
 
 <main class="product_details_page m-t-100">
   <!-- breadcrumb -->
@@ -11,8 +9,11 @@
         <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
       </a>
 
-      <a href="{% url 'shop_page' category=product_details.category %}" class="stext-109 cl8 hov-cl1 trans-04">
-		{{product_details.category}}
+      <a
+        href="{% url 'shop_page' category=product_details.category %}"
+        class="stext-109 cl8 hov-cl1 trans-04"
+      >
+        {{product_details.category}}
         <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
       </a>
 
@@ -31,11 +32,8 @@
               <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 
               <div class="slick3 gallery-lb">
-				{% for img in product_details.images %}
-                <div
-                  class="item-slick3"
-                  data-thumb="{{img.url}}"
-                >
+                {% for img in product_details.images %}
+                <div class="item-slick3" data-thumb="{{img.url}}">
                   <div class="product_img wrap-pic-w pos-relative">
                     <img src="{{img.url}}" alt="IMG-PRODUCT" />
 
@@ -47,7 +45,7 @@
                     </a>
                   </div>
                 </div>
-				{% endfor %}
+                {% endfor %}
               </div>
             </div>
           </div>
@@ -68,74 +66,85 @@
 
             <!--  -->
             <div class="p-t-33">
-              <div class="flex-w flex-r-m p-b-10">
-                <div class="size-203 flex-c-m respon6">Size</div>
+              <form
+                action="{% url 'add_to_cart' id=product_details.id %}"
+                method="post"
+                novalidate
+              >
+                {% csrf_token %}
+                <div class="flex-w flex-r-m p-b-10">
+                  <div class="size-203 flex-c-m respon6">Size</div>
 
-                <div class="size-204 respon6-next">
-                  <div class="rs1-select2 bor8 bg0">
-                    <select class="js-select2" name="time">
-                      <option>Choose an option</option>
-                      <option>Size S</option>
-                      <option>Size M</option>
-                      <option>Size L</option>
-                      <option>Size XL</option>
-                    </select>
-                    <div class="dropDownSelect2"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex-w flex-r-m p-b-10">
-                <div class="size-203 flex-c-m respon6">Color</div>
-
-                <div class="size-204 respon6-next">
-                  <div class="rs1-select2 bor8 bg0">
-                    <select class="js-select2" name="time">
-                      <option>Choose an option</option>
-                      <option>Red</option>
-                      <option>Blue</option>
-                      <option>White</option>
-                      <option>Grey</option>
-                    </select>
-                    <div class="dropDownSelect2"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex-w flex-r-m p-b-10">
-                <div class="size-204 flex-w flex-m respon6-next">
-                  <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                    <div
-                      class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
-                    >
-                      <i class="fs-16 zmdi zmdi-minus"></i>
+                  <div class="size-204 respon6-next">
+                    <div class="rs1-select2 bor8 bg0">
+                      <select class="js-select2" name="size">
+                        <option disabled selected>Choose an option</option>
+                        <option value="S">Size S</option>
+                        <option value="M">Size M</option>
+                        <option value="L">Size L</option>
+                        <option value="XL">Size XL</option>
+                      </select>
+                      <div class="dropDownSelect2"></div>
                     </div>
-
-                    <input
-                      class="mtext-104 cl3 txt-center num-product"
-                      type="number"
-                      name="num-product"
-                      value="1"
-                    />
-
-                    <div
-                      class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
-                    >
-                      <i class="fs-16 zmdi zmdi-plus"></i>
-                    </div>
+                    <p class="text-danger p-1">{{errors.size}}</p>
                   </div>
-
-                  <button
-                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail"
-                  >
-                    Add to cart
-                  </button>
                 </div>
-              </div>
+
+                <div class="flex-w flex-r-m p-b-10">
+                  <div class="size-203 flex-c-m respon6">Color</div>
+
+                  <div class="size-204 respon6-next">
+                    <div class="rs1-select2 bor8 bg0">
+                      <select class="js-select2" name="color">
+                        <option disabled selected>Choose an option</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="White">White</option>
+                        <option value="Gray">Gray</option>
+                      </select>
+                      <div class="dropDownSelect2"></div>
+                    </div>
+                    <p class="text-danger p-1">{{errors.color}}</p>
+                  </div>
+                </div>
+
+                <div class="flex-w flex-r-m p-b-10">
+                  <div class="size-204 flex-w flex-m respon6-next">
+                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                      <div
+                        class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m"
+                      >
+                        <i class="fs-16 zmdi zmdi-minus"></i>
+                      </div>
+
+                      <input
+                        class="mtext-104 cl3 txt-center num-product form-control {% if errors.name %} is-invalid {% endif %}"
+                        type="number"
+                        min="1"
+                        name="quantity"
+                        value="1"
+                      />
+
+                      <div
+                        class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m"
+                      >
+                        <i class="fs-16 zmdi zmdi-plus"></i>
+                      </div>
+                    </div>
+                    <p class="text-danger p-1">{{errors.quantity}}</p>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail"
+                >
+                  Add to cart
+                </button>
+              </form>
             </div>
 
             <!--  -->
-            <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+            <div class="flex-w flex-m p-t-40 respon7">
               <div class="flex-m bor9 p-r-10 m-r-11">
                 <a
                   href="#"
@@ -275,7 +284,10 @@
     <div class="bg6 flex-c-m flex-w size-302 m-t-73 p-tb-15">
       <span class="stext-107 cl6 p-lr-25"> SKU: JAK-01 </span>
 
-      <span class="stext-107 cl6 p-lr-25 text-capitalize"> Categories: {{product_details.subcategory}}, {{product_details.category}} </span>
+      <span class="stext-107 cl6 p-lr-25 text-capitalize">
+        Categories: {{product_details.subcategory}},
+        {{product_details.category}}
+      </span>
     </div>
   </section>
 
@@ -289,49 +301,49 @@
       <!-- Slide2 -->
       <div class="wrap-slick2">
         <div class="slick2">
-		  {% for product in related_products %}
-			<div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
-				<!-- Block2 -->
-				<div class="block2">
-				<div class="block2-pic hov-img0">
-					{% for img in product.images %}
-						<img src="{{img.url}}" alt="IMG-PRODUCT" />
-					{% endfor %}
-				</div>
+          {% for product in related_products %}
+          <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+            <!-- Block2 -->
+            <div class="block2">
+              <div class="block2-pic hov-img0">
+                {% for img in product.images %}
+                <img src="{{img.url}}" alt="IMG-PRODUCT" />
+                {% endfor %}
+              </div>
 
-				<div class="block2-txt flex-w flex-t p-t-14">
-					<div class="block2-txt-child1 flex-col-l">
-					<a
-						href="{% url 'product_details' id=product.id %}"
-						class="product_name stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
-					>
-						{{product.name}}
-					</a>
+              <div class="block2-txt flex-w flex-t p-t-14">
+                <div class="block2-txt-child1 flex-col-l">
+                  <a
+                    href="{% url 'product_details' id=product.id %}"
+                    class="product_name stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                  >
+                    {{product.name}}
+                  </a>
 
-					<span class="stext-105 cl3"> ₹ {{product.price}} </span>
-					</div>
+                  <span class="stext-105 cl3"> ₹ {{product.price}} </span>
+                </div>
 
-					<div class="block2-txt-child2 flex-r p-t-3">
-					<a
-						href="#"
-						class="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-					>
-						<img
-						class="icon-heart1 dis-block trans-04"
-						src="{% static 'images/icons/icon-heart-01.png' %}"
-						alt="ICON"
-						/>
-						<img
-						class="icon-heart2 dis-block trans-04 ab-t-l"
-						src="{% static 'images/icons/icon-heart-02.png' %}"
-						alt="ICON"
-						/>
-					</a>
-					</div>
-				</div>
-				</div>
-			</div>
-		  {% endfor %}
+                <div class="block2-txt-child2 flex-r p-t-3">
+                  <a
+                    href="#"
+                    class="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                  >
+                    <img
+                      class="icon-heart1 dis-block trans-04"
+                      src="{% static 'images/icons/icon-heart-01.png' %}"
+                      alt="ICON"
+                    />
+                    <img
+                      class="icon-heart2 dis-block trans-04 ab-t-l"
+                      src="{% static 'images/icons/icon-heart-02.png' %}"
+                      alt="ICON"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
     </div>

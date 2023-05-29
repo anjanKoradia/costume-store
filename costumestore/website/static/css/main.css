@@ -92,6 +92,10 @@
   object-fit: contain;
 }
 
+.table-shopping-cart .table_row .how-itemcart1 img{
+  height: 100px;
+  object-fit: contain;
+}
 
 /*------------------------------------------------------------------
 [ Bootstrap ]*/
@@ -1930,7 +1934,7 @@ input.num-product::-webkit-inner-spin-button {
 .table-shopping-cart {
   border-collapse: collapse;
   width: 100%;
-  min-width: 680px;
+  min-width: 780px;
 }
 
 .table-shopping-cart tr {
@@ -1944,26 +1948,37 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .table-shopping-cart .column-2 {
-  width: 220px;
   font-size: 15px;
+  width: 220px;
 }
 
 .table-shopping-cart .column-3 {
   width: 120px;
   font-size: 16px;
+  white-space: nowrap;
+  padding-left: 1rem;
 }
 
 .table-shopping-cart .column-4 {
-  width: 145px;
-  text-align: right;
+  width: 120px;
+  font-size: 16px;
 }
 
 .table-shopping-cart .column-5 {
-  width: 172px;
+  width: 120px;
+  font-size: 16px;
+}
+.table-shopping-cart .column-6 {
+  width: 145px;
+  text-align: right;
+}
+.table-shopping-cart .column-7 {
   padding-right: 50px;
+  width: 172px;
   text-align: right;
   font-size: 16px;
 }
+
 
 .table-shopping-cart .table_row {
   height: 185px;
