@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from authentication.models import User
@@ -40,7 +41,7 @@ SIZE_CHOICES = (
 class Cart(models.Model):
     id = models.UUIDField(default=uuid.uuid4,primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product, through='CartItem')
+    total_price = models.PositiveIntegerField(default=0)
     
     class Meta:
         db_table = "cart"
@@ -48,7 +49,7 @@ class Cart(models.Model):
         verbose_name_plural = "Carts"
 
 class CartItem(models.Model):
-    id = models.UUIDField(default=uuid.uuid4,primary_key=True, unique=True)
+    id = models.UUIDField(default=uuid.uuid4,primary_key=True, unique=True, editable=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="cart_item"
@@ -62,8 +63,28 @@ class CartItem(models.Model):
         verbose_name = "CartItem"
         verbose_name_plural = "CartItems"
 
+class Wishlist(models.Model):
+    id = models.UUIDField(default=uuid.uuid4,primary_key=True, unique=True, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_price = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        db_table = "wishlist"
+        verbose_name = "Wishlist"
+        verbose_name_plural = "Wishlists"
 
+class WishlistItem(models.Model):
+    id = models.UUIDField(default=uuid.uuid4,primary_key=True, unique=True, editable=False)
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="wishlist_item"
+    )
 
+    class Meta:
+        db_table = "wishlist_item"
+        verbose_name = "WishlistItem"
+        verbose_name_plural = "WishlistItems"
+        
 @receiver(post_save, sender=CartItem)
 def my_post_save_receiver(sender, instance, created, **kwargs):
     if not created:

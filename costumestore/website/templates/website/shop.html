@@ -299,19 +299,11 @@
 
             <div class="block2-txt-child2 flex-r p-t-3">
               <a
-                href="#"
-                class="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+              {% if product.id in wishlist %} href="{% url 'remove_from_wishlist' id=product.id %}" {% else %} href="{% url 'add_to_wishlist' id=product.id %}" {% endif %}
+              class="btn-addwish-b2 fa {% if product.id in wishlist %} fa-heart {% else %} fa-heart-o {% endif %}"
+              aria-hidden="true"
+              id="add_wishlist_btn"
               >
-                <img
-                  class="icon-heart1 dis-block trans-04"
-                  src="{% static 'images/icons/icon-heart-01.png' %}"
-                  alt="ICON"
-                />
-                <img
-                  class="icon-heart2 dis-block trans-04 ab-t-l"
-                  src="{% static 'images/icons/icon-heart-02.png' %}"
-                  alt="ICON"
-                />
               </a>
             </div>
           </div>
