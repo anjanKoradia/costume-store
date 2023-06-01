@@ -1,87 +1,126 @@
-from .validator import validate_data, VendorDetailsSchema, VendorIdentitySchema
-from django.contrib.auth.decorators import user_passes_test
-from django.utils.decorators import method_decorator
+from .forms import VendorProfileForm, VendorProfileForm_Name_Only, VendorAddressForm
+from costumestore.services import Cloudinary_Services
 from django.shortcuts import render, redirect
 from authentication.models import User
-from django.contrib import messages
 from django.views import View
-from .models import Vendor
+from .models import Vendor, Address
 
 
-def is_vendor(user):
-    return user.is_authenticated and user.role == "vendor"
+def vendor_address(request):
+    vendor = Vendor.objects.get(user__id=request.user.id)
+
+    form = VendorAddressForm(request.POST)
+    if not form.is_valid():
+        errors = {}
+        for field in form:
+            if field.errors:
+                errors[field.name] = field.errors[0]
+
+        return render(
+            request,
+            "accounts/vendor.html",
+            {"errors": errors, "data": vendor},
+        )
+
+    data = form.cleaned_data
+
+    try:
+        Address.objects.update_or_create(
+            user=request.user,
+            defaults={
+                "address": data["address"],
+                "pin_code": data["pin_code"],
+                "city": data["city"],
+                "state": data["state"],
+                "country": data["country"],
+            },
+        )
+    except Exception as e:
+        print(e)
+
+    return redirect("vendor_profile")
 
 
-@method_decorator(user_passes_test(is_vendor, login_url="home_page"), name="dispatch")
-class VendorProfile(View):
-    def get(self, req):
-        vendor = Vendor.objects.get(user_id=req.user.id)
-        return render(req, "accounts/vendor.html", context={"vendor": vendor})
+class Vendor_Profile(View):
+    def get(self, request):
+        vendor = Vendor.objects.get(user__id=request.user.id)
+        address = Address.objects.get(user=request.user)
 
-    def post(self, req):
-        name: str = req.POST.get("name")
-        shop_name: str = req.POST.get("shop_name")
-        aadhar_number: int = req.POST.get("aadhar_number")
-        pancard_number: int = req.POST.get("pancard_number")
-        gst_number: int = req.POST.get("gst_number")
-        aadhar_image: list = req.FILES.getlist("aadhar_image")
-        pancard_image: list = req.FILES.getlist("pancard_image")
-        business_license: list = req.FILES.getlist("business_license")
+        return render(
+            request,
+            "accounts/vendor.html",
+            context={"data": vendor, "address": address},
+        )
 
-        vendor = Vendor.objects.get(user_id=req.user.id)
+    def post(self, request):
+        vendor = Vendor.objects.get(user__id=request.user.id)
+
         if vendor.is_document_added:
             # validate input data
-            errors = validate_data(
-                VendorDetailsSchema,
-                fields={
-                    "name": name,
-                    "shop_name": shop_name,
-                },
-            )
-            if errors:
-                messages.error(req, "errors")
-                return redirect("vendor_profile")
+            form = VendorProfileForm_Name_Only(request.POST)
+
+            if not form.is_valid():
+                errors = {}
+                for field in form:
+                    if field.errors:
+                        errors[field.name] = field.errors[0]
+
+                return render(
+                    request,
+                    "accounts/vendor.html",
+                    {"errors": errors, "data": vendor},
+                )
+
+            data = form.cleaned_data
 
             # update data in database
-            Vendor.objects.filter(user_id=req.user.id).update(
-                shop_name=shop_name,
+            Vendor.objects.filter(user__id=request.user.id).update(
+                shop_name=data["shop_name"]
             )
-            User.objects.filter(id=req.user.id).update(name=name)
+            User.objects.filter(id=request.user.id).update(name=data["name"])
 
             return redirect("vendor_profile")
 
         # validate input data
-        errors = validate_data(
-            VendorIdentitySchema,
-            fields={
-                "name": name,
-                "shop_name": shop_name,
-                "aadhar_number": aadhar_number,
-                "pancard_number": pancard_number,
-                "gst_number": gst_number,
-                "aadhar_image": aadhar_image,
-                "pancard_image": pancard_image,
-                "business_license": business_license,
-            },
-        )
+        form = VendorProfileForm(request.POST, request.FILES)
 
-        if errors:
-            messages.error(req, "errors")
-            return redirect("vendor_profile")
+        if not form.is_valid():
+            errors = {}
+            for field in form:
+                if field.errors:
+                    errors[field.name] = field.errors[0]
 
-        try:
-            Vendor.objects.filter(user_id=req.user.id).update(
-                shop_name=shop_name,
-                aadhar_number=aadhar_number,
-                pancard_number=pancard_number,
-                gst_number=gst_number,
-                aadhar_image=aadhar_image,
-                pancard_image=pancard_image,
-                business_license=business_license,
-                is_document_added = True
+            return render(
+                request,
+                "accounts/vendor.html",
+                {"errors": errors, "data": vendor},
             )
 
-            User.objects.filter(id=req.user.id).update(name=name)
+        data = form.cleaned_data
+
+        # Store documents in cloudinary
+        aadhar_image_url = Cloudinary_Services.store_image(
+            data["aadhar_image"], vendor.shop_name + "/documents"
+        )
+        pancard_image_url = Cloudinary_Services.store_image(
+            data["pancard_image"], vendor.shop_name + "/documents"
+        )
+        business_license_url = Cloudinary_Services.store_image(
+            data["business_license"], vendor.shop_name + "/documents"
+        )
+
+        try:
+            Vendor.objects.filter(user__id=request.user.id).update(
+                shop_name=data["shop_name"],
+                aadhar_number=data["aadhar_number"],
+                pancard_number=data["pancard_number"],
+                gst_number=data["gst_number"],
+                aadhar_image=aadhar_image_url,
+                pancard_image=pancard_image_url,
+                business_license=business_license_url,
+                is_document_added=True,
+            )
+            User.objects.filter(id=request.user.id).update(name=data["name"])
 
         except Exception as e:
             print(e)

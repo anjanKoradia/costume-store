@@ -2,20 +2,23 @@ from django.db import models
 import uuid
 
 
-# class Address(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
-#     id = models.UUIDField(default=uuid.uuid4(),primary_key=True)
-#     address = models.TextField()
-#     city = models.CharField(max_length=50)
-#     state = models.CharField(max_length=50)
-#     pincode = models.CharField(max_length=50)
-#     country = models.CharField(max_length=50)
-#     default = models.BooleanField(default=False)
+class Address(models.Model):
+    id = models.UUIDField(
+        default=uuid.uuid4(), primary_key=True, unique=True, editable=False
+    )
+    user = models.ForeignKey(
+        "authentication.User", on_delete=models.CASCADE, related_name="addresses"
+    )
+    address = models.TextField(blank=True)
+    pin_code = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=50, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50, blank=True)
 
-#     class Meta:
-#         db_table = "addresses"
-#         verbose_name = "Address"
-#         verbose_name_plural = "Addresses"
+    class Meta:
+        db_table = "addresses"
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
 
 
 class Vendor(models.Model):
@@ -23,17 +26,17 @@ class Vendor(models.Model):
     user = models.OneToOneField(
         "authentication.User", on_delete=models.CASCADE, related_name="vendors"
     )
-    shop_name = models.CharField(max_length=100, null=True, blank=True)
-    aadhar_number = models.CharField(max_length=12, null=True, blank=True)
-    aadhar_image = models.ImageField(null=True, blank=True)
-    pancard_number = models.CharField(max_length=10, null=True, blank=True)
-    pancard_image = models.ImageField(null=True, blank=True)
-    gst_number = models.CharField(max_length=15, null=True, blank=True)
-    business_license = models.ImageField(null=True, blank=True)
+    shop_name = models.CharField(max_length=100, blank=True)
+    aadhar_number = models.CharField(max_length=12, blank=True)
+    aadhar_image = models.JSONField(null=True, blank=True)
+    pancard_number = models.CharField(max_length=10, blank=True)
+    pancard_image = models.JSONField(null=True, blank=True)
+    gst_number = models.CharField(max_length=15, blank=True)
+    business_license = models.JSONField(null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     is_document_added = models.BooleanField(default=False)
-    bio = models.TextField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    bio = models.TextField(blank=True)
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
