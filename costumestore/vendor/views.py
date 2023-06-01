@@ -1,21 +1,11 @@
-from typing import Any
-from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpRequest, HttpResponse
-from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DeleteView
+from django.views.generic import ListView
 from .models import Product, Vendor
 from .forms import ProductDetails
 from django.views import View
-from django.urls import reverse_lazy
 import cloudinary.uploader
 
 
-def is_vendor(user):
-    return user.is_authenticated and user.role == "vendor"
-
-
-@user_passes_test(is_vendor, login_url="home_page")
 def dashboard(req):
     vendor = Vendor.objects.get(user=req.user)
     products = (
@@ -24,23 +14,22 @@ def dashboard(req):
 
     return render(req, "vendor/dashboard.html", context={"products": products})
 
-@method_decorator(user_passes_test(is_vendor, login_url="home_page"), name="dispatch")
+
 class Store(ListView):
     model = Product
     template_name = "vendor/store.html"
-    context_object_name = 'products'
+    context_object_name = "products"
     paginate_by = 10
-    
+
     def get_queryset(self):
         return Product.objects.filter(vendor__user=self.request.user)
 
-@user_passes_test(is_vendor, login_url="home_page")
+
 def delete_product(req, id):
     Product.objects.get(id=id).delete()
     return redirect("dashboard")
-    
 
-@method_decorator(user_passes_test(is_vendor, login_url="home_page"), name="dispatch")
+
 class Add_Product(View):
     def get(self, req):
         return render(req, "vendor/add_product.html")
@@ -55,7 +44,9 @@ class Add_Product(View):
                 if field.errors:
                     errors[field.name] = field.errors[0]
             return render(
-                req, "vendor/add_product.html", {"data": form.cleaned_data, "errors": errors}
+                req,
+                "vendor/add_product.html",
+                {"data": form.cleaned_data, "errors": errors},
             )
 
         data = form.cleaned_data
@@ -98,7 +89,6 @@ class Add_Product(View):
         return redirect("dashboard")
 
 
-@method_decorator(user_passes_test(is_vendor, login_url="home_page"), name="dispatch")
 class Edit_Product(View):
     def get(self, req, id):
         product = Product.objects.get(pk=id)
@@ -119,7 +109,9 @@ class Edit_Product(View):
                     errors[field.name] = field.errors[0]
             form.cleaned_data["id"] = id
             return render(
-                req, "vendor/edit_product.html", {"product": form.cleaned_data, "errors": errors}
+                req,
+                "vendor/edit_product.html",
+                {"product": form.cleaned_data, "errors": errors},
             )
 
         data = form.cleaned_data
