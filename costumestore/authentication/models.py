@@ -1,10 +1,11 @@
 from .services import send_account_activation_email
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
+from website.models import Cart, Wishlist
 from .manager import CustomUserManager
 from django.dispatch import receiver
-from django.db import models
 from accounts.models import Vendor
+from django.db import models
 import uuid
 
 
@@ -48,6 +49,10 @@ def create_profile(sender, instance, created, **kwargs):
             # send_account_activation_email(instance.name,instance.email,email_token)
             if created and instance.role == 'vendor':
                 Vendor.objects.create(user=instance)
+            
+            if created and instance.role == "customer":
+                Cart.objects.create(user=instance)
+                Wishlist.objects.create(user=instance)
 
             
     except Exception as e:

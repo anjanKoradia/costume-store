@@ -79,16 +79,17 @@
       
                     <span class="stext-105 cl3"> ₹ {{product.price}} </span>
                   </div>
-      
+                  {% if user.role == "customer" %}
                   <div class="block2-txt-child2 flex-r p-t-3">
                     <a
                       {% if product.id in wishlist_product_id %} href="{% url 'remove_from_wishlist' id=product.id %}" {% else %} href="{% url 'add_to_wishlist' id=product.id %}" {% endif %}
-                      class="btn-addwish-b2 fa {% if product.id in wishlist_product_id %} fa-heart {% else %} fa-heart-o {% endif %}"
+                      class="btn-addwish-b2 fa {% if product.id in wishlist_product_id %}fa-heart{% else %}fa-heart-o{% endif %}"
                       aria-hidden="true"
                       id="add_wishlist_btn"
                     >
                     </a>
                   </div>
+                  {% endif %}
                 </div>
               </div>
             </div>

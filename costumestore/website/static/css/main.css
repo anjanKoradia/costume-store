@@ -102,6 +102,11 @@
   color: #6774d5;
 }
 
+.topbar .fa-user-circle{
+  color: black;
+  font-size: 1.5rem;
+}
+
 /*------------------------------------------------------------------
 [ Bootstrap ]*/
 .container {

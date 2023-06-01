@@ -1,4 +1,6 @@
-{% extends 'website/base.html' %} {% load static %} {% block body %}
+{% extends 'website/base.html' %}
+{% load static %} 
+{% block body %}
 
 <main class="product_details_page m-t-100">
   <!-- breadcrumb -->
@@ -57,7 +59,11 @@
               {{product_details.name}}
             </h4>
 
-            <span class="mtext-106 cl2"> ₹ {{product_details.price}} </span>
+            <div>
+              <span class="mtext-106 cl2"> ₹ {{product_details.price}} </span>
+              <s class="mtext-100 px-1 cl2"> ₹ {{product_details.price}} </s>
+              <span class="mtext-90 mx-3 text-danger">- {{product_details.discount}}% off </span>
+            </div>
 
             <p class="stext-102 cl3 p-t-23">
               Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus
@@ -65,6 +71,7 @@
             </p>
 
             <!--  -->
+            {% if user.role == "customer" %}
             <div class="p-t-33">
               <form
                 action="{% url 'add_to_cart' id=product_details.id %}"
@@ -142,19 +149,22 @@
                 </button>
               </form>
             </div>
+            {% endif %}
 
             <!--  -->
             <div class="flex-w flex-m p-t-40 respon7">
+              {% if user.role == "customer" %}
               <div class="flex-m bor9 p-r-10 m-r-11">
                 <a
-                  href="#"
-                  class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                  data-tooltip="Add to Wishlist"
+                  {% if product_details.id in wishlist_product_id %} href="{% url 'remove_from_wishlist' id=product_details.id %}" {% else %} href="{% url 'add_to_wishlist' id=product_details.id %}" {% endif %}
+                  class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 tooltip100 fa {% if product_details.id in wishlist_product_id %}fa-heart{% else %}fa-heart-o{% endif %}"
+                  aria-hidden="true"
+                  data-tooltip="Add To Wishlist"
+                  id="add_wishlist_btn"
                 >
-                  <i class="zmdi zmdi-favorite"></i>
                 </a>
               </div>
-
+              {% endif %}
               <a
                 href="#"
                 class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
