@@ -1,4 +1,7 @@
-{% extends 'website/base.html' %} {% load static %} {% block body %}
+{% extends 'website/base.html' %} 
+{% load static %} 
+{% block body %}
+
 <!-- Categories Section Begin -->
 <section class="categories">
   <div class="container-fluid">
@@ -52,7 +55,9 @@
               <div class="categories__text">
                 <h4>Cosmetics</h4>
                 <p>159 items</p>
-                <a href="{% url 'shop_page' category='cosmetics' %}">Shop now</a>
+                <a href="{% url 'shop_page' category='cosmetics' %}"
+                  >Shop now</a
+                >
               </div>
             </div>
           </div>
@@ -64,7 +69,9 @@
               <div class="categories__text">
                 <h4>Accessories</h4>
                 <p>792 items</p>
-                <a href="{% url 'shop_page' category='accessories' %}">Shop now</a>
+                <a href="{% url 'shop_page' category='accessories' %}"
+                  >Shop now</a
+                >
               </div>
             </div>
           </div>
@@ -110,13 +117,15 @@
                   ><i class="fa fa-expand" aria-hidden="true"></i>
                 </a>
               </li>
+              {% if user.is_authenticated and user.role == "customer" %}
               <li>
-                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                <a {% if product.id in wishlist_product_id %} href="{% url 'wishlist_operations' operation='remove' id=product.id %}" {% else %} href="{% url 'wishlist_operations' operation='add' id=product.id %}" {% endif %}>
+                  <i class="fa {% if product.id in wishlist_product_id %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
+                </a>
               </li>
+              {% endif %}
               <li>
-                <a href="#"
-                  ><i class="fa fa-shopping-bag" aria-hidden="true"></i
-                ></a>
+                <a href="{% url 'product_details' id=product.id %}"><i class="fa fa-eye" aria-hidden="true"></i></a>
               </li>
             </ul>
           </div>

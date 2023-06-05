@@ -109,12 +109,12 @@ ol {
 /*---------------------
   Helper CSS
 -----------------------*/
-.in_wishlist {
-  background-color: #36a300;
+.product-details .fa-heart-o{
+  color: #ca1515;
 }
-.in_wishlist .fa-heart-o {
-  color: #ddd;
-  font-weight: bolder;
+
+.fa-heart{
+  color: #ca1515;
 }
 
 .section-title {
@@ -367,19 +367,11 @@ ol {
   visibility: visible;
 }
 
-.header__right__widget li:hover .dropdown {
-  top: 60px;
-  left: 200px;
-  opacity: 1;
-  visibility: visible;
-}
-
 .header__menu ul li:last-child {
   margin-right: 0;
 }
 
-.header__menu ul li .dropdown,
-.header__right__widget li .dropdown {
+.header__menu ul li .dropdown {
   position: absolute;
   left: 0;
   top: 56px;
@@ -394,18 +386,13 @@ ol {
   -o-transition: all, 0.3s;
   transition: all, 0.3s;
 }
-.header__right__widget li .dropdown {
-  left: 200px;
-}
 
-.header__menu ul li .dropdown li,
-.header__right__widget li .dropdown li {
+.header__menu ul li .dropdown li {
   display: block;
   margin-right: 0;
 }
 
-.header__menu ul li .dropdown li a,
-.header__right__widget li .dropdown li a {
+.header__menu ul li .dropdown li a {
   font-size: 14px;
   color: #ffffff;
   font-weight: 400;
@@ -413,8 +400,7 @@ ol {
   text-transform: capitalize;
 }
 
-.header__menu ul li .dropdown li a:after,
-.header__right__widget li .dropdown li a:after {
+.header__menu ul li .dropdown li a:after {
   display: none;
 }
 
@@ -455,7 +441,7 @@ ol {
 }
 
 .header__right__auth a {
-  font-size: 12px;
+  font-size: 16px;
   color: #666666;
   position: relative;
   margin-right: 8px;
@@ -492,6 +478,7 @@ ol {
 
 .header__right__widget li:last-child {
   margin-right: 0;
+  position: relative;
 }
 
 .header__right__widget li a {
@@ -513,6 +500,39 @@ ol {
   line-height: 18px;
   text-align: center;
   border-radius: 50%;
+}
+
+.header__right__widget li .dropdown {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  width: 150px;
+  background: #111111;
+  text-align: left;
+  padding: 2px 0;
+  z-index: 9;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all, 0.3s;
+  -o-transition: all, 0.3s;
+  transition: all, 0.3s;
+}
+.header__right__widget li .dropdown li {
+  display: block;
+  width: 100%;
+  margin-right: 0;
+}
+.header__right__widget li .dropdown li a {
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px 20px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+.header__right__widget li:hover .dropdown {
+  top: 30px;
+  opacity: 1;
+  visibility: visible;
 }
 
 .offcanvas-menu-wrapper {
@@ -1018,6 +1038,10 @@ ol {
   padding-top: 35px;
 }
 
+.breadcrumb-option .category_title{
+  text-transform: capitalize;
+}
+
 .breadcrumb__links a {
   font-size: 15px;
   font-weight: 500;
@@ -1280,7 +1304,7 @@ ol {
   display: block;
   height: 45px;
   width: 45px;
-  background: #fcdce1;
+  background: whitesmoke;
   line-height: 48px;
   text-align: center;
   border-radius: 50%;
@@ -2638,6 +2662,106 @@ ol {
   transform: rotate(127deg);
   opacity: 0;
   content: "";
+}
+/*---------------------
+    Wishlist
+-----------------------*/
+.wishlist {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+.wishlist__table {
+  margin-bottom: 30px;
+}
+
+.wishlist__table table {
+  width: 100%;
+}
+
+.wishlist__table thead {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.wishlist__table thead th {
+  font-size: 18px;
+  color: #111111;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding-bottom: 20px;
+}
+
+.wishlist__table tbody tr {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.wishlist__table tbody tr td {
+  padding: 30px 0;
+}
+
+.wishlist__table tbody tr .wishlist__product__item {
+  overflow: hidden;
+  width: 500px;
+  padding-right: 1rem;
+}
+
+.wishlist__table tbody tr .wishlist__product__item img {
+  float: left;
+  margin-right: 25px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.wishlist__table tbody tr .wishlist__product__item .wishlist__product__item__title {
+  overflow: hidden;
+}
+
+.wishlist__table
+  tbody
+  tr
+  .wishlist__product__item
+  .wishlist__product__item__title
+  h6
+  a {
+  color: #111111;
+  font-weight: 600;
+}
+
+.wishlist__table
+  tbody
+  tr
+  .wishlist__product__item
+  .wishlist__product__item__title
+  .rating
+  i {
+  font-size: 10px;
+  color: #e3c01c;
+  margin-right: -4px;
+}
+
+.wishlist__table tbody tr .wishlist__price {
+  font-size: 16px;
+  color: #ca1515;
+  font-weight: 600;
+  width: 190px;
+}
+
+.wishlist__table tbody tr .wishlist__close {
+  text-align: right;
+}
+
+.wishlist__table tbody tr .wishlist__close span {
+  height: 45px;
+  width: 45px;
+  background: #f2f2f2;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #111111;
+  line-height: 44px;
+  text-align: center;
+  display: inline-block;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /*---------------------

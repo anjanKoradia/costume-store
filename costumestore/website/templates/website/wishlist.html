@@ -9,7 +9,7 @@
       <div class="col-lg-12">
         <div class="breadcrumb__links">
           <a href="{% url 'home_page' %}"><i class="fa fa-home"></i> Home</a>
-          <span>Shopping cart</span>
+          <span>Wishlist</span>
         </div>
       </div>
     </div>
@@ -18,29 +18,25 @@
 <!-- Breadcrumb End -->
 
 <!-- Shop Cart Section Begin -->
-<section class="shop-cart spad">
+<section class="wishlist spad">
   <div class="container">
     <div class="row">
-      <div class="col-lg-12">
-        <div class="shop__cart__table">
+      <div class="col-lg-8">
+        <div class="wishlist__table">
           <table>
             <thead>
               <tr>
                 <th>Product</th>
                 <th>Price</th>
-                <th>Size</th>
-                <th>Color</th>
-                <th>Quantity</th>
-                <th>Total</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {% for item in cart_items %}
+              {% for item in wishlist_items %}
               <tr>
-                <td class="cart__product__item">
+                <td class="wishlist__product__item">
                   <img src="{{item.product.images.0.url}}" alt="" />
-                  <div class="cart__product__item__title">
+                  <div class="wishlist__product__item__title">
                     <h6>
                       <a href="{% url 'product_details' id=item.product.id %}"
                         >{{item.product.name}}</a
@@ -55,19 +51,9 @@
                     </div>
                   </div>
                 </td>
-                <td class="cart__price">₹ {{item.product.price}}</td>
-                <td class="cart__size">{{item.size}}</td>
-                <td class="cart__color">{{item.color}}</td>
-                <td class="cart__quantity">
-                  <div class="cart-pro-qty">
-                    <a href="{% url 'cart_item_qty' operation='decrease' id=item.id %}" class="dec qtybtn">-</a>
-                    <input type="text" value="{{item.quantity}}" />
-                    <a href="{% url 'cart_item_qty' operation='increase' id=item.id %}" class="inc qtybtn">+</a>
-                  </div>
-                </td>
-                <td class="cart__total">₹ {% widthratio item.quantity 1 item.product.price %}</td>
-                <td class="cart__close">
-                  <a href="{% url 'cart_item_qty' operation='delete' id=item.id %}">
+                <td class="wishlist__price">₹ {{item.product.price}}</td>
+                <td class="wishlist__close">
+                  <a href="{% url 'wishlist_operations' operation='remove' id=item.product.id %}">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </a>
                 </td>
@@ -76,31 +62,16 @@
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
         <div class="cart__btn float-right">
           <a href="{% url 'shop_page' category='all' %}">Continue Shopping</a>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="discount__content">
-          <h6 class="mb-4">Discount codes</h6>
-          <form action="#">
-            <input type="text" placeholder="Enter your coupon code" />
-            <button type="submit" class="site-btn">Apply</button>
-          </form>
-        </div>
-      </div>
-      <div class="col-lg-4 offset-lg-2">
+      <div class="col-lg-4">
         <div class="cart__total__procced">
-          <h6>Cart total</h6>
+          <h6>Wishlist total</h6>
           <ul>
-            <li>Subtotal <span>₹ {{cart_items.0.cart.total_price}}</span></li>
-            <li>Total <span>₹ {{cart_items.0.cart.total_price}}</span></li>
+            <li>Subtotal <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
+            <li>Total <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
           </ul>
           <a href="#" class="primary-btn">Proceed to checkout</a>
         </div>

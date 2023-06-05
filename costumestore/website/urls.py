@@ -6,15 +6,11 @@ urlpatterns = [
     path("visitor/contact/", views.contact_page, name="contact_page"),
     path("visitor/shop/<str:category>/", views.Shop_Page.as_view(), name="shop_page"),
     path("visitor/product/<str:id>/", views.product_details, name="product_details"),
+    path("customer/wishlist/", views.Wishlist_Operations.wishlist_page, name="wishlist_page"),
     path(   
-        "customer/wishlist/add/<str:id>/",
-        views.Wishlist_Operations.add,
-        name="add_to_wishlist",
-    ),
-    path(
-        "customer/wishlist/remove/<str:id>/",
-        views.Wishlist_Operations.remove,
-        name="remove_from_wishlist",
+        "customer/wishlist/<str:operation>/<str:id>/",
+        views.Wishlist_Operations.wishlist_operations,
+        name="wishlist_operations",
     ),
     path("customer/cart/", views.Cart_Operations.cart_page, name="cart_page"),
     path(

@@ -11,7 +11,7 @@ def home_page(request):
     wishlist = []
     wishlist_product_id = []
     total_price = 0
-    
+
     random_products = random.sample(list(products), 10)
 
     if request.user.is_authenticated and request.user.role == "customer":
@@ -62,29 +62,29 @@ def product_details(request, id):
 
 
 class Wishlist_Operations:
-    def add(request, id):
-        product = Product.objects.get(id=id)
-        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-
-        wishlist_item, item_created = WishlistItem.objects.get_or_create(
-            wishlist=wishlist, product=product
+    def wishlist_page(request):
+        wishlist_items = WishlistItem.objects.filter(wishlist__user=request.user)
+        return render(
+            request, "website/wishlist.html", {"wishlist_items": wishlist_items}
         )
 
-        if wishlist_item:
-            wishlist.total_price = wishlist.total_price + wishlist_item.product.price
-            wishlist.save()
+    def wishlist_operations(request, operation, id):
+        if operation == "add":
+            product = Product.objects.get(id=id)
+            wishlist, created = Wishlist.objects.get_or_create(user=request.user)
 
-        referring_url = request.META.get("HTTP_REFERER")
-        return redirect(referring_url)
+            wishlist_item, item_created = WishlistItem.objects.get_or_create(
+                wishlist=wishlist, product=product
+            )
 
-    def remove(request, id):
-        wishlist_item = WishlistItem.objects.get(product__id=id)
+            if wishlist_item:
+                wishlist.total_price = (
+                    wishlist.total_price + wishlist_item.product.price
+                )
+                wishlist.save()
 
-        wishlist = Wishlist.objects.get(user=request.user)
-        wishlist.total_price = wishlist.total_price - wishlist_item.product.price
-        wishlist.save()
-
-        wishlist_item.delete()
+        elif operation == "remove":
+            WishlistItem.objects.get(product__id=id).delete()
 
         referring_url = request.META.get("HTTP_REFERER")
         return redirect(referring_url)
@@ -92,14 +92,9 @@ class Wishlist_Operations:
 
 class Cart_Operations:
     def cart_page(request):
-        cart = Cart.objects.get(user=request.user)
         cart_items = CartItem.objects.filter(cart__user=request.user)
 
-        return render(
-            request,
-            "website/cart.html",
-            {"cart_items": cart_items, "cart_total_price": cart.total_price},
-        )
+        return render(request, "website/cart.html", {"cart_items": cart_items})
 
     def add_to_cart(request, id):
         form = CartItemForm(request.POST)
@@ -109,6 +104,7 @@ class Cart_Operations:
             for field in form:
                 if field.errors:
                     errors[field.name] = field.errors[0]
+            print(errors)
             return render(
                 request,
                 "website/product-details.html",
@@ -144,7 +140,7 @@ class Cart_Operations:
     def cart_item_qty(request, operation, id):
         cart_item = CartItem.objects.get(id=id)
         cart = cart_item.cart
-        
+
         if operation == "increase":
             cart.total_price = cart.total_price + cart_item.product.price
             cart.save()
@@ -177,3 +173,15 @@ class Shop_Page(ListView):
             return Product.objects.all()
 
         return Product.objects.filter(category=category)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        wishlist_product_id = []
+        if self.request.user.is_authenticated and self.request.user.role == "customer":
+            wishlist_product_id = WishlistItem.objects.filter(
+                wishlist__user=self.request.user
+            ).values_list("product", flat=True)
+
+        context["wishlist"] = wishlist_product_id
+        context["category"] = self.kwargs["category"]
+        return context

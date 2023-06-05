@@ -16,3 +16,11 @@ class CartItemForm(forms.ModelForm):
         self.fields['color'].error_messages = {
             'required': 'Please select valid color.',
         }
+    
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+        
+        if int(quantity) <= 0:
+            raise forms.ValidationError("Quantity must be grater than 0.")
+        
+        return quantity
