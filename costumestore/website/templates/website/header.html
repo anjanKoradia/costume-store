@@ -38,7 +38,7 @@
   </ul>
 
   <div class="offcanvas__logo">
-    <a href="{% url 'home_page' %}"><img src="img/logo.png" alt="" /></a>
+    <a href="{% url 'home_page' %}"><img src="{% static 'images/logo.png' %}" alt="" /></a>
   </div>
   <div id="mobile-menu-wrap"></div>
   {% if not user.is_authenticated %}
@@ -76,7 +76,6 @@
                 <li><a href="{% url 'shop_page' category='accessories' %}">Accessories</a></li>
               </ul>
             </li>
-            <li><a href="./blog.html">Blog</a></li>
             <li><a href="{% url 'contact_page' %}">Contact</a></li>
           </ul>
         </nav>

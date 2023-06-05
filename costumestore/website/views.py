@@ -7,10 +7,12 @@ import random
 
 
 def home_page(request):
-    products = Product.objects.all()[0:10]
+    products = Product.objects.all()
     wishlist = []
     wishlist_product_id = []
     total_price = 0
+    
+    random_products = random.sample(list(products), 10)
 
     if request.user.is_authenticated and request.user.role == "customer":
         wishlist_product_id = WishlistItem.objects.filter(
@@ -24,7 +26,7 @@ def home_page(request):
         request,
         "website/index.html",
         {
-            "products": products,
+            "products": random_products,
             "wishlist_product_id": wishlist_product_id,
             "wishlist": wishlist,
             "total_price": total_price,
@@ -128,19 +130,21 @@ class Cart_Operations:
             },
         )
 
-        cart.total_price = cart.total_price + cart_item.product.price
+        cart.total_price = cart.total_price + (
+            cart_item.product.price * cart_item.quantity
+        )
         cart.save()
 
         if not item_created:
             cart_item.quantity = cart_item.quantity + 1
             cart_item.save()
 
-        return redirect("home_page")
+        return redirect("cart_page")
 
     def cart_item_qty(request, operation, id):
-        cart = Cart.objects.get(user=request.user)
         cart_item = CartItem.objects.get(id=id)
-
+        cart = cart_item.cart
+        
         if operation == "increase":
             cart.total_price = cart.total_price + cart_item.product.price
             cart.save()
@@ -154,6 +158,9 @@ class Cart_Operations:
 
             cart_item.quantity = cart_item.quantity - 1
             cart_item.save()
+
+        elif operation == "delete":
+            cart_item.delete()
 
         return redirect("cart_page")
 

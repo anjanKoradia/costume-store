@@ -1,6 +1,4 @@
 from django.core.validators import MinValueValidator
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from vendor.models import Product
 from django.db import models
 import uuid
@@ -29,6 +27,7 @@ COLOR_CHOICES = (
 )
 
 SIZE_CHOICES = (
+    ("XS", "Extra Small"),
     ("S", "Small"),
     ("M", "Medium"),
     ("L", "Large"),
@@ -95,9 +94,3 @@ class WishlistItem(models.Model):
         verbose_name = "WishlistItem"
         verbose_name_plural = "WishlistItems"
 
-
-@receiver(post_save, sender=CartItem)
-def my_post_save_receiver(sender, instance, created, **kwargs):
-    if not created:
-        if instance.quantity == 0:
-            CartItem.objects.get(id=instance.id).delete()

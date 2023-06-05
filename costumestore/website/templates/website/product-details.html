@@ -6,8 +6,8 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="breadcrumb__links">
-          <a href="./index.html"><i class="fa fa-home"></i> Home</a>
-          <a href="#">{{product_details.category}}'s </a>
+          <a href="{% url 'home_page' %}"><i class="fa fa-home"></i> Home</a>
+          <a href="{% url 'shop_page' category=product_details.category %}">{{product_details.category}}'s </a>
           <span>{{product_details.name}}</span>
         </div>
       </div>
@@ -66,71 +66,84 @@
             nesciunt.
           </p>
           {% if user.is_authenticated and user.role == "customer" %}
-          <div class="product__details__button">
-            <div class="quantity">
-              <span>Quantity:</span>
-              <div class="pro-qty">
-                <input type="text" value="1" />
-              </div>
+          <form
+            action="{% url 'add_to_cart' id=product_details.id %}"
+            method="post"
+            novalidate
+          >
+            {% csrf_token %}
+            <div class="product__details__widget">
+              <ul>
+                <li>
+                  <span>Available color:</span>
+                  <div class="color__checkbox">
+                    <label for="red">
+                      <input
+                        type="radio"
+                        name="color"
+                        id="red"
+                        value="Red"
+                        checked
+                      />
+                      <span class="checkmark red-bg"></span>
+                    </label>
+                    <label for="black">
+                      <input type="radio" name="color" value="Black" id="black" />
+                      <span class="checkmark black-bg"></span>
+                    </label>
+                    <label for="grey">
+                      <input type="radio" name="color" value="Gray" id="grey" />
+                      <span class="checkmark grey-bg"></span>
+                    </label>
+                  </div>
+                </li>
+                <li>
+                  <span>Available size:</span>
+                  <div class="size__btn">
+                    <label for="xs-btn">
+                      <input type="radio" id="xs-btn" name="size" value="XS" />
+                      xs
+                    </label>
+                    <label for="s-btn">
+                      <input type="radio" id="s-btn" name="size" value="S" />
+                      s
+                    </label>
+                    <label for="m-btn" class="active">
+                      <input type="radio" id="m-btn" name="size" value="M" checked/>
+                      m
+                    </label>
+                    <label for="l-btn">
+                      <input type="radio" id="l-btn" name="size" value="L" />
+                      l
+                    </label>
+                  </div>
+                </li>
+                <li>
+                  <span>Promotions:</span>
+                  <p>Free shipping</p>
+                </li>
+              </ul>
             </div>
-            <a href="#" class="cart-btn"
-              ><i class="fa fa-shopping-bag mr-1" aria-hidden="true"></i> Add to
-              cart</a
-            >
-            <ul>
-              <li class="">
-                <a href="#" class="in_wishlist"
-                  ><i class="fa fa-heart-o" aria-hidden="true"></i
-                ></a>
-              </li>
-            </ul>
-          </div>
-          <div class="product__details__widget">
-            <ul>
-              <li>
-                <span>Available color:</span>
-                <div class="color__checkbox">
-                  <label for="red">
-                    <input type="radio" name="color__radio" id="red" checked />
-                    <span class="checkmark"></span>
-                  </label>
-                  <label for="black">
-                    <input type="radio" name="color__radio" id="black" />
-                    <span class="checkmark black-bg"></span>
-                  </label>
-                  <label for="grey">
-                    <input type="radio" name="color__radio" id="grey" />
-                    <span class="checkmark grey-bg"></span>
-                  </label>
+            <div class="product__details__button mt-5">
+              <div class="quantity">
+                <span>Quantity:</span>
+                <div class="pro-qty">
+                  <input type="text" value="1" name="quantity" />
                 </div>
-              </li>
-              <li>
-                <span>Available size:</span>
-                <div class="size__btn">
-                  <label for="xs-btn" class="active">
-                    <input type="radio" id="xs-btn" />
-                    xs
-                  </label>
-                  <label for="s-btn">
-                    <input type="radio" id="s-btn" />
-                    s
-                  </label>
-                  <label for="m-btn">
-                    <input type="radio" id="m-btn" />
-                    m
-                  </label>
-                  <label for="l-btn">
-                    <input type="radio" id="l-btn" />
-                    l
-                  </label>
-                </div>
-              </li>
-              <li>
-                <span>Promotions:</span>
-                <p>Free shipping</p>
-              </li>
-            </ul>
-          </div>
+              </div>
+              <ul>
+                <li class="">
+                  <a href="#" class="in_wishlist"
+                    ><i class="fa fa-heart-o" aria-hidden="true"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
+            <button type="submit" class="cart-btn border-0">
+              <i class="fa fa-shopping-bag mr-1" aria-hidden="true"></i> Add
+              to cart
+            </button>
+          </form>
           {% endif %}
         </div>
       </div>

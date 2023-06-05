@@ -1,4 +1,6 @@
-{% extends 'website/base.html' %} {% load static %} {% block body %}
+{% extends 'website/base.html' %} 
+{% load static %} 
+{% block body %}
 
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
@@ -26,6 +28,8 @@
               <tr>
                 <th>Product</th>
                 <th>Price</th>
+                <th>Size</th>
+                <th>Color</th>
                 <th>Quantity</th>
                 <th>Total</th>
                 <th></th>
@@ -35,9 +39,13 @@
               {% for item in cart_items %}
               <tr>
                 <td class="cart__product__item">
-                  <img src="img/shop-cart/cp-1.jpg" alt="" />
+                  <img src="{{item.product.images.0.url}}" alt="" />
                   <div class="cart__product__item__title">
-                    <h6>Chain bucket bag</h6>
+                    <h6>
+                      <a href="{% url 'product_details' id=item.product.id %}"
+                        >{{item.product.name}}</a
+                      >
+                    </h6>
                     <div class="rating">
                       <i class="fa fa-star"></i>
                       <i class="fa fa-star"></i>
@@ -47,14 +55,22 @@
                     </div>
                   </div>
                 </td>
-                <td class="cart__price">$ 150.0</td>
+                <td class="cart__price">₹ {{item.product.price}}</td>
+                <td class="cart__size">{{item.size}}</td>
+                <td class="cart__color">{{item.color}}</td>
                 <td class="cart__quantity">
-                  <div class="pro-qty">
-                    <input type="text" value="1" />
+                  <div class="cart-pro-qty">
+                    <a href="{% url 'cart_item_qty' operation='decrease' id=item.id %}" class="dec qtybtn">-</a>
+                    <input type="text" value="{{item.quantity}}" />
+                    <a href="{% url 'cart_item_qty' operation='increase' id=item.id %}" class="inc qtybtn">+</a>
                   </div>
                 </td>
-                <td class="cart__total">$ 300.0</td>
-                <td class="cart__close"><span class="icon_close"></span></td>
+                <td class="cart__total">₹ {% widthratio item.quantity 1 item.product.price %}</td>
+                <td class="cart__close">
+                  <a href="{% url 'cart_item_qty' operation='delete' id=item.id %}">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </a>
+                </td>
               </tr>
               {% endfor %}
             </tbody>
@@ -63,21 +79,16 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="cart__btn">
-          <a href="#">Continue Shopping</a>
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="cart__btn update__btn">
-          <a href="#"><span class="icon_loading"></span> Update cart</a>
+      <div class="col-12">
+        <div class="cart__btn float-right">
+          <a href="{% url 'shop_page' category='all' %}">Continue Shopping</a>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-6">
         <div class="discount__content">
-          <h6>Discount codes</h6>
+          <h6 class="mb-4">Discount codes</h6>
           <form action="#">
             <input type="text" placeholder="Enter your coupon code" />
             <button type="submit" class="site-btn">Apply</button>
@@ -88,8 +99,8 @@
         <div class="cart__total__procced">
           <h6>Cart total</h6>
           <ul>
-            <li>Subtotal <span>$ 750.0</span></li>
-            <li>Total <span>$ 750.0</span></li>
+            <li>Subtotal <span>₹ {{cart_total_price}}</span></li>
+            <li>Total <span>₹ {{cart_total_price}}</span></li>
           </ul>
           <a href="#" class="primary-btn">Proceed to checkout</a>
         </div>

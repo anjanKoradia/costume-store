@@ -18,12 +18,12 @@ urlpatterns = [
     ),
     path("customer/cart/", views.Cart_Operations.cart_page, name="cart_page"),
     path(
-        "customer/cart/add/<str:id>",
+        "customer/cart/add/<str:id>/",
         views.Cart_Operations.add_to_cart,
         name="add_to_cart",
     ),
     path(
-        "customer/cart/<str:operation>/<str:id>",
+        "customer/cart/<str:operation>/<str:id>/",
         views.Cart_Operations.cart_item_qty,
         name="cart_item_qty",
     )
