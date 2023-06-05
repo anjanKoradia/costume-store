@@ -1,13 +1,7 @@
-from .services import send_account_activation_email
 from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
-from website.models import Cart, Wishlist
 from .manager import CustomUserManager
-from django.dispatch import receiver
-from accounts.models import Vendor
 from django.db import models
 import uuid
-
 
 class User(AbstractUser):
     id = models.UUIDField(
@@ -34,26 +28,3 @@ class User(AbstractUser):
         db_table = "users"
         verbose_name = "User"
         verbose_name_plural = "Users"
-
-
-# signal to create vendor profile and to send account activation email
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    try:
-        if created:
-            email_token = str(uuid.uuid4())
-            user = User.objects.get(email=instance.email)
-            user.email_token = email_token
-            user.save()
-            
-            # send_account_activation_email(instance.name,instance.email,email_token)
-            if created and instance.role == 'vendor':
-                Vendor.objects.create(user=instance)
-            
-            if created and instance.role == "customer":
-                Cart.objects.create(user=instance)
-                Wishlist.objects.create(user=instance)
-
-            
-    except Exception as e:
-        print(e)

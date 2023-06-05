@@ -1,3 +1,5 @@
+# -*- coding: 'cp1252' -*-
+
 from accounts.models import Vendor
 from vendor.models import Product
 import math
@@ -10,7 +12,7 @@ def run():
     directory = os.path.dirname(__file__)
     dataset_location = os.path.join(directory, "data/products.csv")
 
-    with open(dataset_location) as file:
+    with open(dataset_location, encoding="utf8") as file:
         read_file = csv.reader(file)
         products = list(read_file)
         products_per_vendor = math.floor((len(products) / Vendor.objects.all().count()))

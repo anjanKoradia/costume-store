@@ -1,5 +1,6 @@
-from accounts.models import Vendor
 from authentication.models import User
+from accounts.models import Address
+from accounts.models import Vendor
 import csv
 import os
 
@@ -26,9 +27,25 @@ def run():
                     )
                     
                     if user:
-                        vendor = Vendor.objects.get(user=user)
-                        vendor.shop_name = record[0]
-                        vendor.save()
+                        vendor = Vendor.objects.update_or_create(
+                            user=user,
+                            defaults={
+                                "shop_name":record[0],
+                                "bio":record[10],
+                                "description":record[11],
+                            }
+                        )
+    
+                        address = Address.objects.update_or_create(
+                            user=user,
+                            defaults={
+                                "address": record[4],
+                                "city": record[5],
+                                "state": record[6],
+                                "pin_code": record[7],
+                                "country":record[8]
+                            }
+                        )
                         
                         print(f"Vendors:[{user.name}] added successfully")
                 

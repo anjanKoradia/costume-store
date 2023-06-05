@@ -1,4 +1,3 @@
-from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -39,8 +38,10 @@ SIZE_CHOICES = (
 
 
 class Cart(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    user = models.OneToOneField('authentication.User', on_delete=models.CASCADE)
+    id = models.UUIDField(
+        default=uuid.uuid4, primary_key=True, editable=False, unique=True
+    )
+    user = models.OneToOneField("authentication.User", on_delete=models.CASCADE)
     total_price = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -71,7 +72,7 @@ class Wishlist(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
-    user = models.OneToOneField('authentication.User', on_delete=models.CASCADE)
+    user = models.OneToOneField("authentication.User", on_delete=models.CASCADE)
     total_price = models.PositiveIntegerField(default=0)
 
     class Meta:

@@ -19,13 +19,13 @@
                 <input
                   type="email"
                   class="form-control"
-                  value="{{email}}"
+                  value="{{data.email}}"
                   disabled
                 />
                 <input
                   type="hidden"
                   name="email"
-                  value="{{email}}"
+                  value="{{data.email}}"
                 />
               </div>
               <div class="mb-3">
@@ -33,11 +33,10 @@
                 <input
                   type="text"
                   name="name"
-                  value="{{name}}"
+                  value="{{data.name}}"
                   class="form-control {% if errors.name %} is-invalid {% endif %}"
                   id="inputName"
                   placeholder="First Last"
-                  required
                 />
                 <div id="inputNameFeedback" class="invalid-feedback">
                   {{ errors.name }}
@@ -50,10 +49,10 @@
                 <input
                   type="password"
                   name="password"
+                  value="{{data.password}}"
                   class="form-control {% if errors.password %} is-invalid {% endif %}"
                   id="inputPassword"
                   placeholder="Min 8 chr, 1 letter & 1 number"
-                  required
                 />
                 <div id="inputPasswordFeedback" class="invalid-feedback">
                   {{errors.password}}
@@ -66,10 +65,10 @@
                 <input
                   type="password"
                   name="cpassword"
+                  value="{{data.cpassword}}"
                   class="form-control {% if errors.confirm_pass %} is-invalid {% endif %}"
                   id="inputCPassword"
                   placeholder="Min 8 chr, 1 letter & 1 number"
-                  required
                 />
                 <div id="inputCPasswordFeedback" class="invalid-feedback">
                   {{errors.confirm_pass}}

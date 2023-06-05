@@ -1,101 +1,511 @@
-{% extends 'website/base.html' %}
-{% load static %}
-
-{% block body %}
-    <div class="wrap-header-cart js-panel-cart">
-      <div class="s-full js-hide-cart"></div>
-      <div class="header-cart flex-col-l p-l-65 p-r-25">
-        <div class="header-cart-title flex-w flex-sb-m p-b-8">
-          <span class="mtext-103 cl2"> Your Wishlist </span>
-          <div
-            class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart"
-          >
-            <i class="zmdi zmdi-close"></i>
+{% extends 'website/base.html' %} {% load static %} {% block body %}
+<!-- Categories Section Begin -->
+<section class="categories">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 p-0">
+        <div
+          class="categories__item categories__large__item set-bg"
+          data-setbg="{% static 'images/categories/category-1.jpg' %}"
+        >
+          <div class="categories__text">
+            <h1>Women’s fashion</h1>
+            <p>
+              Sitamet, consectetur adipiscing elit, sed do eiusmod tempor
+              incidid-unt labore edolore magna aliquapendisse ultrices gravida.
+            </p>
+            <a href="{% url 'shop_page' category='women' %}">Shop now</a>
           </div>
         </div>
-        <div class="header-cart-content flex-w js-pscroll">
-          <ul class="header-cart-wrapitem w-full">
-            {% for item in wishlist %}
-            <li class="header-cart-item flex-w flex-t m-b-12">
-              <div class="header-cart-item-img">
-                {% for img in item.product.images %}
-                  <img src="{{img.url}}" alt="IMG" />
-                {% endfor %}
+      </div>
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+            <div
+              class="categories__item set-bg"
+              data-setbg="{% static 'images/categories/category-2.jpg' %}"
+            >
+              <div class="categories__text">
+                <h4>Men’s fashion</h4>
+                <p>358 items</p>
+                <a href="{% url 'shop_page' category='men' %}">Shop now</a>
               </div>
-              <div class="header-cart-item-txt p-t-8">
-                <a
-                  href="#"
-                  class="header-cart-item-name m-b-18 hov-cl1 trans-04"
-                >
-                  {{item.product.name}}
-                </a>
-                <span class="header-cart-item-info"> 1 x ₹ {{item.product.price}} </span>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+            <div
+              class="categories__item set-bg"
+              data-setbg="{% static 'images/categories/category-3.jpg' %}"
+            >
+              <div class="categories__text">
+                <h4>Kid’s fashion</h4>
+                <p>273 items</p>
+                <a href="{% url 'shop_page' category='kids' %}">Shop now</a>
               </div>
-            </li>
-            {% endfor %}
-          </ul>
-          <div class="w-full">
-            <div class="header-cart-total w-full p-tb-40">Total: ₹ {{total_price}}</div>
-            <div class="header-cart-buttons flex-w w-full">
-              <a
-                href="{% url 'cart_page' %}"
-                class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10"
-              >
-                View cart
-              </a>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+            <div
+              class="categories__item set-bg"
+              data-setbg="{% static 'images/categories/category-4.jpg' %}"
+            >
+              <div class="categories__text">
+                <h4>Cosmetics</h4>
+                <p>159 items</p>
+                <a href="{% url 'shop_page' category='cosmetics' %}">Shop now</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+            <div
+              class="categories__item set-bg"
+              data-setbg="{% static 'images/categories/category-5.jpg' %}"
+            >
+              <div class="categories__text">
+                <h4>Accessories</h4>
+                <p>792 items</p>
+                <a href="{% url 'shop_page' category='accessories' %}">Shop now</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div> 
+    </div>
+  </div>
+</section>
+<!-- Categories Section End -->
 
-    {% include "./home/hero.html" %}
-    {% include "./home/banners.html" %}
-
-    <section class="bg0 p-t-23 p-b-140">
-        <div class="container">
-          <div class="p-b-10">
-            <h2 class="font-weight-bold cl5 mb-3">Products</h2>
+<!-- Product Section Begin -->
+<section class="product spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 col-md-4">
+        <div class="section-title">
+          <h4>New product</h4>
+        </div>
+      </div>
+      <div class="col-lg-8 col-md-8">
+        <ul class="filter__controls">
+          <li class="active" data-filter="*">All</li>
+          <li data-filter=".women">Women’s</li>
+          <li data-filter=".men">Men’s</li>
+          <li data-filter=".kid">Kid’s</li>
+          <li data-filter=".accessories">Accessories</li>
+          <li data-filter=".cosmetic">Cosmetics</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row property__gallery">
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6 mix {{product.category}}">
+        <div class="product__item">
+          <div
+            class="product__item__pic set-bg"
+            data-setbg="{{product.images.0.url}}"
+          >
+            <div class="label new">New</div>
+            <ul class="product__hover">
+              <li>
+                <a href="{{product.images.0.url}}" class="image-popup"
+                  ><i class="fa fa-expand" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+              </li>
+              <li>
+                <a href="#"
+                  ><i class="fa fa-shopping-bag" aria-hidden="true"></i
+                ></a>
+              </li>
+            </ul>
           </div>
-          <div class="row isotope-grid">
-            {% for product in products %}
-            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-              <!-- Block2 -->
-              <div class="block2">
-                <div class="block2-pic hov-img0">
-                    {% for img in product.images %}
-                        <img src="{{img.url}}" alt="IMG-PRODUCT" />
-                    {% endfor %}
-                </div>
-      
-                <div class="block2-txt flex-w flex-t p-t-14">
-                  <div class="block2-txt-child1 flex-col-l">
-                    <a
-                      href="{% url 'product_details' id=product.id %}"
-                      class="product_name stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
-                    >
-                      {{product.name}}
-                    </a>
-      
-                    <span class="stext-105 cl3"> ₹ {{product.price}} </span>
-                  </div>
-                  {% if user.role == "customer" %}
-                  <div class="block2-txt-child2 flex-r p-t-3">
-                    <a
-                      {% if product.id in wishlist_product_id %} href="{% url 'remove_from_wishlist' id=product.id %}" {% else %} href="{% url 'add_to_wishlist' id=product.id %}" {% endif %}
-                      class="btn-addwish-b2 fa {% if product.id in wishlist_product_id %}fa-heart{% else %}fa-heart-o{% endif %}"
-                      aria-hidden="true"
-                      id="add_wishlist_btn"
-                    >
-                    </a>
-                  </div>
-                  {% endif %}
-                </div>
-              </div>
+          <div class="product__item__text">
+            <h6>
+              <a href="{% url 'product_details' id=product.id %}"
+                >{{product.name}}</a
+              >
+            </h6>
+            <div class="rating">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
             </div>
-            {% endfor %}
+            <div class="product__price">₹ {{product.price}}</div>
           </div>
         </div>
-    </section>
-    
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- Product Section End -->
+
+<!-- Banner Section Begin -->
+<section
+  class="banner set-bg"
+  data-setbg="{% static 'images/banner/banner-1.jpg' %}"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-7 col-lg-8 m-auto">
+        <div class="banner__slider owl-carousel">
+          <div class="banner__item">
+            <div class="banner__text">
+              <span>The Chloe Collection</span>
+              <h1>The Project Jacket</h1>
+              <a href="#">Shop now</a>
+            </div>
+          </div>
+          <div class="banner__item">
+            <div class="banner__text">
+              <span>The Chloe Collection</span>
+              <h1>The Project Jacket</h1>
+              <a href="#">Shop now</a>
+            </div>
+          </div>
+          <div class="banner__item">
+            <div class="banner__text">
+              <span>The Chloe Collection</span>
+              <h1>The Project Jacket</h1>
+              <a href="#">Shop now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Banner Section End -->
+
+<!-- Trend Section Begin -->
+<section class="trend spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="trend__content">
+          <div class="section-title">
+            <h4>Hot Trend</h4>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/ht-1.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Chain bucket bag</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/ht-2.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Pendant earrings</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/ht-3.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Cotton T-Shirt</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="trend__content">
+          <div class="section-title">
+            <h4>Best seller</h4>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/bs-1.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Cotton T-Shirt</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/bs-2.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Zip-pockets pebbled tote <br />briefcase</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/bs-3.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Round leather bag</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-6">
+        <div class="trend__content">
+          <div class="section-title">
+            <h4>Feature</h4>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/f-1.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Bow wrap skirt</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/f-2.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Metallic earrings</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+          <div class="trend__item">
+            <div class="trend__item__pic">
+              <img src="img/trend/f-3.jpg" alt="" />
+            </div>
+            <div class="trend__item__text">
+              <h6>Flap cross-body bag</h6>
+              <div class="rating">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <div class="product__price">$ 59.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Trend Section End -->
+
+<!-- Discount Section Begin -->
+<section class="discount">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 p-0">
+        <div class="discount__pic">
+          <img src="{% static 'images/discount.jpg' %}" alt="" />
+        </div>
+      </div>
+      <div class="col-lg-6 p-0">
+        <div class="discount__text">
+          <div class="discount__text__title">
+            <span>Discount</span>
+            <h2>Summer 2019</h2>
+            <h5><span>Sale</span> 50%</h5>
+          </div>
+          <div class="discount__countdown" id="countdown-time">
+            <div class="countdown__item">
+              <span>22</span>
+              <p>Days</p>
+            </div>
+            <div class="countdown__item">
+              <span>18</span>
+              <p>Hour</p>
+            </div>
+            <div class="countdown__item">
+              <span>46</span>
+              <p>Min</p>
+            </div>
+            <div class="countdown__item">
+              <span>05</span>
+              <p>Sec</p>
+            </div>
+          </div>
+          <a href="#">Shop now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Discount Section End -->
+
+<!-- Services Section Begin -->
+<section class="services spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="services__item">
+          <i class="fa fa-car"></i>
+          <h6>Free Shipping</h6>
+          <p>For all oder over $99</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="services__item">
+          <i class="fa fa-money"></i>
+          <h6>Money Back Guarantee</h6>
+          <p>If good have Problems</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="services__item">
+          <i class="fa fa-support"></i>
+          <h6>Online Support 24/7</h6>
+          <p>Dedicated support</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="services__item">
+          <i class="fa fa-headphones"></i>
+          <h6>Payment Secure</h6>
+          <p>100% secure payment</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Services Section End -->
+
+<!-- Instagram Begin -->
+<div class="instagram">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-1.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-2.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-3.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-4.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-5.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'images/instagram/insta-6.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ costume_store</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Instagram End -->
+
 {% endblock body %}

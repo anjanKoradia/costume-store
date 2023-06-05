@@ -23,13 +23,8 @@ urlpatterns = [
         name="add_to_cart",
     ),
     path(
-        "customer/cart/decrease-quantity/<str:id>",
-        views.Cart_Operations.decrease_cart_item_qty,
-        name="decrease_cart_item_qty",
-    ),
-    path(
-        "customer/cart/increase-quantity/<str:id>",
-        views.Cart_Operations.increase_cart_item_qty,
-        name="increase_cart_item_qty",
-    ),
+        "customer/cart/<str:operation>/<str:id>",
+        views.Cart_Operations.cart_item_qty,
+        name="cart_item_qty",
+    )
 ]

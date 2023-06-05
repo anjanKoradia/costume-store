@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from validator import Validator
+from django import forms
+import re
 
 
 def is_valid_email(email):
@@ -11,22 +12,11 @@ def is_valid_email(email):
         return False
 
 
-class CustomerSignupValidator(Validator):
-    name = "required"
-    password = "required|password:high"
-    confirm_pass = "same:password"
-    role = "required"
+def password_validator(password):
+    regx = "^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$"
+    match_regx = re.compile(regx)
 
-    message = {
-        "name": {
-            "required": ("Name is required"),
-        },
-        "password": {
-            "required": ("Password is required"),
-            "password": (
-                "7 characters or longer. Combine upper and lower case letters, special characters and digit."
-            ),
-        },
-        "confirm_pass": {"same": ("Password dose not matched")},
-        "role": {"required": ("Role is required")},
-    }
+    if not match_regx.match(password):
+        raise forms.ValidationError(
+            "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character."
+        )

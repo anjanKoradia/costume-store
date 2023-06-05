@@ -4,7 +4,7 @@ import uuid
 
 class Address(models.Model):
     id = models.UUIDField(
-        default=uuid.uuid4(), primary_key=True, unique=True, editable=False
+        default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
     user = models.ForeignKey(
         "authentication.User", on_delete=models.CASCADE, related_name="addresses"
@@ -14,6 +14,8 @@ class Address(models.Model):
     city = models.CharField(max_length=50, blank=True)
     state = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50, blank=True)
+    is_billing = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=True)
 
     class Meta:
         db_table = "addresses"

@@ -1,340 +1,345 @@
-{% extends 'website/base.html' %} 
-{% load static %} 
-{% block body %}
+{% extends 'website/base.html' %} {% load static %} {% block body %}
 
-<!-- Product -->
-<div class="bg0 m-t-100 p-b-140">
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
   <div class="container">
-    <div class="flex-w flex-sb-m p-b-52">
-      <div class="shop_nav flex-w flex-l-m filter-tope-group m-tb-10">
-        <a
-          href="{% url 'shop_page' category='all' %}"
-          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          data-filter="*"
-        >
-          All Products
-        </a>
-
-        <a
-          href="{% url 'shop_page' category='women' %}"
-          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          data-filter=".women"
-        >
-          Women
-        </a>
-
-        <a
-          href="{% url 'shop_page' category='men' %}"
-          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          data-filter=".men"
-        >
-          Men
-        </a>
-
-        <a
-          href="{% url 'shop_page' category='accessories' %}"
-          class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5"
-          data-filter=".accessories"
-        >
-          Accessories
-        </a>
-      </div>
-
-      <div class="flex-w flex-c-m m-tb-10">
-        <div
-          class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter"
-        >
-          <i
-            class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"
-          ></i>
-          <i
-            class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"
-          ></i>
-          Filter
-        </div>
-
-        <div
-          class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search"
-        >
-          <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-          <i
-            class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"
-          ></i>
-          Search
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="breadcrumb__links">
+          <a href="{% url 'home_page' %}"><i class="fa fa-home"></i> Home</a>
+          <span>Shop</span>
         </div>
       </div>
-
-      <!-- Search product -->
-      <div class="dis-none panel-search w-full p-t-10 p-b-15">
-        <div class="bor8 dis-flex p-l-15">
-          <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-            <i class="zmdi zmdi-search"></i>
-          </button>
-
-          <input
-            class="mtext-107 cl2 size-114 plh2 p-r-15"
-            type="text"
-            name="search-product"
-            placeholder="Search"
-          />
-        </div>
-      </div>
-
-      <!-- Filter -->
-      <div class="dis-none panel-filter w-full p-t-10">
-        <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-          <div class="filter-col1 p-r-15 p-b-27">
-            <div class="mtext-102 cl2 p-b-15">Sort By</div>
-
-            <ul>
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04"> Default </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  Popularity
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  Average rating
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a
-                  href="#"
-                  class="filter-link stext-106 trans-04 filter-link-active"
-                >
-                  Newness
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  Price: Low to High
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  Price: High to Low
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="filter-col2 p-r-15 p-b-27">
-            <div class="mtext-102 cl2 p-b-15">Price</div>
-
-            <ul>
-              <li class="p-b-6">
-                <a
-                  href="#"
-                  class="filter-link stext-106 trans-04 filter-link-active"
-                >
-                  All
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  $0.00 - $50.00
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  $50.00 - $100.00
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  $100.00 - $150.00
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  $150.00 - $200.00
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <a href="#" class="filter-link stext-106 trans-04">
-                  $200.00+
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="filter-col3 p-r-15 p-b-27">
-            <div class="mtext-102 cl2 p-b-15">Color</div>
-
-            <ul>
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #222">
-                  <i class="zmdi zmdi-circle"></i>
-                </span>
-
-                <a href="#" class="filter-link stext-106 trans-04"> Black </a>
-              </li>
-
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #4272d7">
-                  <i class="zmdi zmdi-circle"></i>
-                </span>
-
-                <a
-                  href="#"
-                  class="filter-link stext-106 trans-04 filter-link-active"
-                >
-                  Blue
-                </a>
-              </li>
-
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3">
-                  <i class="zmdi zmdi-circle"></i>
-                </span>
-
-                <a href="#" class="filter-link stext-106 trans-04"> Grey </a>
-              </li>
-
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #00ad5f">
-                  <i class="zmdi zmdi-circle"></i>
-                </span>
-
-                <a href="#" class="filter-link stext-106 trans-04"> Green </a>
-              </li>
-
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #fa4251">
-                  <i class="zmdi zmdi-circle"></i>
-                </span>
-
-                <a href="#" class="filter-link stext-106 trans-04"> Red </a>
-              </li>
-
-              <li class="p-b-6">
-                <span class="fs-15 lh-12 m-r-6" style="color: #aaa">
-                  <i class="zmdi zmdi-circle-o"></i>
-                </span>
-
-                <a href="#" class="filter-link stext-106 trans-04"> White </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="filter-col4 p-b-27">
-            <div class="mtext-102 cl2 p-b-15">Tags</div>
-
-            <div class="flex-w p-t-4 m-r--5">
-              <a
-                href="#"
-                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-              >
-                Fashion
-              </a>
-
-              <a
-                href="#"
-                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-              >
-                Lifestyle
-              </a>
-
-              <a
-                href="#"
-                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-              >
-                Denim
-              </a>
-
-              <a
-                href="#"
-                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-              >
-                Streetstyle
-              </a>
-
-              <a
-                href="#"
-                class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5"
-              >
-                Crafts
-              </a>
-            </div>
-          </div>
-        </div>
+      <div class="col-lg-9">
+        <h4><b>{{products.0.category}}</b></h4>
       </div>
     </div>
-
-    <div class="row isotope-grid">
-      {% for product in products %}
-      <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-        <!-- Block2 -->
-        <div class="block2">
-          <div class="block2-pic hov-img0">
-            {% for img in product.images %}
-              <img src="{{img.url}}" alt="IMG-PRODUCT" />
-            {% endfor %}
-          </div>
-
-          <div class="block2-txt flex-w flex-t p-t-14">
-            <div class="block2-txt-child1 flex-col-l">
-              <a
-                href="{% url 'product_details' id=product.id %}"
-                class="product_name stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
-              >
-                {{product.name}}
-              </a>
-
-              <span class="stext-105 cl3"> ₹ {{product.price}} </span>
-            </div>
-
-            <div class="block2-txt-child2 flex-r p-t-3">
-              <a
-              {% if product.id in wishlist %} href="{% url 'remove_from_wishlist' id=product.id %}" {% else %} href="{% url 'add_to_wishlist' id=product.id %}" {% endif %}
-              class="btn-addwish-b2 fa {% if product.id in wishlist %} fa-heart {% else %} fa-heart-o {% endif %}"
-              aria-hidden="true"
-              id="add_wishlist_btn"
-              >
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    {% if is_paginated %}
-    <nav class="mt-5 pt-3 d-flex align-items-center justify-content-between ">
-        <b>Total Pages: {{page_obj.paginator.num_pages}}</b>
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
-                </li>
-            {% endif %}
-
-            <li class="page-item active"><a class="page-link" href="?page={{ page }}">{{ page_obj.number }}</a></li>
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                </li>
-            {% endif %}
-            
-        </ul>
-        <b>Total Products: {{page_obj.paginator.count}}</b>
-    </nav>
-    {% endif %}
   </div>
 </div>
+<!-- Breadcrumb End -->
+
+<!-- Shop Section Begin -->
+<section class="shop spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-3">
+        <div class="shop__sidebar">
+          <div class="sidebar__categories">
+            <div class="section-title">
+              <h4>Categories</h4>
+            </div>
+            <div class="categories__accordion">
+              <div class="accordion" id="accordionExample">
+                <div class="card">
+                  <div class="card-heading active">
+                    <a data-toggle="collapse" data-target="#collapseOne"
+                      >Women</a
+                    >
+                  </div>
+                  <div
+                    id="collapseOne"
+                    class="collapse show"
+                    data-parent="#accordionExample"
+                  >
+                    <div class="card-body">
+                      <ul>
+                        <li><a href="#">Coats</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Dresses</a></li>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T-shirts</a></li>
+                        <li><a href="#">Jeans</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseTwo">Men</a>
+                  </div>
+                  <div
+                    id="collapseTwo"
+                    class="collapse"
+                    data-parent="#accordionExample"
+                  >
+                    <div class="card-body">
+                      <ul>
+                        <li><a href="#">Coats</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Dresses</a></li>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T-shirts</a></li>
+                        <li><a href="#">Jeans</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseThree"
+                      >Kids</a
+                    >
+                  </div>
+                  <div
+                    id="collapseThree"
+                    class="collapse"
+                    data-parent="#accordionExample"
+                  >
+                    <div class="card-body">
+                      <ul>
+                        <li><a href="#">Coats</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Dresses</a></li>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T-shirts</a></li>
+                        <li><a href="#">Jeans</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseFour"
+                      >Accessories</a
+                    >
+                  </div>
+                  <div
+                    id="collapseFour"
+                    class="collapse"
+                    data-parent="#accordionExample"
+                  >
+                    <div class="card-body">
+                      <ul>
+                        <li><a href="#">Coats</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Dresses</a></li>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T-shirts</a></li>
+                        <li><a href="#">Jeans</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-heading">
+                    <a data-toggle="collapse" data-target="#collapseFive"
+                      >Cosmetic</a
+                    >
+                  </div>
+                  <div
+                    id="collapseFive"
+                    class="collapse"
+                    data-parent="#accordionExample"
+                  >
+                    <div class="card-body">
+                      <ul>
+                        <li><a href="#">Coats</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Dresses</a></li>
+                        <li><a href="#">Shirts</a></li>
+                        <li><a href="#">T-shirts</a></li>
+                        <li><a href="#">Jeans</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar__filter">
+            <div class="section-title">
+              <h4>Shop by price</h4>
+            </div>
+            <div class="filter-range-wrap">
+              <div
+                class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
+                data-min="33"
+                data-max="99"
+              ></div>
+              <div class="range-slider">
+                <div class="price-input">
+                  <p>Price:</p>
+                  <input type="text" id="minamount" />
+                  <input type="text" id="maxamount" />
+                </div>
+              </div>
+            </div>
+            <a href="#">Filter</a>
+          </div>
+          <div class="sidebar__sizes">
+            <div class="section-title">
+              <h4>Shop by size</h4>
+            </div>
+            <div class="size__list">
+              <label for="xxs">
+                xxs
+                <input type="checkbox" id="xxs" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="xs">
+                xs
+                <input type="checkbox" id="xs" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="xss">
+                xs-s
+                <input type="checkbox" id="xss" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="s">
+                s
+                <input type="checkbox" id="s" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="m">
+                m
+                <input type="checkbox" id="m" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="ml">
+                m-l
+                <input type="checkbox" id="ml" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="l">
+                l
+                <input type="checkbox" id="l" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="xl">
+                xl
+                <input type="checkbox" id="xl" />
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="sidebar__color">
+            <div class="section-title">
+              <h4>Shop by size</h4>
+            </div>
+            <div class="size__list color__list">
+              <label for="black">
+                Blacks
+                <input type="checkbox" id="black" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="whites">
+                Whites
+                <input type="checkbox" id="whites" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="reds">
+                Reds
+                <input type="checkbox" id="reds" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="greys">
+                Greys
+                <input type="checkbox" id="greys" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="blues">
+                Blues
+                <input type="checkbox" id="blues" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="beige">
+                Beige Tones
+                <input type="checkbox" id="beige" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="greens">
+                Greens
+                <input type="checkbox" id="greens" />
+                <span class="checkmark"></span>
+              </label>
+              <label for="yellows">
+                Yellows
+                <input type="checkbox" id="yellows" />
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-9 col-md-9">
+        <div class="row">
+          {% for product in products %}
+          <div class="col-lg-4 col-md-6">
+            <div class="product__item">
+              <div
+                class="product__item__pic set-bg"
+                data-setbg="{{product.images.0.url}}"
+              >
+                <div class="label new">New</div>
+                <ul class="product__hover">
+                  <li>
+                    <a href="{{product.images.0.url}}" class="image-popup"
+                      ><i class="fa fa-expand" aria-hidden="true"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="fa fa-heart-o" aria-hidden="true"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="#"
+                      ><i class="fa fa-shopping-bag" aria-hidden="true"></i
+                    ></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="product__item__text">
+                <h6>
+                  <a href="{% url 'product_details' id=product.id %}"
+                    >{{product.name}}</a
+                  >
+                </h6>
+                <div class="rating">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                </div>
+                <div class="product__price">₹ {{product.price}}</div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          <!-- Pagination -->
+          {% if is_paginated %}
+          <div class="col-lg-12 mt-5 text-center">
+            <!-- <p>Total Pages: {{page_obj.paginator.num_pages}}</p> -->
+            <div class="pagination__option">
+              {% if page_obj.has_previous %}
+              <a
+                href="?page={{ page_obj.previous_page_number }}"
+                tabindex="-1"
+                ><i class="fa fa-angle-left"></i></a
+              >
+              {% endif %}
+
+              <a href="?page={{ page_obj.number }}"
+                >{{ page_obj.number }}</a
+              >
+
+              {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}"
+                ><i class="fa fa-angle-right"></i></a
+              >
+              {% endif %}
+            </div>
+            <!-- <p>Total Products: {{page_obj.paginator.count}}</p> -->
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Shop Section End -->
+
 {% endblock body %}

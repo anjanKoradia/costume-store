@@ -11,7 +11,7 @@ def home_page(request):
     wishlist = []
     wishlist_product_id = []
     total_price = 0
-    
+
     if request.user.is_authenticated and request.user.role == "customer":
         wishlist_product_id = WishlistItem.objects.filter(
             wishlist__user=request.user
@@ -19,7 +19,7 @@ def home_page(request):
 
         wishlist = WishlistItem.objects.filter(wishlist__user=request.user)
         total_price = Wishlist.objects.get(user=request.user).total_price
-        
+
     return render(
         request,
         "website/index.html",
@@ -38,16 +38,15 @@ def contact_page(request):
 
 def product_details(request, id):
     wishlist_product_id = WishlistItem.objects.filter(
-            wishlist__user=request.user
-        ).values_list("product", flat=True)
+        wishlist__user=request.user
+    ).values_list("product", flat=True)
 
-        
     product_details = Product.objects.get(id=id)
     related_products = Product.objects.filter(
         category=product_details.category, subcategory=product_details.subcategory
     )
 
-    random_related_products = random.sample(list(related_products), 8)
+    random_related_products = random.sample(list(related_products), 4)
 
     return render(
         request,
@@ -138,27 +137,23 @@ class Cart_Operations:
 
         return redirect("home_page")
 
-    def decrease_cart_item_qty(request, id):
+    def cart_item_qty(request, operation, id):
         cart = Cart.objects.get(user=request.user)
         cart_item = CartItem.objects.get(id=id)
 
-        cart.total_price = cart.total_price - cart_item.product.price
-        cart.save()
+        if operation == "increase":
+            cart.total_price = cart.total_price + cart_item.product.price
+            cart.save()
 
-        cart_item.quantity = cart_item.quantity - 1
-        cart_item.save()
+            cart_item.quantity = cart_item.quantity + 1
+            cart_item.save()
 
-        return redirect("cart_page")
+        elif operation == "decrease":
+            cart.total_price = cart.total_price - cart_item.product.price
+            cart.save()
 
-    def increase_cart_item_qty(request, id):
-        cart = Cart.objects.get(user=request.user)
-        cart_item = CartItem.objects.get(id=id)
-
-        cart.total_price = cart.total_price + cart_item.product.price
-        cart.save()
-
-        cart_item.quantity = cart_item.quantity + 1
-        cart_item.save()
+            cart_item.quantity = cart_item.quantity - 1
+            cart_item.save()
 
         return redirect("cart_page")
 
