@@ -78,6 +78,9 @@
               </ul>
             </li>
             <li><a href="{% url 'contact_page' %}">Contact</a></li>
+            {% if user.is_authenticated and user.role == "customer" %}
+            <li><a href="{% url 'my_orders' %}">My Orders</a></li>
+            {% endif %}
           </ul>
         </nav>
       </div>

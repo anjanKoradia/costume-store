@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from vendor.models import Product
 from .forms import CartItemForm
 import random
+from payment.models import OrderItem
 
 
 def home_page(request):
@@ -31,6 +32,11 @@ def contact_page(request):
     return render(request, "website/contact.html")
 
 
+def my_orders(request):
+    ordered_items = OrderItem.objects.filter(order__user=request.user)
+    return render(request, "website/orders.html", {"ordered_items": ordered_items})
+
+
 def product_details(request, id):
     product_details = Product.objects.get(id=id)
 
@@ -40,10 +46,10 @@ def product_details(request, id):
     random_related_products = random.sample(list(related_products), 4)
 
     in_wishlist = False
-    
+
     if request.user.is_authenticated and request.user.role == "customer":
         in_wishlist = product_details.wishlist_item.filter(wishlist__user=request.user)
-    
+
     return render(
         request,
         "website/product-details.html",
@@ -172,7 +178,7 @@ class Shop_Page(ListView):
         context = super().get_context_data(**kwargs)
         products = self.paginate_queryset(self.get_queryset(), self.paginate_by)[2]
         wishlist_products = []
-        
+
         if self.request.user.is_authenticated and self.request.user.role == "customer":
             wishlist_products = filter(
                 lambda product: product.wishlist_item.filter(

@@ -30,5 +30,8 @@ urlpatterns = [
         "customer/cart/<str:operation>/<str:id>/",
         views.Cart_Operations.cart_item_qty,
         name="cart_item_qty",
-    )
+    ),
+    
+    # order related routes
+    path("customer/orders/", views.my_orders, name="my_orders")
 ]

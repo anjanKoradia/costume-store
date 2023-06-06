@@ -2290,10 +2290,6 @@ ol {
   margin-bottom: 50px;
 }
 
-.cart__btn.update__btn {
-  text-align: right;
-}
-
 .cart__btn a {
   font-size: 14px;
   color: #111111;
@@ -2304,11 +2300,6 @@ ol {
   background: #f5f5f5;
 }
 
-.cart__btn a span {
-  color: #ca1515;
-  font-size: 14px;
-  margin-right: 5px;
-}
 
 .discount__content h6 {
   color: #111111;
@@ -2680,6 +2671,119 @@ ol {
   opacity: 0;
   content: "";
 }
+
+/*---------------------
+  Order Page
+-----------------------*/
+
+.orders-page {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+.orders__page__table {
+  margin-bottom: 30px;
+}
+
+.orders__page__table table {
+  width: 100%;
+}
+
+.orders__page__table thead {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.orders__page__table thead th {
+  font-size: 18px;
+  color: #111111;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding-bottom: 20px;
+}
+
+.orders__page__table tbody tr {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.orders__page__table tbody tr td {
+  padding: 30px 0;
+}
+
+.orders__page__table tbody tr .orders__product__item {
+  overflow: hidden;
+  width: 450px;
+  padding-right: 1rem;
+}
+
+.orders__page__table tbody tr .orders__product__item img {
+  float: left;
+  margin-right: 25px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.orders__page__table tbody tr .orders__product__item .orders__product__item__title {
+  overflow: hidden;
+}
+
+.orders__page__table
+  tbody
+  tr
+  .orders__product__item
+  .orders__product__item__title
+  h6
+  a {
+  color: #111111;
+  font-weight: 600;
+}
+
+.orders__page__table
+  tbody
+  tr
+  .orders__product__item
+  .orders__product__item__title
+  .rating
+  i {
+  font-size: 10px;
+  color: #e3c01c;
+  margin-right: -4px;
+}
+
+.orders__page__table tbody tr .order__item__price {
+  font-size: 16px;
+  color: #ca1515;
+  font-weight: 600;
+  width: 150px;
+  text-align: left;
+}
+
+.orders__page__table tbody tr .order__item__size {
+  width: 150px;
+  text-align: left;
+}
+
+.orders__page__table tbody tr .order__item__color {
+  width: 150px;
+  text-align: left;
+}
+
+.orders__page__table tbody tr .order__item__quantity {
+  width: 150px;
+  text-align: left;
+}
+
+.orders__page__table tbody tr .order__total {
+  font-size: 16px;
+  color: #ca1515;
+  font-weight: 600;
+  width: 150px;
+  text-align: left;
+}
+
+.orders__page__table tbody tr .order__status {
+  text-transform: capitalize;
+}
+
 /*---------------------
     Wishlist
 -----------------------*/
