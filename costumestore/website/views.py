@@ -8,28 +8,21 @@ import random
 
 def home_page(request):
     products = Product.objects.all()
-    wishlist = []
-    wishlist_product_id = []
-    total_price = 0
-
     random_products = random.sample(list(products), 10)
+    wishlist_products = []
 
     if request.user.is_authenticated and request.user.role == "customer":
-        wishlist_product_id = WishlistItem.objects.filter(
-            wishlist__user=request.user
-        ).values_list("product", flat=True)
-
-        wishlist = WishlistItem.objects.filter(wishlist__user=request.user)
-        total_price = Wishlist.objects.get(user=request.user).total_price
+        wishlist_products = filter(
+            lambda product: product.wishlist_item.filter(wishlist__user=request.user),
+            random_products,
+        )
 
     return render(
         request,
         "website/index.html",
         {
             "products": random_products,
-            "wishlist_product_id": wishlist_product_id,
-            "wishlist": wishlist,
-            "total_price": total_price,
+            "wishlist_products": list(wishlist_products),
         },
     )
 
@@ -39,23 +32,24 @@ def contact_page(request):
 
 
 def product_details(request, id):
-    wishlist_product_id = WishlistItem.objects.filter(
-        wishlist__user=request.user
-    ).values_list("product", flat=True)
-
     product_details = Product.objects.get(id=id)
+
     related_products = Product.objects.filter(
         category=product_details.category, subcategory=product_details.subcategory
     )
-
     random_related_products = random.sample(list(related_products), 4)
 
+    in_wishlist = False
+    
+    if request.user.is_authenticated and request.user.role == "customer":
+        in_wishlist = product_details.wishlist_item.filter(wishlist__user=request.user)
+    
     return render(
         request,
         "website/product-details.html",
         {
             "product_details": product_details,
-            "wishlist_product_id": wishlist_product_id,
+            "in_wishlist": in_wishlist,
             "related_products": random_related_products,
         },
     )
@@ -176,12 +170,17 @@ class Shop_Page(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        wishlist_product_id = []
+        products = self.paginate_queryset(self.get_queryset(), self.paginate_by)[2]
+        wishlist_products = []
+        
         if self.request.user.is_authenticated and self.request.user.role == "customer":
-            wishlist_product_id = WishlistItem.objects.filter(
-                wishlist__user=self.request.user
-            ).values_list("product", flat=True)
+            wishlist_products = filter(
+                lambda product: product.wishlist_item.filter(
+                    wishlist__user=self.request.user
+                ),
+                products,
+            )
 
-        context["wishlist"] = wishlist_product_id
+        context["wishlist_products"] = list(wishlist_products)
         context["category"] = self.kwargs["category"]
         return context

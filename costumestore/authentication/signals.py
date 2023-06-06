@@ -1,8 +1,8 @@
 from .services import send_account_activation_email
 from django.db.models.signals import post_save
+from accounts.models import Address, Vendor
 from website.models import Cart, Wishlist
 from django.dispatch import receiver
-from accounts.models import Address, Vendor
 from .models import User
 import uuid
 
@@ -16,8 +16,6 @@ def create_profile(sender, instance, created, **kwargs):
             user = User.objects.get(email=instance.email)
             user.email_token = email_token
             user.save()
-            
-            print(instance.role)
 
             Address.objects.create(user=instance)
 

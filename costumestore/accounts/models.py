@@ -3,19 +3,23 @@ import uuid
 
 
 class Address(models.Model):
+    ADDRESS_TYPE = (
+        ("Billing", "Billing"),
+        ("Default", "Default"),
+    )
+    
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
     user = models.ForeignKey(
-        "authentication.User", on_delete=models.CASCADE, related_name="addresses"
+        "authentication.User", on_delete=models.CASCADE, related_name="address"
     )
     address = models.TextField(blank=True)
     pin_code = models.CharField(max_length=50, blank=True)
     city = models.CharField(max_length=50, blank=True)
     state = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50, blank=True)
-    is_billing = models.BooleanField(default=False)
-    is_default = models.BooleanField(default=True)
+    type = models.CharField(max_length=10, choices=ADDRESS_TYPE, default="Default")
 
     class Meta:
         db_table = "addresses"

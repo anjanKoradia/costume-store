@@ -281,8 +281,8 @@
                   </li>
                   {% if user.is_authenticated and user.role == "customer" %}
                   <li>
-                    <a {% if product.id in wishlist %} href="{% url 'wishlist_operations' operation='remove' id=product.id %}" {% else %} href="{% url 'wishlist_operations' operation='add' id=product.id %}" {% endif %}>
-                      <i class="fa {% if product.id in wishlist %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
+                    <a {% if product in wishlist_products %} href="{% url 'wishlist_operations' operation='remove' id=product.id %}" {% else %} href="{% url 'wishlist_operations' operation='add' id=product.id %}" {% endif %}>
+                      <i class="fa {% if product in wishlist_products %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
                     </a>
                   </li>
                   {% endif %}

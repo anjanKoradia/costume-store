@@ -16,3 +16,6 @@ venv
 /costumestore/accounts/migrations
 
 /costumestore/scripts/__pycache__
+
+/costumestore/payment/__pycache__
+/costumestore/payment/migrations

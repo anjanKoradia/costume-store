@@ -85,7 +85,6 @@ def register_user(request):
         )
 
     data = form.cleaned_data
-    print(data, form.full_clean)
 
     try:
         User.objects.create_user(

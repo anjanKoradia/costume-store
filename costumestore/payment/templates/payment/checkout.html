@@ -1,0 +1,198 @@
+{% extends 'website/base.html' %} {% load static %} {% block body %}
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__links">
+          <a href="{% url 'home_page' %}"><i class="fa fa-home"></i> Home</a>
+          <span>Shopping cart</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h6 class="coupon__link">
+          <span class="icon_tag_alt"></span>
+          <a href="#">Have a coupon?</a> Click here to enter your code.
+        </h6>
+      </div>
+    </div>
+    <form
+      action="{% url 'place_order' %}"
+      method="post"
+      novalidate
+      class="checkout__form"
+    >
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-lg-8">
+          <h5>Billing detail</h5>
+          <div class="row">
+            <div class="col-12">
+              <div class="checkout__form__input">
+                <p>Full Name <span>*</span></p>
+                <input
+                  class="{% if errors.name %} is-invalid {% endif %}"
+                  type="text"
+                  name="name"
+                  value="{{user.name}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.name }}
+                </div>
+              </div>
+              <div class="checkout__form__input">
+                <p>Address <span>*</span></p>
+                <input
+                  class="{% if errors.address %} is-invalid {% endif %}"
+                  type="text"
+                  name="address"
+                  value="{{address.address}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.address }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>Town/City <span>*</span></p>
+                <input
+                  class="{% if errors.city %} is-invalid {% endif %}"
+                  type="text"
+                  name="city"
+                  value="{{address.city}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.city }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>State <span>*</span></p>
+                <input
+                  class="{% if errors.state %} is-invalid {% endif %}"
+                  type="text"
+                  name="state"
+                  value="{{address.state}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.state }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>Country <span>*</span></p>
+                <input
+                  class="{% if errors.country %} is-invalid {% endif %}"
+                  type="text"
+                  name="country"
+                  value="{{address.country}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.country }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>Postcode/Zip <span>*</span></p>
+                <input
+                  class="{% if errors.pin_code %} is-invalid {% endif %}"
+                  type="text"
+                  name="pin_code"
+                  value="{{address.pin_code}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.pin_code }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>Phone <span>*</span></p>
+                <input
+                  class="{% if errors.phone %} is-invalid {% endif %}"
+                  type="text"
+                  name="phone"
+                  value="{{user.phone}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.phone }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-12">
+              <div class="checkout__form__input">
+                <p>Email <span>*</span></p>
+                <input
+                  class="{% if errors.email %} is-invalid {% endif %}"
+                  type="text"
+                  name="email"
+                  value="{{user.email}}"
+                />
+                <div id="inputNameFeedback" class="invalid-feedback">
+                  {{ errors.email }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="checkout__form__input">
+                <p>Order Notes</p>
+                <input
+                  type="text"
+                  name="order_note"
+                  placeholder="Note about your order, e.g, special noe for delivery"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="checkout__order">
+            <h5>Your order</h5>
+            <div class="checkout__order__product">
+              <ul>
+                <li>
+                  <span class="top__text">Product</span>
+                  <span class="top__text__right">Total</span>
+                </li>
+                {% for item in cart_items %}
+                <li>
+                  <a href="{% url 'product_details' id=item.product.id %}"
+                    >{{forloop.counter}}. {{item.product.name}}</a
+                  >
+                  <span>₹ {{item.product.price}}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="checkout__order__total">
+              <ul>
+                <li>
+                  Subtotal <span>₹ {{cart_items.0.cart.total_price}}</span>
+                </li>
+                <li>Total <span>₹ {{cart_items.0.cart.total_price}}</span></li>
+              </ul>
+            </div>
+            <button type="submit" class="site-btn">Place oder</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+<!-- Checkout Section End -->
+
+{% endblock body %}

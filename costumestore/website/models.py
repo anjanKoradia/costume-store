@@ -40,11 +40,11 @@ class Cart(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, editable=False, unique=True
     )
-    user = models.OneToOneField("authentication.User", on_delete=models.CASCADE)
+    user = models.OneToOneField("authentication.User", on_delete=models.CASCADE, related_name="cart")
     total_price = models.PositiveIntegerField(default=0)
 
     class Meta:
-        db_table = "cart"
+        db_table = "carts"
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
 
@@ -53,7 +53,7 @@ class CartItem(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_item")
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="cart_item"
     )
@@ -62,7 +62,7 @@ class CartItem(models.Model):
     color = models.CharField(choices=COLOR_CHOICES)
 
     class Meta:
-        db_table = "cart_item"
+        db_table = "cart_items"
         verbose_name = "CartItem"
         verbose_name_plural = "CartItems"
 
@@ -75,7 +75,7 @@ class Wishlist(models.Model):
     total_price = models.PositiveIntegerField(default=0)
 
     class Meta:
-        db_table = "wishlist"
+        db_table = "wishlists"
         verbose_name = "Wishlist"
         verbose_name_plural = "Wishlists"
 
@@ -90,7 +90,8 @@ class WishlistItem(models.Model):
     )
 
     class Meta:
-        db_table = "wishlist_item"
+        db_table = "wishlist_items"
         verbose_name = "WishlistItem"
         verbose_name_plural = "WishlistItems"
+
 

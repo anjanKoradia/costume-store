@@ -175,6 +175,10 @@ ol {
   background: #ca1515;
 }
 
+.primary-btn:hover{
+  color: #ffffff;
+}
+
 .site-btn {
   font-size: 14px;
   color: #ffffff;
@@ -2432,6 +2436,10 @@ ol {
   margin-bottom: 25px;
 }
 
+.checkout__form .checkout__form__input{
+  margin-bottom: 25px;
+}
+
 .checkout__form .checkout__form__input p {
   color: #444444;
   font-weight: 500;
@@ -2447,7 +2455,6 @@ ol {
   width: 100%;
   border: 1px solid #e1e1e1;
   border-radius: 2px;
-  margin-bottom: 25px;
   font-size: 14px;
   padding-left: 20px;
   color: #666666;
@@ -2562,6 +2569,16 @@ ol {
   overflow: hidden;
   margin-bottom: 14px;
   line-height: 24px;
+}
+
+.checkout__order__product ul li a{
+  text-decoration: none;
+  color: #323232;
+  text-overflow: ellipsis;
+  width: 70%;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .checkout__order__product ul li:last-child {
