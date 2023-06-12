@@ -39,6 +39,7 @@ def my_orders(request):
 
 def product_details(request, id):
     product_details = Product.objects.get(id=id)
+    print(product_details.vendor.user)
 
     related_products = Product.objects.filter(
         category=product_details.category, subcategory=product_details.subcategory

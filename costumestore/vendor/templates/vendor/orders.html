@@ -1,0 +1,76 @@
+{% extends "vendor/base.html" %} 
+{% load static %} 
+{% block vendor_body %}
+
+<section class="store_container">
+  <div class="details p-0">
+    <div class="recentOrders rounded">
+      <div class="cardHeader mb-4">
+        <h2>Recent Products</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <td>No.</td>
+            <td>Name</td>
+            <td>Category</td>
+            <td>Quantity</td>
+            <td>Size</td>
+            <td>Color</td>
+            <td>Address</td>
+            <td>Status</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in orders %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{item.product.name}}</td>
+            <td>{{item.product.category}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.size}}</td>
+            <td>{{item.color}}</td>
+            <td>
+              <p>{{item.order.billing_detail.address.address}}</p>
+              <p>Pincode: {{item.order.billing_detail.address.pin_code}}</p>
+              <p>City: {{item.order.billing_detail.address.city}}</p>
+              <p>State: {{item.order.billing_detail.address.state}}</p>
+              <p>Country: {{item.order.billing_detail.address.country}}</p>
+            </td>
+            <td><span class="status delivered text-capitalize">{{item.status}}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if is_paginated %}
+        <nav class="mt-5 pt-3 d-flex align-items-center justify-content-between ">
+            <b>Total Pages: {{page_obj.paginator.num_pages}}</b>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active"><a class="page-link" href="?page={{ page }}">{{ page_obj.number }}</a></li>
+
+                <!-- {% for page in page_obj.paginator.get_elided_page_range %}
+                    <li class="page-item {% if page_obj.number == page %} active {% endif %}"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                {% endfor %} -->
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+                
+            </ul>
+            <b>Total Products: {{page_obj.paginator.count}}</b>
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock vendor_body %}

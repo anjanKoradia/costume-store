@@ -3,16 +3,29 @@ from django.views.generic import ListView
 from .models import Product, Vendor
 from .forms import ProductDetails
 from django.views import View
+from payment.models import Order, OrderItem
 import cloudinary.uploader
 
 
-def dashboard(req):
-    vendor = Vendor.objects.get(user=req.user)
+def dashboard(request):
+    vendor = Vendor.objects.get(user=request.user)
     products = (
         Product.objects.filter(vendor=vendor).order_by("updated_at").reverse()[:10]
     )
 
-    return render(req, "vendor/dashboard.html", context={"products": products})
+    return render(request, "vendor/dashboard.html", context={"products": products})
+
+
+class Orders(ListView):
+    model = OrderItem
+    template_name = "vendor/orders.html"
+    context_object_name = "orders"
+    paginate_by = 10
+
+    def get_queryset(self):
+        orders = OrderItem.objects.filter(product__vendor__user=self.request.user)
+        
+        return orders
 
 
 class Store(ListView):
@@ -25,18 +38,18 @@ class Store(ListView):
         return Product.objects.filter(vendor__user=self.request.user)
 
 
-def delete_product(req, id):
+def delete_product(request, id):
     Product.objects.get(id=id).delete()
     return redirect("dashboard")
 
 
 class Add_Product(View):
-    def get(self, req):
-        return render(req, "vendor/add_product.html")
+    def get(self, request):
+        return render(request, "vendor/add_product.html")
 
-    def post(self, req):
-        images = req.FILES.getlist("images")
-        form = ProductDetails(req.POST)
+    def post(self, request):
+        images = request.FILES.getlist("images")
+        form = ProductDetails(request.POST)
 
         if not form.is_valid():
             errors = {}
@@ -44,7 +57,7 @@ class Add_Product(View):
                 if field.errors:
                     errors[field.name] = field.errors[0]
             return render(
-                req,
+                request,
                 "vendor/add_product.html",
                 {"data": form.cleaned_data, "errors": errors},
             )
@@ -52,7 +65,7 @@ class Add_Product(View):
         data = form.cleaned_data
 
         try:
-            vendor = Vendor.objects.get(user=req.user)
+            vendor = Vendor.objects.get(user=request.user)
 
             images_url = []
             if len(images) > 0:
@@ -90,17 +103,17 @@ class Add_Product(View):
 
 
 class Edit_Product(View):
-    def get(self, req, id):
+    def get(self, request, id):
         product = Product.objects.get(pk=id)
         return render(
-            req,
+            request,
             "vendor/edit_product.html",
             context={"product": product},
         )
 
-    def post(self, req, id):
-        images = req.FILES.getlist("images")
-        form = ProductDetails(req.POST)
+    def post(self, request, id):
+        images = request.FILES.getlist("images")
+        form = ProductDetails(request.POST)
 
         if not form.is_valid():
             errors = {}
@@ -109,7 +122,7 @@ class Edit_Product(View):
                     errors[field.name] = field.errors[0]
             form.cleaned_data["id"] = id
             return render(
-                req,
+                request,
                 "vendor/edit_product.html",
                 {"product": form.cleaned_data, "errors": errors},
             )
@@ -117,7 +130,7 @@ class Edit_Product(View):
         data = form.cleaned_data
 
         try:
-            vendor = Vendor.objects.get(user=req.user)
+            vendor = Vendor.objects.get(user=request.user)
             old_product = Product.objects.get(id=id)
 
             # store new images in cloudinary
