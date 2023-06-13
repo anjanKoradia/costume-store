@@ -2,11 +2,11 @@
 {% load static %} 
 {% block vendor_body %}
 
-<section class="store_container">
+<section class="order_container">
   <div class="details p-0">
     <div class="recentOrders rounded">
       <div class="cardHeader mb-4">
-        <h2>Recent Products</h2>
+        <h2>Recent Orders</h2>
       </div>
       <table>
         <thead>
@@ -19,7 +19,6 @@
             <td>Color</td>
             <td>Address</td>
             <td>Status</td>
-            <td></td>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +37,26 @@
               <p>State: {{item.order.billing_detail.address.state}}</p>
               <p>Country: {{item.order.billing_detail.address.country}}</p>
             </td>
-            <td><span class="status delivered text-capitalize">{{item.status}}</span></td>
+            <td>
+              <form action="{% url 'update_order_status' %}" method="post" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="order_item_id" value="{{item.id}}">
+                <select
+                  id="inputState"
+                  class="form-control {% if errors.category %} is-invalid {% endif %}"
+                  name="status"
+                  onchange="this.form.submit()"
+                >
+                  <option selected disabled>Select Category</option>
+                  <option value="placed" {% if 'placed' in item.status %} selected {% endif %} selected>Placed</option>
+                  <option value="confirmed" {% if 'confirmed' in item.status %} selected {% endif %}>Confirmed</option>
+                  <option value="packed" {% if 'packed' in item.status %} selected {% endif %}>Packed</option>
+                  <option value="shipped" {% if 'shipped' in item.status %} selected {% endif %}>Shipped</option>
+                  <option value="delivered" {% if 'delivered' in item.status %} selected {% endif %}>Delivered</option>
+                  <option value="completed" {% if 'completed' in item.status %} selected {% endif %}>Completed</option>
+                </select>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>

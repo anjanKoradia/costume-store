@@ -23,9 +23,20 @@ class Orders(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        orders = OrderItem.objects.filter(product__vendor__user=self.request.user)
-        
+        orders = (
+            OrderItem.objects.filter(product__vendor__user=self.request.user)
+            .exclude(status="completed")
+            .order_by("created_at")
+        )
         return orders
+
+
+def update_order_status(request):
+    order_item_id = request.POST.get("order_item_id")
+    status = request.POST.get("status")
+
+    OrderItem.objects.filter(id=order_item_id).update(status=status)
+    return redirect("orders")
 
 
 class Store(ListView):

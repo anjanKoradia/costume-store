@@ -12,7 +12,7 @@ class Order(models.Model):
     user = models.ForeignKey("authentication.User", on_delete=models.CASCADE, related_name='order')
     amount = models.PositiveIntegerField()
     order_note = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -33,6 +33,8 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     size = models.CharField(max_length=3, choices=SIZE_CHOICES)
     color = models.CharField(choices=COLOR_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table = "order_items"
@@ -51,7 +53,7 @@ class BillingDetail(models.Model):
     )
     phone = models.CharField(max_length=10)
     email = models.EmailField()
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
