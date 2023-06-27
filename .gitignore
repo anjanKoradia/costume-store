@@ -1,4 +1,5 @@
 venv
+a.pylintrc
 
 /costumestore/costumestore/.env
 /costumestore/costumestore/__pycache__

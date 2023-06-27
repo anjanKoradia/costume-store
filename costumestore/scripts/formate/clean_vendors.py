@@ -4,14 +4,14 @@ import os
 import pandas as pd
 
 # set directory path
-directory = "/home/anjan/Anjan/Projects/django/ecommerce-store/costumestore/scripts"
+DIRECTORY = "/home/anjan/Anjan/Projects/django/ecommerce-store/costumestore/scripts"
 
 # accessing raw data file
-raw_file_location = "raw-data/vendors.csv"
-raw_file = os.path.join(directory, raw_file_location)
+RAW_FILE_LOCATION = "raw-data/vendors.csv"
+raw_file = os.path.join(DIRECTORY, RAW_FILE_LOCATION)
 
 # accessing data file
-file = os.path.join(directory, "data/vendors.csv")
+file = os.path.join(DIRECTORY, "data/vendors.csv")
 
 # set unnecessary column names to drop from csv file
 columns_to_remove = [

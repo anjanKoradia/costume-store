@@ -1,12 +1,29 @@
-from .forms import VendorProfileForm, VendorProfileForm_Name_Only, VendorAddressForm
-from costumestore.services import Cloudinary_Services
 from django.shortcuts import render, redirect
 from authentication.models import User
 from django.views import View
+from costumestore.services import CloudinaryServices
+from .forms import VendorProfileForm, VendorProfileFormNameOnly, VendorAddressForm
 from .models import Vendor, Address
 
 
 def vendor_address(request):
+    """
+    View function for handling vendor address update.
+
+    This function retrieves the vendor associated with the current user,
+    validates the submitted address form, and updates the corresponding
+    address record in the database. If any errors occur during form validation
+    or database update, the errors are rendered along with the vendor data on
+    the vendor.html template. Upon successful update, the function redirects
+    to the vendor_profile view.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponseRedirect: Redirects to the vendor_profile view.
+
+    """
     vendor = Vendor.objects.get(user__id=request.user.id)
 
     form = VendorAddressForm(request.POST)
@@ -41,8 +58,34 @@ def vendor_address(request):
     return redirect("vendor_profile")
 
 
-class Vendor_Profile(View):
+class VendorProfile(View):
+    """
+    A class-based view for managing the vendor profile.
+
+    This view handles both GET and POST requests for the vendor profile page.
+    It allows vendors to update their profile information, including shop name,
+    personal name, and various documents such as Aadhar card, Pan card, and business license.
+
+    Attributes:
+        None
+
+    Methods:
+        get(request): Retrieves the vendor and address information and renders the vendor profile page.
+        post(request): Handles the form submission for updating the vendor profile.
+
+    """
+
     def get(self, request):
+        """
+        Retrieve the vendor and address information and render the vendor profile page.
+
+        Args:
+            request: The HTTP GET request object.
+
+        Returns:
+            A rendered HTML template displaying the vendor profile page with vendor and address data.
+
+        """
         vendor = Vendor.objects.get(user__id=request.user.id)
         address = Address.objects.get(user=request.user)
 
@@ -53,11 +96,22 @@ class Vendor_Profile(View):
         )
 
     def post(self, request):
+        """
+        Handle the form submission for updating the vendor profile.
+
+        Args:
+            request: The HTTP POST request object.
+
+        Returns:
+            If the form is valid and the profile update is successful, redirects to the vendor profile page.
+            If the form is invalid, re-renders the vendor profile page with validation errors.
+
+        """
         vendor = Vendor.objects.get(user__id=request.user.id)
 
         if vendor.is_document_added:
             # validate input data
-            form = VendorProfileForm_Name_Only(request.POST)
+            form = VendorProfileFormNameOnly(request.POST)
 
             if not form.is_valid():
                 errors = {}
@@ -99,14 +153,14 @@ class Vendor_Profile(View):
         data = form.cleaned_data
 
         # Store documents in cloudinary
-        aadhar_image_url = Cloudinary_Services.store_image(
-            data["aadhar_image"], vendor.shop_name + "/documents"
+        aadhar_image_url = CloudinaryServices.store_image(
+            image=data["aadhar_image"], folder=vendor.shop_name + "/documents"
         )
-        pancard_image_url = Cloudinary_Services.store_image(
-            data["pancard_image"], vendor.shop_name + "/documents"
+        pancard_image_url = CloudinaryServices.store_image(
+            image=data["pancard_image"], folder=vendor.shop_name + "/documents"
         )
-        business_license_url = Cloudinary_Services.store_image(
-            data["business_license"], vendor.shop_name + "/documents"
+        business_license_url = CloudinaryServices.store_image(
+            image=data["business_license"], folder=vendor.shop_name + "/documents"
         )
 
         try:

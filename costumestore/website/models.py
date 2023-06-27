@@ -1,7 +1,7 @@
+import uuid
+from django.db import models
 from django.core.validators import MinValueValidator
 from vendor.models import Product
-from django.db import models
-import uuid
 
 COLOR_CHOICES = (
     ("Red", "Red"),
@@ -37,10 +37,29 @@ SIZE_CHOICES = (
 
 
 class Cart(models.Model):
+    """
+    Model representing a shopping cart.
+
+    A shopping cart is associated with a user and contains cart items that represent 
+    the products added to the cart.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the cart.
+        user (OneToOneField): The user associated with the cart.
+        total_price (PositiveIntegerField): The total price of all items in the cart.
+
+    Meta:
+        db_table (str): The name of the database table for the Cart model.
+        verbose_name (str): The human-readable name for a single cart object.
+        verbose_name_plural (str): The human-readable name for multiple cart objects.
+    """
+
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, editable=False, unique=True
     )
-    user = models.OneToOneField("authentication.User", on_delete=models.CASCADE, related_name="cart")
+    user = models.OneToOneField(
+        "authentication.User", on_delete=models.CASCADE, related_name="cart"
+    )
     total_price = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -50,6 +69,25 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
+    """
+    Model representing an item in a shopping cart.
+
+    An item in a shopping cart is associated with a cart and a product.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the cart item.
+        cart (ForeignKey): The cart to which the item belongs.
+        product (ForeignKey): The product associated with the item.
+        quantity (PositiveIntegerField): The quantity of the product in the cart.
+        size (CharField): The size of the product.
+        color (CharField): The color of the product.
+
+    Meta:
+        db_table (str): The name of the database table for the CartItem model.
+        verbose_name (str): The human-readable name for a single cart item object.
+        verbose_name_plural (str): The human-readable name for multiple cart item objects.
+    """
+
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
@@ -68,6 +106,23 @@ class CartItem(models.Model):
 
 
 class Wishlist(models.Model):
+    """
+    Model representing a user's wishlist.
+
+    A wishlist is associated with a user and contains wishlist items that represent 
+    the products added to the wishlist.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the wishlist.
+        user (OneToOneField): The user associated with the wishlist.
+        total_price (PositiveIntegerField): The total price of all items in the wishlist.
+
+    Meta:
+        db_table (str): The name of the database table for the Wishlist model.
+        verbose_name (str): The human-readable name for a single wishlist object.
+        verbose_name_plural (str): The human-readable name for multiple wishlist objects.
+    """
+
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
@@ -81,6 +136,22 @@ class Wishlist(models.Model):
 
 
 class WishlistItem(models.Model):
+    """
+    Model representing an item in a wishlist.
+
+    An item in a wishlist is associated with a wishlist and a product.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the wishlist item.
+        wishlist (ForeignKey): The wishlist to which the item belongs.
+        product (ForeignKey): The product associated with the item.
+
+    Meta:
+        db_table (str): The name of the database table for the WishlistItem model.
+        verbose_name (str): The human-readable name for a single wishlist item object.
+        verbose_name_plural (str): The human-readable name for multiple wishlist item objects.
+    """
+
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
@@ -93,5 +164,3 @@ class WishlistItem(models.Model):
         db_table = "wishlist_items"
         verbose_name = "WishlistItem"
         verbose_name_plural = "WishlistItems"
-
-

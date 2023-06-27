@@ -1,13 +1,36 @@
-from django.db import models
 import uuid
+from django.db import models
 
 
 class Address(models.Model):
+    """
+    Represents a user address.
+
+    This model stores the information about a user's address, including the 
+    address type (billing or default), the address details (text field), 
+    pin code, city, state, country, and the associated user.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the address (auto-generated).
+        user (ForeignKey): The user associated with the address.
+        address (TextField): The address details.
+        pin_code (CharField): The pin code of the address.
+        city (CharField): The city of the address.
+        state (CharField): The state of the address.
+        country (CharField): The country of the address.
+        type (CharField): The type of the address (choices: 'Billing', 'Default').
+
+    Meta:
+        db_table (str): The name of the database table for the Address model.
+        verbose_name (str): The human-readable name for a single address object.
+        verbose_name_plural (str): The human-readable name for multiple address objects.
+    """
+
     ADDRESS_TYPE = (
         ("Billing", "Billing"),
         ("Default", "Default"),
     )
-    
+
     id = models.UUIDField(
         default=uuid.uuid4, primary_key=True, unique=True, editable=False
     )
@@ -28,6 +51,43 @@ class Address(models.Model):
 
 
 class Vendor(models.Model):
+    """
+    Represents a vendor in the system.
+
+    This model stores information about a vendor, including their 
+    user account, shop details, identification documents, verification 
+    status, and other related information.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the vendor (automatically generated).
+        user (OneToOneField): The user account associated with the vendor.
+        shop_name (CharField): The name of the vendor's shop.
+        aadhar_number (CharField): The Aadhar number of the vendor (optional).
+        aadhar_image (JSONField): JSON data storing the Aadhar card image of 
+                                  the vendor (optional).
+        pancard_number (CharField): The PAN card number of the vendor (optional).
+        pancard_image (JSONField): JSON data storing the PAN card image 
+                                   of the vendor (optional).
+        gst_number (CharField): The GST number of the vendor (optional).
+        business_license (JSONField): JSON data storing the business license 
+                                      information of the vendor (optional).
+        is_verified (BooleanField): Indicates whether the vendor has been verified 
+                                    by the system (default: False).
+        is_document_added (BooleanField): Indicates whether the vendor has added 
+                                          identification documents (default: False).
+        bio (TextField): A brief biography or description of the vendor (optional).
+        description (TextField): Additional description or information about the vendor (optional).
+        created_at (DateTimeField): The date and time when the vendor was 
+                                    created (automatically set).
+        updated_at (DateTimeField): The date and time when the vendor was 
+                                    last updated (automatically set).
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+        verbose_name (str): The human-readable singular name for the model.
+        verbose_name_plural (str): The human-readable plural name for the model.
+    """
+
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     user = models.OneToOneField(
         "authentication.User", on_delete=models.CASCADE, related_name="vendors"

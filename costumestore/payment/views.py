@@ -1,11 +1,35 @@
-from .models import Order, OrderItem, BillingDetail
-from .forms import BillingDetailsForm
-from accounts.models import Address
 from django.shortcuts import render, redirect
+from accounts.models import Address
+from .forms import BillingDetailsForm
+from .models import Order, OrderItem, BillingDetail
 
 
 class Checkout:
+    """
+    This class handles the checkout process for placing orders.
+
+    The checkout process involves rendering the checkout page, validating
+    the billing details form, creating an order, saving order items, creating
+    or retrieving the billing address, and creating billing details. After a
+    successful order placement, the user's cart is cleared, and they are
+    redirected to the home page.
+
+    Methods:
+        checkout_page(request): To render the checkout page
+        place_order(request): To place an order
+    """
+
     def checkout_page(request):
+        """
+        Renders the checkout page with the user's default address and cart items.
+
+        Args:
+            request: The HTTP request object.
+
+        Returns:
+            A rendered HTML template displaying the checkout page with the user's default address
+            and cart items.
+        """
         address = request.user.address.get(type="Default")
         cart_items = request.user.cart.cart_item.all()
 
@@ -16,6 +40,23 @@ class Checkout:
         )
 
     def place_order(request):
+        """
+        Handles the order placement process by validating the billing details form, creating an order,
+        saving order items, creating or retrieving the billing address, creating billing details, and
+        clearing the user's cart.
+
+        Args:
+            request: The HTTP request object.
+
+        Returns:
+            - If the form is valid and the order placement is successful, redirects
+              the user to the home page.
+            - If the form is invalid, renders the checkout page with the validation
+              errors, user's default address, and cart items.
+            - If an exception occurs during the order placement process, redirects
+              the user to the home page.
+
+        """
         address = request.user.address.get(type="Default")
         cart_items = request.user.cart.cart_item.all()
 
@@ -58,9 +99,7 @@ class Checkout:
                 country=data["country"],
                 pin_code=data["pin_code"],
                 user=request.user,
-                defaults={
-                    "type": "Billing"
-                },
+                defaults={"type": "Billing"},
             )
 
             BillingDetail.objects.create(
@@ -70,7 +109,7 @@ class Checkout:
                 phone=data["phone"],
                 email=data["email"],
             )
-            
+
             request.user.cart.delete()
 
             return redirect("home_page")

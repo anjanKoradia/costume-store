@@ -1,13 +1,19 @@
-# -*- coding: 'cp1252' -*-
-
+import os
+import csv
+import math
 from accounts.models import Vendor
 from vendor.models import Product
-import math
-import csv
-import os
 
 
 def run():
+    """
+    Import products from a CSV file and create corresponding Product objects.
+
+    This function reads product data from a CSV file located at 'data/products.csv' and creates
+    Product objects in the database based on the data. Each product is associated with a vendor,
+    and the number of products is evenly distributed among all the existing vendors in the database.
+    """
+
     # accessing data file
     directory = os.path.dirname(__file__)
     dataset_location = os.path.join(directory, "data/products.csv")
