@@ -1,8 +1,15 @@
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from accounts.models import Address
 from .forms import BillingDetailsForm
 from .models import Order, OrderItem, BillingDetail
 
+def is_cart_items_available(user):
+    if user.cart.cart_item.all().count() == 0:
+        return False
+    
+    return True
 
 class Checkout:
     """
@@ -19,6 +26,7 @@ class Checkout:
         place_order(request): To place an order
     """
 
+    @user_passes_test(is_cart_items_available, login_url="cart_page")
     def checkout_page(request):
         """
         Renders the checkout page with the user's default address and cart items.
@@ -39,6 +47,7 @@ class Checkout:
             {"address": address, "cart_items": cart_items},
         )
 
+    @user_passes_test(is_cart_items_available, login_url="cart_page")
     def place_order(request):
         """
         Handles the order placement process by validating the billing details form, creating an order,
@@ -67,7 +76,7 @@ class Checkout:
             for field in form:
                 if field.errors:
                     errors[field.name] = field.errors[0]
-            print(errors)
+
             return render(
                 request,
                 "payment/checkout.html",

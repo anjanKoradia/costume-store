@@ -19,6 +19,7 @@
 
 <!-- Shop Cart Section Begin -->
 <section class="wishlist spad">
+  {% if wishlist_items %}
   <div class="container">
     <div class="row">
       <div class="col-lg-8">
@@ -62,9 +63,6 @@
             </tbody>
           </table>
         </div>
-        <div class="cart__btn float-right">
-          <a href="{% url 'shop_page' category='all' %}">Continue Shopping</a>
-        </div>
       </div>
       <div class="col-lg-4">
         <div class="cart__total__procced">
@@ -73,11 +71,32 @@
             <li>Subtotal <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
             <li>Total <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
           </ul>
-          <a href="#" class="primary-btn">Proceed to checkout</a>
+          <a href="{% url 'shop_page' category='all' %}" class="primary-btn">Continue Shopping</a>
         </div>
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="container">
+    <div class="empty_cart">
+      <div class="container text-center">
+        <h4 class="fw-bold">Wishlist Is Empty 😕</h4>
+        <p class="text-muted">
+          You probably haven't added yet. To add a costumes, go to the
+          shop page.
+        </p>
+        <img
+          class="d-block mx-auto my-4"
+          src="{% static 'images/wishlist.png' %}"
+          alt=""
+        />
+        <div class="cart__btn">
+          <a href="{% url 'shop_page' category='all' %}">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </section>
 <!-- Shop Cart Section End -->
 

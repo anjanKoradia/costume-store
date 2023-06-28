@@ -35,7 +35,7 @@ Created: Colorib
     --------------------*/
   $(".set-bg").each(function () {
     var bg = $(this).data("setbg");
-    $(this).css("background-image", 'url(' + bg + ')');
+    $(this).css("background-image", "url(" + bg + ")");
   });
 
   //Search Switch
@@ -69,7 +69,7 @@ Created: Colorib
   });
 
   /*------------------
-        Accordin Active
+    Accordin Active
     --------------------*/
   $(".collapse").on("shown.bs.collapse", function () {
     $(this).prev().addClass("active");
@@ -80,7 +80,7 @@ Created: Colorib
   });
 
   /*--------------------------
-        Banner Slider
+    Banner Slider
     ----------------------------*/
   $(".banner__slider").owlCarousel({
     loop: true,
@@ -93,7 +93,7 @@ Created: Colorib
   });
 
   /*--------------------------
-        Product Details Slider
+    Product Details Slider
     ----------------------------*/
   $(".product__details__pic__slider")
     .owlCarousel({
@@ -145,7 +145,7 @@ Created: Colorib
   });
 
   /*------------------
-        CountDown
+    CountDown
     --------------------*/
   // For demo preview start
   var today = new Date();
@@ -177,27 +177,6 @@ Created: Colorib
       )
     );
   });
-
-  /*-------------------
-		Range Slider
-	--------------------- */
-  var rangeSlider = $(".price-range"),
-    minamount = $("#minamount"),
-    maxamount = $("#maxamount"),
-    minPrice = rangeSlider.data("min"),
-    maxPrice = rangeSlider.data("max");
-  rangeSlider.slider({
-    range: true,
-    min: minPrice,
-    max: maxPrice,
-    values: [minPrice, maxPrice],
-    slide: function (event, ui) {
-      minamount.val("$" + ui.values[0]);
-      maxamount.val("$" + ui.values[1]);
-    },
-  });
-  minamount.val("$" + rangeSlider.slider("values", 0));
-  maxamount.val("$" + rangeSlider.slider("values", 1));
 
   /*------------------
 		Single Product
@@ -239,4 +218,9 @@ Created: Colorib
     $(".size__btn label").removeClass("active");
     $(this).addClass("active");
   });
+
+  $(".product_price_range").on("input", function(e){
+    $(".filter-range-wrap .min_price").text("₹" + $(this).val())
+  })
+
 })(jQuery);

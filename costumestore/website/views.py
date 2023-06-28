@@ -1,4 +1,5 @@
 import random
+from django.db.models import Min, Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView
 from payment.models import OrderItem
@@ -93,7 +94,6 @@ def product_details(request, id):
 
     """
     product_details = Product.objects.get(id=id)
-    print(product_details.vendor.user)
 
     related_products = Product.objects.filter(
         category=product_details.category, subcategory=product_details.subcategory
@@ -229,7 +229,7 @@ class CartOperations:
             for field in form:
                 if field.errors:
                     errors[field.name] = field.errors[0]
-            print(errors)
+
             return render(
                 request,
                 "website/product-details.html",
@@ -284,14 +284,14 @@ class CartOperations:
             cart_item.quantity = cart_item.quantity + 1
             cart_item.save()
 
-        elif operation == "decrease":
+        if operation == "decrease":
             cart.total_price = cart.total_price - cart_item.product.price
             cart.save()
 
             cart_item.quantity = cart_item.quantity - 1
             cart_item.save()
-
-        elif operation == "delete":
+    
+        if operation == "delete":
             cart_item.delete()
 
         return redirect("cart_page")
@@ -357,7 +357,13 @@ class ShopPage(ListView):
                 ),
                 products,
             )
+        
+        min_price = Product.objects.aggregate(min_price=Min('price'))['min_price']
+        max_price = Product.objects.aggregate(max_price=Max('price'))['max_price']
 
         context["wishlist_products"] = list(wishlist_products)
         context["category"] = self.kwargs["category"]
+        context["min_price"] = min_price
+        context["max_price"] = max_price
+    
         return context

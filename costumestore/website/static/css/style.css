@@ -1499,63 +1499,28 @@ ol {
   border-radius: 2px;
 }
 
-.filter-range-wrap .range-slider .price-input {
-  position: relative;
+.filter-range-wrap input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  margin: 10px 0;
 }
-
-.filter-range-wrap .range-slider .price-input p {
-  font-size: 16px;
-  color: #0d0d0d;
-  font-weight: 500;
-  display: inline-block;
-  margin-bottom: 0;
-}
-
-.filter-range-wrap .range-slider .price-input:after {
-  position: absolute;
-  left: 81px;
-  top: 12px;
-  height: 1px;
-  width: 5px;
-  background: #0d0d0d;
-  content: "";
-}
-
-.filter-range-wrap .range-slider .price-input input {
-  font-size: 16px;
-  color: #0d0d0d;
-  max-width: 16%;
-  border: none;
-}
-
-.filter-range-wrap .range-slider .price-input input:nth-child(1) {
-  margin-right: 28px;
-}
-
-.filter-range-wrap .price-range {
+.filter-range-wrap input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;  
+  background: #fce4e4;
   border-radius: 0;
-  margin-bottom: 28px;
-}
-
-.filter-range-wrap .price-range.ui-widget-content {
   border: none;
-  background: rgba(0, 0, 0, 0.1);
-  height: 5px;
 }
-
-.filter-range-wrap .price-range.ui-widget-content .ui-slider-handle {
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
+.filter-range-wrap input[type=range]::-webkit-slider-thumb {
+  border: 0;
+  height: 20px;
+  width: 10px;
+  border-radius: 5px;
   background: #ca1515;
-  border: none;
-  outline: none;
   cursor: pointer;
-}
-
-.filter-range-wrap .price-range .ui-slider-range {
-  background: #ca1515;
-  border-radius: 0;
+  -webkit-appearance: none;
+  margin-top: -5px;
 }
 
 .sidebar__sizes,
@@ -2160,6 +2125,10 @@ ol {
 /*---------------------
   Shop Cart
 -----------------------*/
+
+.empty_cart img{
+  width: 50% !important;
+}
 
 .shop-cart {
   padding-top: 70px;
@@ -3759,6 +3728,16 @@ ol {
 /* Wide Mobile = 480px */
 
 @media only screen and (max-width: 767px) {
+  .empty_cart h4{
+    font-size: 1.2rem;
+  }
+  .empty_cart p{
+    font-size: 0.8rem;
+  }
+  .empty_cart img{
+    width: 100% !important;
+  }
+  
   .canvas__open {
     display: block;
     font-size: 22px;
