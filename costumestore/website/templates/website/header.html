@@ -11,13 +11,13 @@
     <li>
       <a href="{% url 'wishlist_page' %}"
         ><i class="fa fa-heart-o" aria-hidden="true"></i>
-        <div class="tip">2</div>
+        <div class="tip">{{wishlist_count}}</div>
       </a>
     </li>
     <li>
       <a href="{% url 'cart_page' %}"
         ><i class="fa fa-shopping-bag" aria-hidden="true"></i>
-        <div class="tip">2</div>
+        <div class="tip">{{cart_count}}</div> 
       </a>
     </li>
     {% elif user.is_authenticated and not user.role == "customer" %}
@@ -99,13 +99,13 @@
             <li>
               <a href="{% url 'wishlist_page' %}"
                 ><i class="fa fa-heart-o" aria-hidden="true"></i>
-                <div class="tip">2</div>
+                <div class="tip">{{wishlist_count}}</div>
               </a>
             </li>
             <li>
               <a href="{% url 'cart_page' %}"
                 ><i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                <div class="tip">2</div>
+                <div class="tip">{{cart_count}}</div>
               </a>
             </li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
