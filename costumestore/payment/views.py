@@ -6,7 +6,7 @@ from .forms import BillingDetailsForm
 from .models import Order, OrderItem, BillingDetail
 
 def is_cart_items_available(user):
-    if user.cart.cart_item.all().count() == 0:
+    if user.cart.cart_items.all().count() == 0:
         return False
     
     return True
@@ -39,7 +39,7 @@ class Checkout:
             and cart items.
         """
         address = request.user.address.get(type="Default")
-        cart_items = request.user.cart.cart_item.all()
+        cart_items = request.user.cart.cart_items.all()
 
         return render(
             request,
@@ -67,7 +67,7 @@ class Checkout:
 
         """
         address = request.user.address.get(type="Default")
-        cart_items = request.user.cart.cart_item.all()
+        cart_items = request.user.cart.cart_items.all()
 
         form = BillingDetailsForm(request.POST)
 
@@ -121,7 +121,7 @@ class Checkout:
 
             request.user.cart.delete()
 
-            return redirect("home_page")
+            return redirect("my_orders")
 
         except Exception as e:
             print(e)

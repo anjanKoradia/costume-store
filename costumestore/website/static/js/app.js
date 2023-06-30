@@ -117,21 +117,24 @@ $("[id='wishlist_btn']").click(function () {
       "X-CSRFToken": csrfToken,
     },
     success: function (response) {
-      if (response.items_count == 0 && window.location.href.includes("wishlist")) {
+      if (
+        response.items_count == 0 &&
+        window.location.href.includes("wishlist")
+      ) {
         window.location.reload();
         return;
       }
 
       if (operation == "add") {
         btn.html('<i class="fa fa-heart" aria-hidden="true"></i>');
-        btn.data("operation", "remove")
+        btn.data("operation", "remove");
         new Noty({
           theme: "metroui",
           type: "success",
           text: response.message,
           timeout: 1000,
         }).show();
-        return
+        return;
       }
 
       if (operation == "remove" && btn.hasClass("wishlist_item_remove_btn")) {
@@ -142,20 +145,40 @@ $("[id='wishlist_btn']").click(function () {
           text: response.message,
           timeout: 1000,
         }).show();
-        return
+        return;
       }
 
       if (operation == "remove") {
         btn.html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
-        btn.data("operation", "add")
+        btn.data("operation", "add");
         new Noty({
           theme: "metroui",
           type: "error",
           text: response.message,
           timeout: 1000,
         }).show();
-        return
+        return;
       }
     },
   });
 });
+
+
+// $(".product_price_range").on("input", function(e){
+//   let price = $(this).val();
+//   let url = window.location.href
+//   $.ajax({
+//     url: url,
+//     method: "GET",
+//     data: {
+//       price: price,
+//     },
+//     contentType: "application/json",
+//     headers: {
+//       "X-CSRFToken": csrfToken,
+//     },
+//     success: function (response) {
+//       console.log(response);
+//     }
+//   })
+// })

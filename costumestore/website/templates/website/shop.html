@@ -1,7 +1,6 @@
-{% extends 'website/base.html' %} 
-{% load static %} 
-{% block body %}
+{% extends 'website/base.html' %} {% load static %} {% block body %}
 
+{% if products %}
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
   <div class="container">
@@ -26,105 +25,119 @@
     <div class="row">
       <div class="col-lg-3 col-md-3">
         <div class="shop__sidebar">
-          <div class="sidebar__filter">
-            <div class="section-title">
-              <h4>Shop by price</h4>
+          <form action="{% url 'shop_page' category=category %}" method="get">
+            <div class="sidebar__filter">
+              <div class="section-title">
+                <h4>Shop by price</h4>
+              </div>
+              <div class="filter-range-wrap">
+                <input
+                  type="range"
+                  name="price"
+                  value="{{current_price}}"
+                  class="product_price_range"
+                  min="{{min_price}}"
+                  max="{{max_price}}"
+                  step="1"
+                />
+                <p>
+                  Price: <span class="min_price">₹{{current_price}}</span> -
+                  <span>₹{{max_price}}</span>
+                </p>
+              </div>
+              <!-- <a href="#">Filter</a> -->
             </div>
-            <div class="filter-range-wrap">
-              <input type="range" class="product_price_range" min="{{min_price}}" max="{{max_price}}" step="1">
-              <p>Price: <span class="min_price">₹{{min_price}}</span> - <span>₹{{max_price}}</span></p>
+            <div class="sidebar__sizes">
+              <div class="section-title">
+                <h4>Shop by size</h4>
+              </div>
+              <div class="size__list">
+                <label for="xxs">
+                  xxs
+                  <input type="checkbox" id="xxs" name="sizes" value="xxs" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="xs">
+                  xs
+                  <input type="checkbox" id="xs" name="sizes" value="xs" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="s">
+                  s
+                  <input type="checkbox" id="s" name="sizes" value="s" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="m">
+                  m
+                  <input type="checkbox" id="m" name="sizes" value="m" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="l">
+                  l
+                  <input type="checkbox" id="l" name="sizes" value="l" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="xl">
+                  xl
+                  <input type="checkbox" id="xl" name="sizes" value="xl" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="xxl">
+                  xxl
+                  <input type="checkbox" id="xxl" name="sizes" value="xxl" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
             </div>
-            <!-- <a href="#">Filter</a> -->
-          </div>
-          <div class="sidebar__sizes">
-            <div class="section-title">
-              <h4>Shop by size</h4>
+            <div class="sidebar__color">
+              <div class="section-title">
+                <h4>Shop by color</h4>
+              </div>
+              <div class="size__list color__list">
+                <label for="black">
+                  Blacks
+                  <input type="checkbox" id="black" name="colors" value="black" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="whites">
+                  Whites
+                  <input type="checkbox" id="whites" name="colors" value="white" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="reds">
+                  Reds
+                  <input type="checkbox" id="reds" name="colors" value="red" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="greys">
+                  Greys
+                  <input type="checkbox" id="greys" name="colors" value="grey" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="blues">
+                  Blues
+                  <input type="checkbox" id="blues" name="colors" value="blue" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="beige">
+                  Beige Tones
+                  <input type="checkbox" id="beige" name="colors" value="beige" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="greens">
+                  Greens
+                  <input type="checkbox" id="greens" name="colors" value="green" />
+                  <span class="checkmark"></span>
+                </label>
+                <label for="yellows">
+                  Yellows
+                  <input type="checkbox" id="yellows" name="colors" value="yellow" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
             </div>
-            <div class="size__list">
-              <label for="xxs">
-                xxs
-                <input type="checkbox" id="xxs" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="xs">
-                xs
-                <input type="checkbox" id="xs" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="s">
-                s
-                <input type="checkbox" id="s" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="m">
-                m
-                <input type="checkbox" id="m" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="l">
-                l
-                <input type="checkbox" id="l" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="xl">
-                xl
-                <input type="checkbox" id="xl" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="xxl">
-                xxl
-                <input type="checkbox" id="xxl" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
-          </div>
-          <div class="sidebar__color">
-            <div class="section-title">
-              <h4>Shop by size</h4>
-            </div>
-            <div class="size__list color__list">
-              <label for="black">
-                Blacks
-                <input type="checkbox" id="black" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="whites">
-                Whites
-                <input type="checkbox" id="whites" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="reds">
-                Reds
-                <input type="checkbox" id="reds" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="greys">
-                Greys
-                <input type="checkbox" id="greys" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="blues">
-                Blues
-                <input type="checkbox" id="blues" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="beige">
-                Beige Tones
-                <input type="checkbox" id="beige" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="greens">
-                Greens
-                <input type="checkbox" id="greens" />
-                <span class="checkmark"></span>
-              </label>
-              <label for="yellows">
-                Yellows
-                <input type="checkbox" id="yellows" />
-                <span class="checkmark"></span>
-              </label>
-            </div>
-          </div>
+            <button type="submit" class="btn btn-outline-success">Filter</button>
+          </form>
         </div>
       </div>
       <div class="col-lg-9 col-md-9">
@@ -144,13 +157,24 @@
                   </li>
                   {% if user.is_authenticated and user.role == "customer" %}
                   <li>
-                    <a href="#" id="wishlist_btn" data-url="{% url 'wishlist' %}" data-id="{{product.id}}" {% if product in wishlist_products %} data-operation='remove' {% else %} data-operation='add' {% endif %}>
-                      <i class="fa {% if product in wishlist_products %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
+                    <a
+                      href="#"
+                      id="wishlist_btn"
+                      data-url="{% url 'wishlist' %}"
+                      data-id="{{product.id}}"
+                      {% if product in wishlist_products %} data-operation="remove" {% else %} data-operation="add" {% endif %}
+                    >
+                      <i
+                        class="fa {% if product in wishlist_products %} fa-heart {% else %} fa-heart-o {% endif %}"
+                        aria-hidden="true"
+                      ></i>
                     </a>
                   </li>
                   {% endif %}
                   <li>
-                    <a href="{% url 'product_details' id=product.id %}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    <a href="{% url 'product_details' id=product.id %}"
+                      ><i class="fa fa-eye" aria-hidden="true"></i
+                    ></a>
                   </li>
                 </ul>
               </div>
@@ -179,21 +203,17 @@
             <!-- <p>Total Pages: {{page_obj.paginator.num_pages}}</p> -->
             <div class="pagination__option">
               {% if page_obj.has_previous %}
-              <a
-                href="?page={{ page_obj.previous_page_number }}"
-                tabindex="-1"
-                ><i class="fa fa-angle-left"></i></a
-              >
+              <a href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+                ><i class="fa fa-angle-left"></i
+              ></a>
               {% endif %}
 
-              <a href="?page={{ page_obj.number }}"
-                >{{ page_obj.number }}</a
-              >
+              <a href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
 
               {% if page_obj.has_next %}
               <a href="?page={{ page_obj.next_page_number }}"
-                ><i class="fa fa-angle-right"></i></a
-              >
+                ><i class="fa fa-angle-right"></i
+              ></a>
               {% endif %}
             </div>
             <!-- <p>Total Products: {{page_obj.paginator.count}}</p> -->
@@ -204,6 +224,28 @@
     </div>
   </div>
 </section>
+{% else %}
+<section class="shop spad">
+  <div class="container">
+    <div class="empty_cart">
+      <div class="container text-center">
+        <h4 class="fw-bold">Product Not Found 😕</h4>
+        <p class="text-muted">
+          Your requirement has not been met. Please visit after some time.
+        </p>
+        <img
+          class="d-block mx-auto my-4"
+          src="{% static 'images/Not_found.png' %}"
+          alt=""
+        />
+        <div class="cart__btn">
+          <a href="{% url 'home_page' %}">Home Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
 <!-- Shop Section End -->
 
 {% endblock body %}

@@ -3,8 +3,8 @@ import json
 from django.http import JsonResponse
 from django.db.models import Min, Max
 from django.urls import reverse
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, View
+from django.shortcuts import render
+from django.views.generic import ListView, View, DetailView
 from costumestore.services import list_errors
 from payment.models import OrderItem
 from vendor.models import Product
@@ -12,39 +12,29 @@ from .models import CartItem, Cart, Wishlist, WishlistItem
 from .forms import CartItemForm
 
 
-def home_page(request):
-    """
-    Render the home page.
+class HomePage(ListView):
+    model = Product
+    template_name = "website/index.html"
+    context_object_name = "products"
+    paginate_by = 10
 
-    Retrieves a list of products, selects 10 random products, and checks
-    if the user is authenticated as a customer. If authenticated, filters the
-    random products to include only those in the user's wishlist. Finally, renders
-    the 'website/index.html' template with the list of random products and wishlist products.
+    def get_queryset(self):
+        return Product.objects.all().order_by("-created_at")
 
-    Args:
-        request (HttpRequest): The HTTP request object.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        wishlist_products = []
 
-    Returns:
-        HttpResponse: The HTTP response object containing the rendered template.
-    """
-    products = Product.objects.all()
-    random_products = random.sample(list(products), 10)
-    wishlist_products = []
+        if self.request.user.is_authenticated and self.request.user.role == "customer":
+            wishlist_products = filter(
+                lambda product: product.wishlist_items.filter(
+                    wishlist__user=self.request.user
+                ),
+                context["object_list"],
+            )
 
-    if request.user.is_authenticated and request.user.role == "customer":
-        wishlist_products = filter(
-            lambda product: product.wishlist_items.filter(wishlist__user=request.user),
-            random_products,
-        )
-
-    return render(
-        request,
-        "website/index.html",
-        {
-            "products": random_products,
-            "wishlist_products": list(wishlist_products),
-        },
-    )
+        context["wishlist_products"] = wishlist_products
+        return context
 
 
 def contact_page(request):
@@ -62,62 +52,43 @@ def contact_page(request):
     return render(request, "website/contact.html")
 
 
-def my_orders(request):
-    """
-    Render the orders page.
+class MyOrders(ListView):
+    model = OrderItem
+    template_name = "website/orders.html"
+    context_object_name = "ordered_items"
+    paginate_by = 10
 
-    Retrieves a list of ordered items associated with the currently authenticated user's orders.
-    Renders the 'website/orders.html' template with the list of ordered items.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-
-    Returns:
-        HttpResponse: The HTTP response object containing the rendered template.
-    """
-    ordered_items = OrderItem.objects.filter(order__user=request.user)
-    return render(request, "website/orders.html", {"ordered_items": ordered_items})
+    def get_queryset(self):
+        return OrderItem.objects.filter(order__user=self.request.user)
 
 
-def product_details(request, id):
-    """
-    View function for displaying product details.
+class ProductDetails(DetailView):
+    model = Product
+    template_name = "website/product-details.html"
+    context_object_name = "product_details"
+    slug_url_kwarg = "id"
+    slug_field = "id"
+    queryset = Product.objects.all()
 
-    Retrieves the details of a product based on the provided `id` parameter and renders
-    the product details page with relevant information.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product_details = context["object"]
 
-    Args:
-        request (HttpRequest): The HTTP request object.
-        id (int): The ID of the product to retrieve details for.
+        related_products = Product.objects.filter(
+            category=product_details.category, subcategory=product_details.subcategory
+        )
+        random_related_products = random.sample(list(related_products), 4)
 
-    Returns:
-        HttpResponse: The HTTP response containing the rendered product details page.
+        in_wishlist = False
 
-    Raises:
-        Product.DoesNotExist: If the product with the specified ID does not exist.
+        if self.request.user.is_authenticated and self.request.user.role == "customer":
+            in_wishlist = product_details.wishlist_items.filter(
+                wishlist__user=self.request.user
+            )
 
-    """
-    product_details = Product.objects.get(id=id)
-
-    related_products = Product.objects.filter(
-        category=product_details.category, subcategory=product_details.subcategory
-    )
-    random_related_products = random.sample(list(related_products), 4)
-
-    in_wishlist = False
-
-    if request.user.is_authenticated and request.user.role == "customer":
-        in_wishlist = product_details.wishlist_items.filter(wishlist__user=request.user)
-
-    return render(
-        request,
-        "website/product-details.html",
-        {
-            "product_details": product_details,
-            "in_wishlist": in_wishlist,
-            "related_products": random_related_products,
-        },
-    )
+        context["related_products"] = random_related_products
+        context["in_wishlist"] = in_wishlist
+        return context
 
 
 class WishlistOperations(View):
@@ -276,11 +247,27 @@ class ShopPage(ListView):
         Returns:
             QuerySet: The queryset of products.
         """
+
+        price = self.request.GET.get("price") or 0
+        sizes = self.request.GET.getlist("sizes") or []
+        colors = self.request.GET.getlist("colors") or []
+
+        filter_kwargs = {}
+
+        # if sizes:
+        #     filter_kwargs["sizes"] = sizes
+
+        if colors:
+            filter_kwargs["colors__in"] = colors
+
+        # breakpoint()
         category = self.kwargs["category"]
         if category == "all":
-            return Product.objects.all()
+            return Product.objects.filter(price__gte=price, **filter_kwargs)
 
-        return Product.objects.filter(category=category)
+        return Product.objects.filter(
+            category=category, price__gte=price, **filter_kwargs
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -293,6 +280,7 @@ class ShopPage(ListView):
             dict: The context data.
         """
         context = super().get_context_data(**kwargs)
+
         products = self.paginate_queryset(self.get_queryset(), self.paginate_by)[2]
         wishlist_products = []
 
@@ -311,5 +299,6 @@ class ShopPage(ListView):
         context["category"] = self.kwargs["category"]
         context["min_price"] = min_price
         context["max_price"] = max_price
+        context["current_price"] = self.request.GET.get("price") or 0
 
         return context
