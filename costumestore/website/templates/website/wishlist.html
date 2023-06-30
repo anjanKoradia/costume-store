@@ -1,6 +1,4 @@
-{% extends 'website/base.html' %} 
-{% load static %} 
-{% block body %}
+{% extends 'website/base.html' %} {% load static %} {% block body %}
 
 <!-- Breadcrumb Begin -->
 <div class="breadcrumb-option">
@@ -54,7 +52,14 @@
                 </td>
                 <td class="wishlist__price">₹ {{item.product.price}}</td>
                 <td class="wishlist__close">
-                  <a href="{% url 'wishlist_operations' operation='remove' id=item.product.id %}">
+                  <a
+                    href="#"
+                    id="wishlist_btn"
+                    class="wishlist_item_remove_btn"
+                    data-url="{% url 'wishlist' %}"
+                    data-id="{{item.product.id}}"
+                    data-operation="remove"
+                  >
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </a>
                 </td>
@@ -68,10 +73,16 @@
         <div class="cart__total__procced">
           <h6>Wishlist total</h6>
           <ul>
-            <li>Subtotal <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
-            <li>Total <span>₹ {{wishlist_items.0.wishlist.total_price}}</span></li>
+            <li>
+              Subtotal <span>₹ {{wishlist_items.0.wishlist.total_price}}</span>
+            </li>
+            <li>
+              Total <span>₹ {{wishlist_items.0.wishlist.total_price}}</span>
+            </li>
           </ul>
-          <a href="{% url 'shop_page' category='all' %}" class="primary-btn">Continue Shopping</a>
+          <a href="{% url 'shop_page' category='all' %}" class="primary-btn"
+            >Continue Shopping</a
+          >
         </div>
       </div>
     </div>
@@ -82,8 +93,8 @@
       <div class="container text-center">
         <h4 class="fw-bold">Wishlist Is Empty 😕</h4>
         <p class="text-muted">
-          You probably haven't added yet. To add a costumes, go to the
-          shop page.
+          You probably haven't added yet. To add a costumes, go to the shop
+          page.
         </p>
         <img
           class="d-block mx-auto my-4"

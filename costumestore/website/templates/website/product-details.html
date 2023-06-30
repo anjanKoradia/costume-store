@@ -135,7 +135,7 @@
               </div>
               <ul>
                 <li>
-                  <a {% if in_wishlist %} href="{% url 'wishlist_operations' operation='remove' id=product_details.id %}" {% else %} href="{% url 'wishlist_operations' operation='add' id=product_details.id %}" {% endif %}>
+                  <a href="#" id="wishlist_btn" data-url="{% url 'wishlist' %}" data-id="{{product_details.id}}" {% if in_wishlist %} data-operation='remove' {% else %} data-operation='add' {% endif %}>
                     <i class="fa {% if in_wishlist %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
                   </a>
                 </li>

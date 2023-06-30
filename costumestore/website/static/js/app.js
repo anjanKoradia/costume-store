@@ -95,3 +95,67 @@ $("#add_to_cart").submit(function (e) {
     },
   });
 });
+
+/*-------------------
+	Handel Add/Remove to Wishlist
+	--------------------- */
+$("[id='wishlist_btn']").click(function () {
+  let btn = $(this);
+  let url = btn.data("url");
+  let operation = btn.data("operation");
+  let id = btn.data("id");
+
+  $.ajax({
+    url: url,
+    method: "POST",
+    data: JSON.stringify({
+      operation: operation,
+      id: id,
+    }),
+    contentType: "application/json",
+    headers: {
+      "X-CSRFToken": csrfToken,
+    },
+    success: function (response) {
+      if (response.items_count == 0 && window.location.href.includes("wishlist")) {
+        window.location.reload();
+        return;
+      }
+
+      if (operation == "add") {
+        btn.html('<i class="fa fa-heart" aria-hidden="true"></i>');
+        btn.data("operation", "remove")
+        new Noty({
+          theme: "metroui",
+          type: "success",
+          text: response.message,
+          timeout: 1000,
+        }).show();
+        return
+      }
+
+      if (operation == "remove" && btn.hasClass("wishlist_item_remove_btn")) {
+        btn.parent().parent().remove();
+        new Noty({
+          theme: "metroui",
+          type: "error",
+          text: response.message,
+          timeout: 1000,
+        }).show();
+        return
+      }
+
+      if (operation == "remove") {
+        btn.html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
+        btn.data("operation", "add")
+        new Noty({
+          theme: "metroui",
+          type: "error",
+          text: response.message,
+          timeout: 1000,
+        }).show();
+        return
+      }
+    },
+  });
+});

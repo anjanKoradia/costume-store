@@ -144,7 +144,7 @@
                   </li>
                   {% if user.is_authenticated and user.role == "customer" %}
                   <li>
-                    <a {% if product in wishlist_products %} href="{% url 'wishlist_operations' operation='remove' id=product.id %}" {% else %} href="{% url 'wishlist_operations' operation='add' id=product.id %}" {% endif %}>
+                    <a href="#" id="wishlist_btn" data-url="{% url 'wishlist' %}" data-id="{{product.id}}" {% if product in wishlist_products %} data-operation='remove' {% else %} data-operation='add' {% endif %}>
                       <i class="fa {% if product in wishlist_products %} fa-heart {% else %} fa-heart-o {% endif %}" aria-hidden="true"></i>
                     </a>
                   </li>

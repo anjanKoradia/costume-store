@@ -120,50 +120,18 @@ def product_details(request, id):
     )
 
 
-class WishlistOperations:
-    """
-    Render the wishlist page for the logged-in user.
-
-    Retrieves the wishlist items for the current user and renders the 'wishlist.html' template
-    with the wishlist items.
-
-    Args:
-        request: The HTTP request object.
-
-    Returns:
-        A rendered response with the wishlist items.
-
-    """
-
-    def wishlist_page(request):
-        """
-        Render the wishlist page with the user's wishlist items.
-
-        Args:
-            request (HttpRequest): The HTTP request object.
-
-        Returns:
-            HttpResponse: The rendered wishlist page.
-
-        """
+class WishlistOperations(View):
+    def get(self, request):
         wishlist_items = WishlistItem.objects.filter(wishlist__user=request.user)
         return render(
             request, "website/wishlist.html", {"wishlist_items": wishlist_items}
         )
 
-    def wishlist_operations(request, operation, id):
-        """
-        Perform operations on the wishlist items.
+    def post(self, request):
+        data = json.loads(request.body)
+        operation = data.get("operation")
+        id = data.get("id")
 
-        Args:
-            request (HttpRequest): The HTTP request object.
-            operation (str): The operation to be performed. Possible values are "add" or "remove".
-            id (int): The ID of the product associated with the operation.
-
-        Returns:
-            HttpResponseRedirect: Redirects back to the referring URL.
-
-        """
         if operation == "add":
             product = Product.objects.get(id=id)
             wishlist, created = Wishlist.objects.get_or_create(user=request.user)
@@ -178,11 +146,21 @@ class WishlistOperations:
                 )
                 wishlist.save()
 
-        elif operation == "remove":
-            WishlistItem.objects.get(product__id=id).delete()
+            return JsonResponse(
+                {
+                    "message": "Added to wishlist",
+                    "items_count": wishlist.wishlist_items.all().count(),
+                }
+            )
 
-        referring_url = request.META.get("HTTP_REFERER")
-        return redirect(referring_url)
+        if operation == "remove":
+            wishlist_item = WishlistItem.objects.get(product__id=id).delete()
+            items_count = WishlistItem.objects.filter(
+                wishlist__user=request.user
+            ).count()
+            return JsonResponse(
+                {"message": "Removed from wishlist", "items_count": items_count}
+            )
 
 
 class CartOperations(View):
