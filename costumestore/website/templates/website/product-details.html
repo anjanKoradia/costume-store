@@ -67,11 +67,12 @@
           </p>
           {% if user.is_authenticated and user.role == "customer" %}
           <form
-            action="{% url 'add_to_cart' id=product_details.id %}"
-            method="post"
+            action="{% url 'cart' %}"
+            id="add_to_cart"
             novalidate
           >
             {% csrf_token %}
+            <input type="hidden" name="id" value="{{product_details.id}}">
             <div class="product__details__widget">
               <ul>
                 <li>

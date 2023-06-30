@@ -15,9 +15,9 @@
       </a>
     </li>
     <li>
-      <a href="{% url 'cart_page' %}"
+      <a href="{% url 'cart' %}"
         ><i class="fa fa-shopping-bag" aria-hidden="true"></i>
-        <div class="tip">{{cart_count}}</div> 
+        <div class="tip" id="cart_count">{{cart_count}}</div> 
       </a>
     </li>
     {% elif user.is_authenticated and not user.role == "customer" %}
@@ -103,9 +103,9 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'cart_page' %}"
+              <a href="{% url 'cart' %}"
                 ><i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                <div class="tip">{{cart_count}}</div>
+                <div class="tip" id="cart_count">{{cart_count}}</div>
               </a>
             </li>
             <li><a href="{% url 'logout' %}">Logout</a></li>

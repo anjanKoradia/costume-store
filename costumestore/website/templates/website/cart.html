@@ -60,24 +60,39 @@
                 <td class="cart__quantity">
                   <div class="cart-pro-qty">
                     <a
-                      href="{% url 'cart_item_qty' operation='decrease' id=item.id %}"
+                      data-url="{% url 'cart' %}"
+                      data-operation="decrease"
+                      data-id="{{item.id}}"
+                      id="cart_item_quantity"
                       class="dec qtybtn"
-                      >-</a
                     >
-                    <input type="text" value="{{item.quantity}}" />
+                      -
+                    </a>
+                    <input
+                      type="text"
+                      id="item_quantity"
+                      value="{{item.quantity}}"
+                    />
                     <a
-                      href="{% url 'cart_item_qty' operation='increase' id=item.id %}"
                       class="inc qtybtn"
+                      data-url="{% url 'cart' %}"
+                      data-operation="increase"
+                      data-id="{{item.id}}"
+                      id="cart_item_quantity"
                       >+</a
                     >
                   </div>
                 </td>
-                <td class="cart__total">
+                <td class="cart__total" id="item_total_price">
                   ₹ {% widthratio item.quantity 1 item.product.price %}
                 </td>
                 <td class="cart__close">
                   <a
-                    href="{% url 'cart_item_qty' operation='delete' id=item.id %}"
+                    data-url="{% url 'cart' %}"
+                    data-operation="delete"
+                    data-id="{{item.id}}"
+                    id="cart_item_quantity"
+                    href="#"
                   >
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </a>
@@ -110,8 +125,16 @@
         <div class="cart__total__procced">
           <h6>Cart total</h6>
           <ul>
-            <li>Subtotal <span>₹ {{cart_items.0.cart.total_price}}</span></li>
-            <li>Total <span>₹ {{cart_items.0.cart.total_price}}</span></li>
+            <li>
+              Subtotal
+              <span id="cart_subtotal"
+                >₹ {{cart_items.0.cart.total_price}}</span
+              >
+            </li>
+            <li>
+              Total
+              <span id="cart_total">₹ {{cart_items.0.cart.total_price}}</span>
+            </li>
           </ul>
           <a href="{% url 'checkout_page' %}" class="primary-btn"
             >Proceed to checkout</a
@@ -126,8 +149,8 @@
       <div class="container text-center">
         <h4 class="fw-bold">Cart Is Empty 😕</h4>
         <p class="text-muted">
-          You probably haven't ordered yet. To order a costumes, go to the
-          shop page.
+          You probably haven't ordered yet. To order a costumes, go to the shop
+          page.
         </p>
         <img
           class="d-block mx-auto my-4"

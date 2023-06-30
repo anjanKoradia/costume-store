@@ -1,7 +1,11 @@
 import random
+import json
+from django.http import JsonResponse
 from django.db.models import Min, Max
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
+from django.urls import reverse
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, View
+from costumestore.services import list_errors
 from payment.models import OrderItem
 from vendor.models import Product
 from .models import CartItem, Cart, Wishlist, WishlistItem
@@ -29,7 +33,7 @@ def home_page(request):
 
     if request.user.is_authenticated and request.user.role == "customer":
         wishlist_products = filter(
-            lambda product: product.wishlist_item.filter(wishlist__user=request.user),
+            lambda product: product.wishlist_items.filter(wishlist__user=request.user),
             random_products,
         )
 
@@ -103,7 +107,7 @@ def product_details(request, id):
     in_wishlist = False
 
     if request.user.is_authenticated and request.user.role == "customer":
-        in_wishlist = product_details.wishlist_item.filter(wishlist__user=request.user)
+        in_wishlist = product_details.wishlist_items.filter(wishlist__user=request.user)
 
     return render(
         request,
@@ -181,64 +185,22 @@ class WishlistOperations:
         return redirect(referring_url)
 
 
-class CartOperations:
-    """
-    This class provides operations related to the shopping cart functionality.
-
-    Methods:
-        cart_page(request):
-            Retrieve and display the cart items for the authenticated user.
-
-        add_to_cart(request, id):
-            Add a product to the shopping cart based on the provided form data.
-
-        cart_item_qty(request, operation, id):
-            Perform quantity operations (increase, decrease, delete) on a cart item.
-    """
-
-    def cart_page(request):
-        """
-        Render the cart page with the cart items for the authenticated user.
-
-        Args:
-            request: The HTTP request object.
-
-        Returns:
-            A rendered response with the cart items in the "cart.html" template.
-        """
+class CartOperations(View):
+    def get(self, request):
         cart_items = CartItem.objects.filter(cart__user=request.user)
-
         return render(request, "website/cart.html", {"cart_items": cart_items})
 
-    def add_to_cart(request, id):
-        """
-        Add a product to the cart for the authenticated user.
-
-        Args:
-            request: The HTTP request object.
-            id (int): The ID of the product to add to the cart.
-
-        Returns:
-            Redirects to the cart page after adding the product to the cart, or
-            renders the "product-details.html" template with errors if the form is invalid.
-        """
+    def post(self, request):
+        id = request.POST.get("id")
         form = CartItemForm(request.POST)
 
         if not form.is_valid():
-            errors = {}
-            for field in form:
-                if field.errors:
-                    errors[field.name] = field.errors[0]
-
-            return render(
-                request,
-                "website/product-details.html",
-                {"product_details": Product.objects.get(id=id), "errors": errors},
-            )
+            errors = list_errors(form.errors)
+            return JsonResponse(errors, status=400, safe=False)
 
         data = form.cleaned_data
 
-        product = get_object_or_404(Product, id=id)
+        product = Product.objects.get(id=id)
         cart, created = Cart.objects.get_or_create(user=request.user)
 
         cart_item, item_created = CartItem.objects.get_or_create(
@@ -260,20 +222,17 @@ class CartOperations:
             cart_item.quantity = cart_item.quantity + 1
             cart_item.save()
 
-        return redirect("cart_page")
+        return JsonResponse(
+            {"message": "Added to cart successfully", "redirect_url": reverse("cart")},
+            status=201,
+        )
 
-    def cart_item_qty(request, operation, id):
-        """
-        Update the quantity or delete a cart item for the authenticated user.
+    def patch(self, request):
+        data = json.loads(request.body)
 
-        Args:
-            request: The HTTP request object.
-            operation (str): The operation to perform on the cart item. Can be "increase", "decrease", or "delete".
-            id (int): The ID of the cart item to update or delete.
+        operation = data.get("operation")
+        id = data.get("id")
 
-        Returns:
-            Redirects to the cart page after updating the cart item or deleting it.
-        """
         cart_item = CartItem.objects.get(id=id)
         cart = cart_item.cart
 
@@ -290,11 +249,20 @@ class CartOperations:
 
             cart_item.quantity = cart_item.quantity - 1
             cart_item.save()
-    
+
         if operation == "delete":
             cart_item.delete()
 
-        return redirect("cart_page")
+        cart_count = cart.cart_items.count()
+
+        return JsonResponse(
+            {
+                "quantity": cart_item.quantity,
+                "item_price": cart_item.product.price,
+                "total_price": cart_item.cart.total_price,
+                "cart_count": cart_count,
+            }
+        )
 
 
 class ShopPage(ListView):
@@ -352,18 +320,18 @@ class ShopPage(ListView):
 
         if self.request.user.is_authenticated and self.request.user.role == "customer":
             wishlist_products = filter(
-                lambda product: product.wishlist_item.filter(
+                lambda product: product.wishlist_items.filter(
                     wishlist__user=self.request.user
                 ),
                 products,
             )
-        
-        min_price = Product.objects.aggregate(min_price=Min('price'))['min_price']
-        max_price = Product.objects.aggregate(max_price=Max('price'))['max_price']
+
+        min_price = Product.objects.aggregate(min_price=Min("price"))["min_price"]
+        max_price = Product.objects.aggregate(max_price=Max("price"))["max_price"]
 
         context["wishlist_products"] = list(wishlist_products)
         context["category"] = self.kwargs["category"]
         context["min_price"] = min_price
         context["max_price"] = max_price
-    
+
         return context

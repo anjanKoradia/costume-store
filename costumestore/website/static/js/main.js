@@ -219,8 +219,7 @@ Created: Colorib
     $(this).addClass("active");
   });
 
-  $(".product_price_range").on("input", function(e){
-    $(".filter-range-wrap .min_price").text("₹" + $(this).val())
-  })
-
+  $(".product_price_range").on("input", function (e) {
+    $(".filter-range-wrap .min_price").text("₹" + $(this).val());
+  });
 })(jQuery);

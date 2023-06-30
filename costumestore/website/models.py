@@ -1,6 +1,6 @@
-import uuid
 from django.db import models
 from django.core.validators import MinValueValidator
+from costumestore.models import BaseModel
 from vendor.models import Product
 
 COLOR_CHOICES = (
@@ -36,15 +36,14 @@ SIZE_CHOICES = (
 )
 
 
-class Cart(models.Model):
+class Cart(BaseModel):
     """
     Model representing a shopping cart.
 
-    A shopping cart is associated with a user and contains cart items that represent 
+    A shopping cart is associated with a user and contains cart items that represent
     the products added to the cart.
 
     Attributes:
-        id (UUIDField): The unique identifier for the cart.
         user (OneToOneField): The user associated with the cart.
         total_price (PositiveIntegerField): The total price of all items in the cart.
 
@@ -54,9 +53,6 @@ class Cart(models.Model):
         verbose_name_plural (str): The human-readable name for multiple cart objects.
     """
 
-    id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, editable=False, unique=True
-    )
     user = models.OneToOneField(
         "authentication.User", on_delete=models.CASCADE, related_name="cart"
     )
@@ -68,14 +64,13 @@ class Cart(models.Model):
         verbose_name_plural = "Carts"
 
 
-class CartItem(models.Model):
+class CartItem(BaseModel):
     """
     Model representing an item in a shopping cart.
 
     An item in a shopping cart is associated with a cart and a product.
 
     Attributes:
-        id (UUIDField): The unique identifier for the cart item.
         cart (ForeignKey): The cart to which the item belongs.
         product (ForeignKey): The product associated with the item.
         quantity (PositiveIntegerField): The quantity of the product in the cart.
@@ -88,13 +83,8 @@ class CartItem(models.Model):
         verbose_name_plural (str): The human-readable name for multiple cart item objects.
     """
 
-    id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, unique=True, editable=False
-    )
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_item")
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="cart_item"
-    )
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     size = models.CharField(max_length=3, choices=SIZE_CHOICES)
     color = models.CharField(choices=COLOR_CHOICES)
@@ -105,15 +95,14 @@ class CartItem(models.Model):
         verbose_name_plural = "CartItems"
 
 
-class Wishlist(models.Model):
+class Wishlist(BaseModel):
     """
     Model representing a user's wishlist.
 
-    A wishlist is associated with a user and contains wishlist items that represent 
+    A wishlist is associated with a user and contains wishlist items that represent
     the products added to the wishlist.
 
     Attributes:
-        id (UUIDField): The unique identifier for the wishlist.
         user (OneToOneField): The user associated with the wishlist.
         total_price (PositiveIntegerField): The total price of all items in the wishlist.
 
@@ -123,9 +112,6 @@ class Wishlist(models.Model):
         verbose_name_plural (str): The human-readable name for multiple wishlist objects.
     """
 
-    id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, unique=True, editable=False
-    )
     user = models.OneToOneField("authentication.User", on_delete=models.CASCADE)
     total_price = models.PositiveIntegerField(default=0)
 
@@ -135,14 +121,13 @@ class Wishlist(models.Model):
         verbose_name_plural = "Wishlists"
 
 
-class WishlistItem(models.Model):
+class WishlistItem(BaseModel):
     """
     Model representing an item in a wishlist.
 
     An item in a wishlist is associated with a wishlist and a product.
 
     Attributes:
-        id (UUIDField): The unique identifier for the wishlist item.
         wishlist (ForeignKey): The wishlist to which the item belongs.
         product (ForeignKey): The product associated with the item.
 
@@ -152,12 +137,11 @@ class WishlistItem(models.Model):
         verbose_name_plural (str): The human-readable name for multiple wishlist item objects.
     """
 
-    id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, unique=True, editable=False
+    wishlist = models.ForeignKey(
+        Wishlist, on_delete=models.CASCADE, related_name="wishlist_items"
     )
-    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="wishlist_item"
+        Product, on_delete=models.CASCADE, related_name="wishlist_items"
     )
 
     class Meta:

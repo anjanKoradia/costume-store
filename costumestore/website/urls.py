@@ -18,17 +18,17 @@ urlpatterns = [
         name="wishlist_operations",
     ),
     # cart related routes
-    path("customer/cart/", views.CartOperations.cart_page, name="cart_page"),
-    path(
-        "customer/cart/add/<str:id>/",
-        views.CartOperations.add_to_cart,
-        name="add_to_cart",
-    ),
-    path(
-        "customer/cart/<str:operation>/<str:id>/",
-        views.CartOperations.cart_item_qty,
-        name="cart_item_qty",
-    ),
+    path("customer/cart/", views.CartOperations.as_view(), name="cart"),
+    # path(
+    #     "customer/cart/add/<str:id>/",
+    #     views.CartOperations.add_to_cart,
+    #     name="add_to_cart",
+    # ),
+    # path(
+    #     "customer/cart/<str:operation>/<str:id>/",
+    #     views.CartOperations.cart_item_qty,
+    #     name="cart_item_qty",
+    # ),
     # order related routes
     path("customer/orders/", views.my_orders, name="my_orders"),
 ]

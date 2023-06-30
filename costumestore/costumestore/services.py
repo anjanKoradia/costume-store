@@ -1,4 +1,5 @@
 import cloudinary.uploader
+from django.http import JsonResponse
 
 
 class CloudinaryServices:
@@ -44,3 +45,12 @@ class CloudinaryServices:
             cloudinary.exceptions.Error: If an error occurs during the deletion process.
         """
         cloudinary.uploader.destroy(image_id)
+
+
+def list_errors(errors):
+    clean_errors = []
+    for error in errors:
+        clean_errors.append(errors.get(error)[0])
+    
+    return clean_errors
+
