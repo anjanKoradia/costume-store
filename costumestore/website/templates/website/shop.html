@@ -51,41 +51,13 @@
                 <h4>Shop by size</h4>
               </div>
               <div class="size__list">
-                <label for="xxs">
-                  xxs
-                  <input type="checkbox" id="xxs" name="sizes" value="xxs" />
+                {% for size in all_sizes %}
+                <label for="{{size}}">
+                  {{size}}
+                  <input type="checkbox" id="{{size}}" name="sizes" value="{{size}}" {% if size in filtered_sizes %} checked {% endif %} />
                   <span class="checkmark"></span>
                 </label>
-                <label for="xs">
-                  xs
-                  <input type="checkbox" id="xs" name="sizes" value="xs" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="s">
-                  s
-                  <input type="checkbox" id="s" name="sizes" value="s" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="m">
-                  m
-                  <input type="checkbox" id="m" name="sizes" value="m" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="l">
-                  l
-                  <input type="checkbox" id="l" name="sizes" value="l" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="xl">
-                  xl
-                  <input type="checkbox" id="xl" name="sizes" value="xl" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="xxl">
-                  xxl
-                  <input type="checkbox" id="xxl" name="sizes" value="xxl" />
-                  <span class="checkmark"></span>
-                </label>
+                {% endfor %}
               </div>
             </div>
             <div class="sidebar__color">
@@ -93,46 +65,13 @@
                 <h4>Shop by color</h4>
               </div>
               <div class="size__list color__list">
-                <label for="black">
-                  Blacks
-                  <input type="checkbox" id="black" name="colors" value="black" />
+                {% for color in all_colors %}
+                <label for="{{color}}">
+                  {{color}}
+                  <input type="checkbox" id="{{color}}" name="colors" value="{{color}}" {% if color in filtered_colors %} checked {% endif %} />
                   <span class="checkmark"></span>
                 </label>
-                <label for="whites">
-                  Whites
-                  <input type="checkbox" id="whites" name="colors" value="white" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="reds">
-                  Reds
-                  <input type="checkbox" id="reds" name="colors" value="red" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="greys">
-                  Greys
-                  <input type="checkbox" id="greys" name="colors" value="grey" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="blues">
-                  Blues
-                  <input type="checkbox" id="blues" name="colors" value="blue" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="beige">
-                  Beige Tones
-                  <input type="checkbox" id="beige" name="colors" value="beige" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="greens">
-                  Greens
-                  <input type="checkbox" id="greens" name="colors" value="green" />
-                  <span class="checkmark"></span>
-                </label>
-                <label for="yellows">
-                  Yellows
-                  <input type="checkbox" id="yellows" name="colors" value="yellow" />
-                  <span class="checkmark"></span>
-                </label>
+                {% endfor %}
               </div>
             </div>
             <button type="submit" class="btn btn-outline-success">Filter</button>

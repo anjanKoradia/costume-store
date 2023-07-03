@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, View, DetailView
 from costumestore.services import HandelErrors
 from payment.models import OrderItem
-from vendor.models import Product
+from vendor.models import Product, Color, Size
 from .models import CartItem, Cart, Wishlist, WishlistItem
 from .forms import CartItemForm
 
@@ -254,13 +254,12 @@ class ShopPage(ListView):
 
         filter_kwargs = {}
 
-        # if sizes:
-        #     filter_kwargs["sizes"] = sizes
+        if sizes:
+            filter_kwargs["sizes__name__in"] = sizes
 
         if colors:
-            filter_kwargs["colors__in"] = colors
+            filter_kwargs["colors__name__in"] = colors
 
-        # breakpoint()
         category = self.kwargs["category"]
         if category == "all":
             return Product.objects.filter(price__gte=price, **filter_kwargs)
@@ -299,6 +298,10 @@ class ShopPage(ListView):
         context["category"] = self.kwargs["category"]
         context["min_price"] = min_price
         context["max_price"] = max_price
+        context["all_colors"] = list(Color.objects.all().values_list("name", flat=True))
+        context["all_sizes"] = list(Size.objects.all().values_list("name", flat=True))
         context["current_price"] = self.request.GET.get("price") or 0
+        context["filtered_colors"] = self.request.GET.getlist("colors")
+        context["filtered_sizes"] = self.request.GET.getlist("sizes")
 
         return context

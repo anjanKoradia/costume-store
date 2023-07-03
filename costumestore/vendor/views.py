@@ -158,7 +158,7 @@ class DeleteProduct(DeleteView):
 
 
 class AddProduct(View):
-    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+    # @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def get(self, request):
         colors = Color.objects.all()
         sizes = Size.objects.all()
@@ -167,7 +167,7 @@ class AddProduct(View):
             request, "vendor/add_product.html", {"sizes": sizes, "colors": colors}
         )
 
-    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+    # @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def post(self, request):
         images = request.FILES.getlist("images")
         form = ProductDetails(request.POST)

@@ -62,6 +62,7 @@ class Cart(BaseModel):
         db_table = "carts"
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
+    
 
 
 class CartItem(BaseModel):
