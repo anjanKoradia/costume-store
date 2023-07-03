@@ -35,11 +35,11 @@ function getCookie(name) {
 }
 
 // delete product
-function delete_product(id) {
+function delete_product(url) {
   flag =  confirm("Are you sure you want delete this product ?");
 
   if(flag){
-    fetch(`/vendor/delete/${id}/`,{
+    fetch(url,{
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

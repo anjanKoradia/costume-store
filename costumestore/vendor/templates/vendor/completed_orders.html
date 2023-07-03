@@ -2,11 +2,11 @@
 {% load static %} 
 {% block vendor_body %}
 
-<section class="store_container">
+<section class="order_container">
   <div class="details p-0">
     <div class="recentOrders rounded">
       <div class="cardHeader mb-4">
-        <h2>Recent Products</h2>
+        <h2>Completed Orders</h2>
       </div>
       <table>
         <thead>
@@ -14,32 +14,30 @@
             <td>No.</td>
             <td>Name</td>
             <td>Category</td>
-            <td>Price</td>
-            <td>Discount</td>
-            <td>Stock</td>
-            <td></td>
+            <td>Quantity</td>
+            <td>Size</td>
+            <td>Color</td>
+            <td>Address</td>
+            <td>Status</td>
           </tr>
         </thead>
         <tbody>
-          {% for product in products %}
+          {% for item in orders %}
           <tr>
             <td>{{forloop.counter}}</td>
-            <td>{{product.name}}</td>
-            <td>{{product.category}}</td>
-            <td>{{product.price}}</td>
-            <td>{{product.discount}} %</td>
-            <td>{{product.stock}}</td>
+            <td>{{item.product.name}}</td>
+            <td class="text-capitalize">{{item.product.category}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.size}}</td>
+            <td>{{item.color}}</td>
             <td>
-              <a
-                href="{% url 'edit_product' id=product.id %}"
-                class="btn btn-dark"
-              >
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger" id="delete_product" onclick="delete_product(`{% url 'delete_product' id=product.id %}`)">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
+              <p>{{item.order.billing_detail.address.address}}</p>
+              <p>Pincode: {{item.order.billing_detail.address.pin_code}}</p>
+              <p>City: {{item.order.billing_detail.address.city}}</p>
+              <p>State: {{item.order.billing_detail.address.state}}</p>
+              <p>Country: {{item.order.billing_detail.address.country}}</p>
             </td>
+            <td class="text-capitalize">{{item.status}}</td>
           </tr>
           {% endfor %}
         </tbody>

@@ -1,5 +1,4 @@
 import cloudinary.uploader
-from django.http import JsonResponse
 
 
 class CloudinaryServices:
@@ -51,6 +50,20 @@ def list_errors(errors):
     clean_errors = []
     for error in errors:
         clean_errors.append(errors.get(error)[0])
-    
+
     return clean_errors
 
+
+class HandelErrors:
+    def form_errors(errors, type):
+        if type == "dict":
+            clean_errors = {}
+            for error in errors:
+                clean_errors[error] = errors.get(error)[0]
+            return clean_errors
+
+        if type == "list":
+            clean_errors = []
+            for error in errors:
+                clean_errors.append(errors.get(error)[0])
+            return clean_errors

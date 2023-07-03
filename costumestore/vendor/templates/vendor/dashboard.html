@@ -80,11 +80,10 @@
               <a href="{% url 'edit_product' id=product.id %}" class="btn btn-dark">
                 <ion-icon name="create-outline"></ion-icon>
               </a>
-              <button class="btn btn-danger" id="delete_product" onclick="delete_product('{{product.id}}')" >
+              <button class="btn btn-danger" id="delete_product" onclick="delete_product(`{% url 'delete_product' id=product.id %}`)" >
                 <ion-icon name="trash-outline"></ion-icon>
               </button>
             </td>
-            <!-- <td><span class="status delivered">Delivered</span></td> -->
           </tr>
         {% endfor %}
       </tbody>

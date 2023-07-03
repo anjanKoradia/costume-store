@@ -5,7 +5,7 @@ from django.db.models import Min, Max
 from django.urls import reverse
 from django.shortcuts import render
 from django.views.generic import ListView, View, DetailView
-from costumestore.services import list_errors
+from costumestore.services import HandelErrors
 from payment.models import OrderItem
 from vendor.models import Product
 from .models import CartItem, Cart, Wishlist, WishlistItem
@@ -144,7 +144,7 @@ class CartOperations(View):
         form = CartItemForm(request.POST)
 
         if not form.is_valid():
-            errors = list_errors(form.errors)
+            errors = HandelErrors.form_errors(form.errors, "list")
             return JsonResponse(errors, status=400, safe=False)
 
         data = form.cleaned_data

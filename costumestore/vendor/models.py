@@ -1,11 +1,70 @@
-import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from accounts.models import Vendor
+from costumestore.models import BaseModel
+
+PRODUCT_CATEGORY = (
+    ("mens", "Men's"),
+    ("women", "Women's"),
+    ("kids", "Kid's"),
+    ("cosmetics", "Cosmetics"),
+    ("accessories", "Accessories"),
+)
+
+SIZE_CHOICES = (
+    ("XS", "Extra Small"),
+    ("S", "Small"),
+    ("M", "Medium"),
+    ("L", "Large"),
+    ("XL", "Extra Large"),
+    ("XXL", "Extra Extra Large"),
+)
 
 
-class Product(models.Model):
+class Color(BaseModel):
+    """
+    Model representing a color.
+
+    Attributes:
+        name (CharField): Field for the color name.
+
+    Meta:
+        db_table (str): The database table name for this model.
+        verbose_name (str): The human-readable name for a single object of this model.
+        verbose_name_plural (str): The human-readable name for multiple objects of this model.
+    """
+
+    name = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = "colors"
+        verbose_name = "Color"
+        verbose_name_plural = "Colors"
+
+
+class Size(BaseModel):
+    """
+    Model representing a size.
+
+    Attributes:
+        name (CharField): Field for the size name.
+
+    Meta:
+        db_table (str): The database table name for this model.
+        verbose_name (str): The human-readable name for a single object of this model.
+        verbose_name_plural (str): The human-readable name for multiple objects of this model.
+    """
+
+    name = models.CharField(max_length=20, choices=SIZE_CHOICES)
+
+    class Meta:
+        db_table = "sizes"
+        verbose_name = "Size"
+        verbose_name_plural = "Sizes"
+
+
+class Product(BaseModel):
     """
     A model representing a product.
 
@@ -36,12 +95,12 @@ class Product(models.Model):
         verbose_name_plural (str): The plural name for the model in the Django admin interface.
     """
 
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="Product")
     name = models.CharField(max_length=200)
-    colors = models.CharField(max_length=100, blank=True, default="")
+    colors = models.ManyToManyField(Color)
+    sizes = models.ManyToManyField(Size)
     dimension = models.CharField(max_length=100, blank=True, default="")
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=20, choices=PRODUCT_CATEGORY)
     subcategory = models.CharField(max_length=100, blank=True, default="Clothing")
     rating = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(5)]
@@ -53,8 +112,6 @@ class Product(models.Model):
     stock = models.PositiveIntegerField(default=1)
     images = ArrayField(models.JSONField())
     description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "products"

@@ -1,25 +1,31 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DeleteView
 from django.views import View
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 from payment.models import OrderItem
-from costumestore.services import CloudinaryServices
-from .models import Product, Vendor
+from costumestore.services import CloudinaryServices, HandelErrors
+from .models import Product, Vendor, Color, Size
 from .forms import ProductDetails
 
+
+def is_vendor_verified(user):   
+    return user.vendors.is_verified
 
 def dashboard(request):
     """
     View function for the vendor dashboard.
 
-    This function retrieves the vendor associated with the current user and fetches 
-    the 10 most recently updated products belonging to that vendor. It renders the 
+    This function retrieves the vendor associated with the current user and fetches
+    the 10 most recently updated products belonging to that vendor. It renders the
     'vendor/dashboard.html' template with the fetched products as the context.
 
     Args:
         request: The HTTP request object.
 
     Returns:
-        A rendered HTTP response with the 'vendor/dashboard.html' template and the 
+        A rendered HTTP response with the 'vendor/dashboard.html' template and the
         fetched products as the context.
     """
     vendor = Vendor.objects.get(user=request.user)
@@ -30,14 +36,27 @@ def dashboard(request):
     return render(request, "vendor/dashboard.html", context={"products": products})
 
 
+class CompletedOrders(ListView):
+    model = OrderItem
+    template_name = "vendor/completed_orders.html"
+    context_object_name = "orders"
+    paginate_by = 10
+
+    def get_queryset(self):
+        orders = OrderItem.objects.filter(
+            product__vendor__user=self.request.user, status="completed"
+        ).order_by("updated_at")
+        return orders
+
+
 class Orders(ListView):
     """
     View class for displaying vendor orders.
 
-    This class extends Django's ListView and provides a paginated list of orders 
+    This class extends Django's ListView and provides a paginated list of orders
     associated with the current vendor.
-    
-    The orders are filtered based on the current user and their product's vendor. 
+
+    The orders are filtered based on the current user and their product's vendor.
     The 'vendor/orders.html' template is used to render the orders.
 
     Attributes:
@@ -47,7 +66,7 @@ class Orders(ListView):
         paginate_by: The number of orders to display per page (10).
 
     Methods:
-        get_queryset: Returns the queryset of orders, filtered based on the current user 
+        get_queryset: Returns the queryset of orders, filtered based on the current user
                       and their product's vendor.
 
     """
@@ -61,8 +80,8 @@ class Orders(ListView):
         """
         Get the queryset of orders.
 
-        This method filters the orders based on the current user and their product's vendor. 
-        It excludes orders with the status 'completed' and sorts the remaining orders by the 
+        This method filters the orders based on the current user and their product's vendor.
+        It excludes orders with the status 'completed' and sorts the remaining orders by the
         'created_at' field.
 
         Returns:
@@ -81,8 +100,8 @@ def update_order_status(request):
     Update the status of an order item.
 
     This function takes a POST request containing the `order_item_id` and `status` parameters.
-    
-    It updates the corresponding order item's status in the database and redirects the user 
+
+    It updates the corresponding order item's status in the database and redirects the user
     to the "orders" page.
 
     Args:
@@ -130,84 +149,43 @@ class Store(ListView):
         return Product.objects.filter(vendor__user=self.request.user)
 
 
-def delete_product(request, id):
-    """
-    Delete a product.
-
-    This function takes the ID of a product as a parameter and deletes it from the database.
-    After deleting the product, the user is redirected to the "dashboard" page.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        id (int): The ID of the product to delete.
-
-    Returns:
-        HttpResponseRedirect: A redirect response to the "dashboard" page.
-    """
-    Product.objects.get(id=id).delete()
-    return redirect("dashboard")
+class DeleteProduct(DeleteView):
+    model = Product
+    queryset = Product.objects.all()
+    slug_url_kwarg = "id"
+    slug_field = "id"
+    success_url = reverse_lazy("dashboard")
 
 
 class AddProduct(View):
-    """
-    View for adding a product.
-
-    This class-based view handles both GET and POST requests for adding a product.
-    GET request renders the 'vendor/add_product.html' template.
-    POST request processes the form data and creates a new Product instance.
-
-    Methods:
-        - get(request): Renders the 'vendor/add_product.html' template.
-        - post(request): Processes the form data, uploads images to cloud storage, and 
-                         creates a new Product instance.
-
-    Returns:
-        - GET request: Rendered HTML template.
-        - POST request: Redirect to the 'dashboard' view.
-    """
-
+    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def get(self, request):
-        """
-        Handles the GET request for adding a new product.
+        colors = Color.objects.all()
+        sizes = Size.objects.all()
 
-        This method renders the 'vendor/add_product.html' template for the GET request.
+        return render(
+            request, "vendor/add_product.html", {"sizes": sizes, "colors": colors}
+        )
 
-        Parameters:
-            - request (HttpRequest): The HTTP GET request object.
-
-        Returns:
-            - HttpResponse: The HTTP response object containing the rendered template.
-
-        """
-        return render(request, "vendor/add_product.html")
-
+    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def post(self, request):
-        """
-        Handles the POST request for adding a new product.
-
-        This method processes the form data from the POST request to create a new Product object. 
-        It validates the form data, uploads images to a cloud storage service, and saves the 
-        product details.
-
-        Parameters:
-            - request (HttpRequest): The HTTP POST request object.
-
-        Returns:
-            - HttpResponse: The HTTP response object for redirecting to the 'dashboard' URL.
-
-        """
         images = request.FILES.getlist("images")
         form = ProductDetails(request.POST)
 
+        colors = Color.objects.all()
+        sizes = Size.objects.all()
+
         if not form.is_valid():
-            errors = {}
-            for field in form:
-                if field.errors:
-                    errors[field.name] = field.errors[0]
+            errors = HandelErrors.form_errors(form.errors, "dict")
             return render(
                 request,
                 "vendor/add_product.html",
-                {"data": form.cleaned_data, "errors": errors},
+                {
+                    "data": form.cleaned_data,
+                    "errors": errors,
+                    "colors": colors,
+                    "sizes": sizes,
+                },
             )
 
         data = form.cleaned_data
@@ -220,16 +198,15 @@ class AddProduct(View):
             if len(images) > 0:
                 for image in images:
                     result_dict = CloudinaryServices.store_image(
-                        image=image, folder=vendor.shop_name + "/products", 
+                        image=image,
+                        folder=vendor.shop_name + "/products",
                         tags=[data["category"], data["subcategory"]],
                     )
                     images_url.append(result_dict)
 
-            Product.objects.create(
+            product = Product.objects.create(
                 vendor=vendor,
                 name=data["name"],
-                colors=data["colors"],
-                dimension=data["dimension"],
                 category=data["category"],
                 subcategory=data["subcategory"],
                 rating=data["rating"],
@@ -240,6 +217,14 @@ class AddProduct(View):
                 images=images_url,
             )
 
+            for color in data["colors"]:
+                instance, created = Color.objects.get_or_create(name=color)
+                product.colors.add(instance)
+
+            for size in data["sizes"]:
+                instance, created = Size.objects.get_or_create(name=size)
+                product.sizes.add(instance)
+
         except Exception as e:
             print(e)
 
@@ -247,68 +232,43 @@ class AddProduct(View):
 
 
 class EditProduct(View):
-    """
-    A class-based view for editing a product.
-
-    This view allows a vendor to edit the details of a specific product. It handles both GET and POST requests.
-
-    Methods:
-        - get(request, id): Renders the edit_product.html template with the product details for the given ID.
-        - post(request, id): Updates the product details based on the submitted form data 
-          and handles image uploads and deletions.
-    """
-
     def get(self, request, id):
-        """
-        Handle GET requests.
+        colors = Color.objects.all()
+        sizes = Size.objects.all()
+        product = Product.objects.get(id=id)
+        prod_colors = product.colors.all().values_list("name", flat=True)
+        prod_sizes = product.sizes.all().values_list("name", flat=True)
 
-        Retrieves the product with the given ID from the database and renders the edit_product.html 
-        template with the product details.
-
-        Args:
-            request (HttpRequest): The HTTP request object.
-            id (int): The ID of the product to be edited.
-
-        Returns:
-            HttpResponse: The HTTP response containing the rendered template.
-        """
-        product = Product.objects.get(pk=id)
         return render(
             request,
             "vendor/edit_product.html",
-            context={"product": product},
+            context={
+                "product": product,
+                "colors": colors,
+                "sizes": sizes,
+                "prod_sizes": list(prod_sizes),
+                "prod_colors": list(prod_colors),
+            },
         )
 
     def post(self, request, id):
-        """
-        Handle POST requests.
-
-        Updates the product details based on the submitted form data and 
-        handles image uploads and deletions.
-
-        If the form data is not valid, it renders the edit_product.html template with the form 
-        data and any validation errors.
-
-        Args:
-            request (HttpRequest): The HTTP request object.
-            id (int): The ID of the product being edited.
-
-        Returns:
-            HttpResponse: The HTTP response for the redirect to the dashboard.
-        """
         images = request.FILES.getlist("images")
         form = ProductDetails(request.POST)
 
+        colors = Color.objects.all()
+        sizes = Size.objects.all()
+
         if not form.is_valid():
-            errors = {}
-            for field in form:
-                if field.errors:
-                    errors[field.name] = field.errors[0]
-            form.cleaned_data["id"] = id
+            errors = HandelErrors.form_errors(form.errors, "dict")
             return render(
                 request,
-                "vendor/edit_product.html",
-                {"product": form.cleaned_data, "errors": errors},
+                "vendor/add_product.html",
+                {
+                    "data": form.cleaned_data,
+                    "errors": errors,
+                    "colors": colors,
+                    "sizes": sizes,
+                },
             )
 
         data = form.cleaned_data
@@ -316,23 +276,28 @@ class EditProduct(View):
         try:
             vendor = Vendor.objects.get(user=request.user)
             old_product = Product.objects.get(id=id)
-        
+
             # Store documents in cloudinary
-            images_url = []
+            images_url = old_product.images
             if len(images) > 0:
                 for image in images:
                     result_dict = CloudinaryServices.store_image(
-                        image=image, folder=vendor.shop_name + "/products",
+                        image=image,
+                        folder="vendors/" + vendor.shop_name + "/products",
                         tags=[data["category"], data["subcategory"]],
                     )
+                    images_url = []
                     images_url.append(result_dict)
 
-            Product.objects.update_or_create(
+                # delete old images from cloudinary
+                for image in old_product.images:
+                    if image["public_id"]:
+                        CloudinaryServices.delete_image(image_id=image["public_id"])
+
+            product, created = Product.objects.update_or_create(
                 id=id,
                 defaults={
                     "name": data["name"],
-                    "colors": data["colors"],
-                    "dimension": data["dimension"],
                     "category": data["category"],
                     "subcategory": data["subcategory"],
                     "rating": data["rating"],
@@ -344,10 +309,13 @@ class EditProduct(View):
                 },
             )
 
-            # delete old images from cloudinary
-            for image in old_product.images:
-                if image["public_id"]:
-                    CloudinaryServices.delete_image(image_id=image["public_id"])
+            for color in data["colors"]:
+                instance, created = Color.objects.get_or_create(name=color)
+                product.colors.add(instance)
+
+            for size in data["sizes"]:
+                instance, created = Size.objects.get_or_create(name=size)
+                product.sizes.add(instance)
 
         except Exception as e:
             print(e)

@@ -160,25 +160,13 @@ $("[id='wishlist_btn']").click(function () {
         return;
       }
     },
+    error: function (xhr, status, error) {
+      new Noty({
+        theme: "metroui",
+        type: "error",
+        text: error,
+        timeout: 1000,
+      }).show();
+    },
   });
 });
-
-
-// $(".product_price_range").on("input", function(e){
-//   let price = $(this).val();
-//   let url = window.location.href
-//   $.ajax({
-//     url: url,
-//     method: "GET",
-//     data: {
-//       price: price,
-//     },
-//     contentType: "application/json",
-//     headers: {
-//       "X-CSRFToken": csrfToken,
-//     },
-//     success: function (response) {
-//       console.log(response);
-//     }
-//   })
-// })

@@ -13,7 +13,7 @@
   >
     {% csrf_token %}
     <div class="form-row">
-      <div class="form-group col-md-6 col-lg-4">
+      <div class="form-group col-12">
         <label for="name">Name</label>
         <input
           type="text"
@@ -27,29 +27,41 @@
           {{errors.name}}
         </div>
       </div>
-      <div class="form-group col-md-6 col-lg-4">
-        <label for="colors">Colors</label>
-        <input
-          type="text"
-          name="colors"
-          value="{{data.colors}}"
-          class="form-control"
-          id="colors"
-          placeholder="Enter product colors"
-        />
+      <div class="form-group col-6">
+        <div>Colors : </div>
+        <div class="col-12">
+          <div class="row ml-2">
+            {% for color in colors %}
+            <div class="form-check col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <input class="form-check-input {% if errors.colors %} is-invalid {% endif %}" name="colors" value="{{color.name}}" type="checkbox" id="color_{{color.name}}_checkbox" {% if color.name in data.colors %} checked {% endif %}>
+              <label class="form-check-label" for="color_{{color.name}}_checkbox">
+                {{color.name}}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="text-danger">
+          {{errors.colors}}
+        </div>
       </div>
-      <div class="form-group col-md-6 col-lg-4">
-        <label for="dimensions">Dimensions</label>
-        <input
-          type="text"
-          name="dimensions"
-          value="{{data.dimensions}}"
-          class="form-control"
-          min="0"
-          max="100"
-          id="dimensions"
-          placeholder="Enter product dimension"
-        />
+      <div class="form-group col-6">
+        <div>Sizes : </div>
+        <div class="col-12">
+          <div class="row ml-2">
+            {% for size in sizes %}
+            <div class="form-check col-xl-3 col-lg-4 col-md-6 col-sm-12">
+              <input class="form-check-input {% if errors.sizes %} is-invalid {% endif %}" name="sizes" value="{{size.name}}" type="checkbox" id="size_{{size.name}}_checkbox" {% if size.name in data.sizes %} checked {% endif %}>
+              <label class="form-check-label" for="size_{{size.name}}_checkbox">
+                {{size.name}}
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="text-danger">
+          {{errors.sizes}}
+        </div>
       </div>
       <div class="form-group col-md-6 col-lg-4">
         <label for="category">Category</label>
@@ -59,8 +71,11 @@
           name="category"
         >
           <option selected disabled>Select Category</option>
-          <option value="men" {% if 'men' in data.category %} selected {% endif %}>Men</option>
+          <option value="mens" {% if 'mens' in data.category %} selected {% endif %}>Men's</option>
           <option value="women" {% if 'women' in data.category %} selected {% endif %}>Women</option>
+          <option value="kids" {% if 'kids' in data.category %} selected {% endif %}>Kid's</option>
+          <option value="cosmetics" {% if 'cosmetics' in data.category %} selected {% endif %}>Cosmetic's</option>
+          <option value="Accessories" {% if 'accessories' in data.category %} selected {% endif %}>Accessories</option>
         </select>
         <div class="invalid-feedback">
           {{errors.category}} 
