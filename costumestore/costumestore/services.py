@@ -46,16 +46,29 @@ class CloudinaryServices:
         cloudinary.uploader.destroy(image_id)
 
 
-def list_errors(errors):
-    clean_errors = []
-    for error in errors:
-        clean_errors.append(errors.get(error)[0])
-
-    return clean_errors
-
-
 class HandelErrors:
+    """
+    A class for handling and cleaning error messages.
+
+    Methods:
+        form_errors(errors, type): Clean and return error messages based on the specified type.
+    """
+
     def form_errors(errors, type):
+        """
+        Clean and return error messages based on the specified type.
+
+        Args:
+            errors (dict): A dictionary containing error messages.
+            type (str): The type of output desired. Must be either 'dict' or 'list'.
+
+        Returns:
+            dict or list: Cleaned error messages based on the specified type.
+
+        Raises:
+            ValueError: If the type argument is not 'dict' or 'list'.
+
+        """
         if type == "dict":
             clean_errors = {}
             for error in errors:

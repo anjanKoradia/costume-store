@@ -5,23 +5,53 @@ from django.db.models import Min, Max
 from django.urls import reverse
 from django.shortcuts import render
 from django.views.generic import ListView, View, DetailView
-from costumestore.services import HandelErrors
-from payment.models import OrderItem
 from vendor.models import Product, Color, Size
+from payment.models import OrderItem
+from costumestore.services import HandelErrors
 from .models import CartItem, Cart, Wishlist, WishlistItem
 from .forms import CartItemForm
 
 
 class HomePage(ListView):
+    """
+    View for the home page displaying a list of products.
+
+    Attributes:
+        model (Model): The model class representing the products.
+        template_name (str): The template to render for the home page.
+        context_object_name (str): The name of the context variable containing the products.
+        paginate_by (int): The number of products to display per page.
+
+    Methods:
+        get_queryset(): Returns the queryset of products to be displayed.
+        get_context_data(**kwargs): Returns additional context data for the template.
+    """
+
     model = Product
     template_name = "website/index.html"
     context_object_name = "products"
     paginate_by = 10
 
     def get_queryset(self):
+        """
+        Returns the queryset of Product objects to be displayed on the homepage.
+        The products are ordered by the created_at field in descending order.
+
+        Returns:
+            QuerySet: A queryset of Product objects ordered by created_at field.
+        """
         return Product.objects.all().order_by("-created_at")
 
     def get_context_data(self, **kwargs):
+        """
+        Adds additional data to the context before rendering the template.
+
+        Args:
+            **kwargs: Additional keyword arguments passed to the method.
+
+        Returns:
+            dict: The updated context dictionary. Having wishlist products
+        """
         context = super().get_context_data(**kwargs)
         wishlist_products = []
 
@@ -53,16 +83,49 @@ def contact_page(request):
 
 
 class MyOrders(ListView):
+    """
+    A Django view class that displays a list of ordered items for the authenticated user.
+
+    Attributes:
+        model (Model): The model class associated with the view, representing the OrderItem model.
+        template_name (str): The path to the template used to render the view.
+        context_object_name (str): The name used to access the list of ordered items in the template context.
+        paginate_by (int): The number of ordered items displayed per page.
+
+    Methods:
+        get_queryset: Returns the queryset of OrderItem objects related to the authenticated user's orders.
+    """
+
     model = OrderItem
     template_name = "website/orders.html"
     context_object_name = "ordered_items"
     paginate_by = 10
 
     def get_queryset(self):
+        """
+        Returns the queryset of OrderItem objects related to the authenticated user's orders.
+
+        Returns:
+            QuerySet: A queryset of OrderItem objects filtered based on the order__user field.
+        """
         return OrderItem.objects.filter(order__user=self.request.user)
 
 
 class ProductDetails(DetailView):
+    """
+    A Django view class that displays the details of a specific Product.
+
+    Attributes:
+        model (Model): The model class associated with the view, representing the Product model.
+        template_name (str): The path to the template used to render the view.
+        context_object_name (str): The name used to access the product details in the template context.
+        slug_url_kwarg (str): The keyword argument name used to retrieve the product's slug from the URL.
+        slug_field (str): The field used as the slug identifier for the product.
+        queryset (QuerySet): The base queryset used to retrieve the product object.
+
+    Methods:
+        get_context_data: Adds additional data to the context, including related products and wishlist information.
+    """
     model = Product
     template_name = "website/product-details.html"
     context_object_name = "product_details"
@@ -71,6 +134,15 @@ class ProductDetails(DetailView):
     queryset = Product.objects.all()
 
     def get_context_data(self, **kwargs):
+        """
+        Adds additional data to the context before rendering the template.
+
+        Args:
+            **kwargs: Additional keyword arguments passed to the method.
+
+        Returns:
+            dict: The updated context dictionary containing related products and in_wishlist.
+        """
         context = super().get_context_data(**kwargs)
         product_details = context["object"]
 
@@ -92,13 +164,38 @@ class ProductDetails(DetailView):
 
 
 class WishlistOperations(View):
+    """
+    A Django view class that handles operations related to a user's wishlist.
+
+    Methods:
+        get: Retrieves and renders the wishlist items for the authenticated user.
+        post: Processes the wishlist operation (add or remove) based on the received data.
+    """
     def get(self, request):
+        """
+        Retrieves and renders the wishlist items for the authenticated user.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            HttpResponse: The rendered wishlist template with the wishlist items in the context.
+        """
         wishlist_items = WishlistItem.objects.filter(wishlist__user=request.user)
         return render(
             request, "website/wishlist.html", {"wishlist_items": wishlist_items}
         )
 
     def post(self, request):
+        """
+        Processes the wishlist operation (add or remove) based on the received data.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            JsonResponse: A JSON response indicating the success and relevant information of the wishlist operation.
+        """
         data = json.loads(request.body)
         operation = data.get("operation")
         id = data.get("id")
@@ -135,11 +232,37 @@ class WishlistOperations(View):
 
 
 class CartOperations(View):
+    """
+    A Django view class that handles operations related to a user's cart.
+
+    Methods:
+        get: Retrieves and renders the cart items for the authenticated user.
+        post: Processes the cart operation (add) based on the received form data.
+        patch: Processes the cart operations (increase, decrease, delete) based on the received JSON data.
+    """
     def get(self, request):
+        """
+        Retrieves and renders the cart items for the authenticated user.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            HttpResponse: The rendered cart template with the cart items in the context.
+        """
         cart_items = CartItem.objects.filter(cart__user=request.user)
         return render(request, "website/cart.html", {"cart_items": cart_items})
 
     def post(self, request):
+        """
+        Processes the cart operation (add) based on the received form data.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            JsonResponse: A JSON response indicating the success and relevant information of the cart operation.
+        """
         id = request.POST.get("id")
         form = CartItemForm(request.POST)
 
@@ -177,6 +300,15 @@ class CartOperations(View):
         )
 
     def patch(self, request):
+        """
+        Processes the cart operations (increase, decrease, delete) based on the received JSON data.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            JsonResponse: A JSON response indicating the success and relevant information of the cart operation.
+        """
         data = json.loads(request.body)
 
         operation = data.get("operation")

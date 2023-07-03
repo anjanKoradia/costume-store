@@ -9,8 +9,16 @@ from costumestore.services import CloudinaryServices, HandelErrors
 from .models import Product, Vendor, Color, Size
 from .forms import ProductDetails
 
-
 def is_vendor_verified(user):   
+    """
+    Check if the user's vendor account is verified.
+
+    Args:
+        user (User): The user object.
+
+    Returns:
+        bool: True if the vendor account is verified, False otherwise.
+    """
     return user.vendors.is_verified
 
 def dashboard(request):
@@ -37,12 +45,30 @@ def dashboard(request):
 
 
 class CompletedOrders(ListView):
+    """
+    A class-based view for displaying a list of completed orders for a specific vendor.
+
+    Attributes:
+        model (Model): The model to use for retrieving the orders.
+        template_name (str): The name of the template used for rendering the view.
+        context_object_name (str): The name of the context variable containing the orders.
+        paginate_by (int): The number of orders to display per page.
+
+    Methods:
+        get_queryset(): Get the queryset of completed orders.
+    """
     model = OrderItem
     template_name = "vendor/completed_orders.html"
     context_object_name = "orders"
     paginate_by = 10
 
     def get_queryset(self):
+        """
+        Get the queryset of completed orders for the vendor.
+
+        Returns:
+            QuerySet: The queryset of completed orders.
+        """
         orders = OrderItem.objects.filter(
             product__vendor__user=self.request.user, status="completed"
         ).order_by("updated_at")
@@ -150,6 +176,16 @@ class Store(ListView):
 
 
 class DeleteProduct(DeleteView):
+    """
+    A class-based view for deleting a specific Product object.
+
+    Attributes:
+        model (Model): The model to use for retrieving the Product object.
+        queryset (QuerySet): The queryset of Product objects to be considered for deletion.
+        slug_url_kwarg (str): The name of the URL keyword argument that contains the Product object's identifier.
+        slug_field (str): The field used to retrieve the Product object from the database.
+        success_url (str): The URL to redirect to after successful deletion.
+    """
     model = Product
     queryset = Product.objects.all()
     slug_url_kwarg = "id"
@@ -158,8 +194,24 @@ class DeleteProduct(DeleteView):
 
 
 class AddProduct(View):
-    # @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+    """
+    A class-based view for adding a new product.
+
+    Methods:
+        get(request): Handle GET requests and render the product add form.
+        post(request): Handle POST requests and process the submitted form data.
+    """
+    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def get(self, request):
+        """
+        Handle GET requests and render the product add form.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            HttpResponse: The response containing the rendered product add form.
+        """
         colors = Color.objects.all()
         sizes = Size.objects.all()
 
@@ -167,8 +219,17 @@ class AddProduct(View):
             request, "vendor/add_product.html", {"sizes": sizes, "colors": colors}
         )
 
-    # @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
     def post(self, request):
+        """
+        Handle POST requests and process the submitted form data.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+
+        Returns:
+            HttpResponse: The response after processing the form data.
+        """
         images = request.FILES.getlist("images")
         form = ProductDetails(request.POST)
 
@@ -232,7 +293,24 @@ class AddProduct(View):
 
 
 class EditProduct(View):
+    """
+    A class-based view for editing an existing product.
+
+    Methods:
+        get(request, id): Handle GET requests and render the product edit form.
+        post(request, id): Handle POST requests and update the product with the submitted form data.
+    """
     def get(self, request, id):
+        """
+        Handle GET requests and render the product edit form.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            id (int): The ID of the product to be edited.
+
+        Returns:
+            HttpResponse: The response with the rendered product edit form.
+        """
         colors = Color.objects.all()
         sizes = Size.objects.all()
         product = Product.objects.get(id=id)
@@ -252,6 +330,16 @@ class EditProduct(View):
         )
 
     def post(self, request, id):
+        """
+        Handle POST requests and update the product with the submitted form data.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            id (int): The ID of the product to be updated.
+
+        Returns:
+            HttpResponseRedirect: The redirect response to the dashboard.
+        """
         images = request.FILES.getlist("images")
         form = ProductDetails(request.POST)
 

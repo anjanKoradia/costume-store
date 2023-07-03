@@ -38,9 +38,7 @@ def create_profile(sender, instance, created, **kwargs):
             user.save()
 
             Address.objects.create(user=instance)
-
             send_account_activation_email(instance.name,instance.email,email_token)
-            
             if instance.role == "vendor":
                 Vendor.objects.create(user=instance)
 

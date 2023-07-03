@@ -1,17 +1,26 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
+from django.views import View
 from accounts.models import Address
 from .forms import BillingDetailsForm
 from .models import Order, OrderItem, BillingDetail
 
 def is_cart_items_available(user):
+    """
+    Check if the user's cart has any items.
+
+    Args:
+        user (User): The user object.
+
+    Returns:
+        bool: True if there are items in the cart, False otherwise.
+    """
     if user.cart.cart_items.all().count() == 0:
         return False
-    
     return True
 
-class Checkout:
+class Checkout(View):
     """
     This class handles the checkout process for placing orders.
 
@@ -22,12 +31,12 @@ class Checkout:
     redirected to the home page.
 
     Methods:
-        checkout_page(request): To render the checkout page
-        place_order(request): To place an order
+        get(request): To render the checkout page
+        post(request): To place an order
     """
-
-    @user_passes_test(is_cart_items_available, login_url="cart_page")
-    def checkout_page(request):
+    
+    @method_decorator(user_passes_test(is_cart_items_available, login_url="cart_page"))
+    def get(self, request):
         """
         Renders the checkout page with the user's default address and cart items.
 
@@ -47,8 +56,8 @@ class Checkout:
             {"address": address, "cart_items": cart_items},
         )
 
-    @user_passes_test(is_cart_items_available, login_url="cart_page")
-    def place_order(request):
+    @method_decorator(user_passes_test(is_cart_items_available, login_url="cart_page"))
+    def post(self, request):
         """
         Handles the order placement process by validating the billing details form, creating an order,
         saving order items, creating or retrieving the billing address, creating billing details, and

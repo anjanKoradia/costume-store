@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from costumestore.models import BaseModel
 from vendor.models import Product
+from costumestore.models import BaseModel
 
 COLOR_CHOICES = (
     ("Red", "Red"),
@@ -62,7 +62,6 @@ class Cart(BaseModel):
         db_table = "carts"
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
-    
 
 
 class CartItem(BaseModel):
