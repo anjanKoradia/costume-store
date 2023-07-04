@@ -1,10 +1,8 @@
-import uuid
 from django.core.validators import MinValueValidator
 from django.db import models
 from accounts.models import Address
 from vendor.models import Product
-from website.models import COLOR_CHOICES, SIZE_CHOICES
-from costumestore.models import BaseModel
+from common.models import BaseModel, SIZE_CHOICES
 
 
 class Order(BaseModel):
@@ -66,7 +64,7 @@ class OrderItem(BaseModel):
     status = models.CharField(max_length=10, default="placed")
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     size = models.CharField(max_length=3, choices=SIZE_CHOICES)
-    color = models.CharField(choices=COLOR_CHOICES)
+    color = models.CharField()
 
     class Meta:
         db_table = "order_items"

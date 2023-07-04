@@ -11,6 +11,3 @@ class WebsiteConfig(AppConfig):
     """
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'website'
-    def ready(self) -> None:
-        import website.signals
-        return super().ready()

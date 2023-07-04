@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.error_page{
+    background-color: #CA1515;
+    height: 100vh;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.error_page .title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.error_page .title h1{
+    font-size: 10rem;
+    font-weight: bolder;
+}
+.error_page .title .subtitle {
+    margin-left: 3rem;
+}
+.error_page .title .subtitle h2{
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.error_page .title .subtitle p{
+    font-size: 1.2rem;
+}
+
+.error_page a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: underline white;
+    margin-top: 3rem;
+}
+
+@media screen and (max-width: 768px) {
+    .error_page .title{
+        flex-direction: column;
+    }
+    .error_page .title .subtitle {
+        margin-left: 0;
+        text-align: center;
+    }
+}

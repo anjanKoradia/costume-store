@@ -1,39 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from vendor.models import Product
-from costumestore.models import BaseModel
-
-COLOR_CHOICES = (
-    ("Red", "Red"),
-    ("Blue", "Blue"),
-    ("Green", "Green"),
-    ("Yellow", "Yellow"),
-    ("Black", "Black"),
-    ("White", "White"),
-    ("Gray", "Gray"),
-    ("Pink", "Pink"),
-    ("Purple", "Purple"),
-    ("Orange", "Orange"),
-    ("Brown", "Brown"),
-    ("Silver", "Silver"),
-    ("Gold", "Gold"),
-    ("Navy", "Navy"),
-    ("Teal", "Teal"),
-    ("Maroon", "Maroon"),
-    ("Olive", "Olive"),
-    ("Coral", "Coral"),
-    ("Turquoise", "Turquoise"),
-    ("Beige", "Beige"),
-)
-
-SIZE_CHOICES = (
-    ("XS", "Extra Small"),
-    ("S", "Small"),
-    ("M", "Medium"),
-    ("L", "Large"),
-    ("XL", "Extra Large"),
-    ("XXL", "Extra Extra Large"),
-)
+from common.models import BaseModel, SIZE_CHOICES
 
 
 class Cart(BaseModel):
@@ -87,7 +55,7 @@ class CartItem(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     size = models.CharField(max_length=3, choices=SIZE_CHOICES)
-    color = models.CharField(choices=COLOR_CHOICES)
+    color = models.CharField()
 
     class Meta:
         db_table = "cart_items"

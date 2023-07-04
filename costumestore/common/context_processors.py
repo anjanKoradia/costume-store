@@ -1,4 +1,4 @@
-from .models import CartItem, WishlistItem
+from website.models import CartItem, WishlistItem
 
 def custom_context_processor(request):
     """

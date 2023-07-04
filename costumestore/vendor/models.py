@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from accounts.models import Vendor
-from costumestore.models import BaseModel
+from common.models import BaseModel
 
 PRODUCT_CATEGORY = (
     ("mens", "Men's"),

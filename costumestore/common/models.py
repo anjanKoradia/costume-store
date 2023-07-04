@@ -1,6 +1,16 @@
 import uuid
 from django.db import models
 
+SIZE_CHOICES = (
+    ("XS", "Extra Small"),
+    ("S", "Small"),
+    ("M", "Medium"),
+    ("L", "Large"),
+    ("XL", "Extra Large"),
+    ("XXL", "Extra Extra Large"),
+)
+
+
 class BaseModel(models.Model):
     """
     Abstract base model class. To apply in all models.

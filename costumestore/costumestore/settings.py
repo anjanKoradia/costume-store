@@ -20,7 +20,7 @@ SECRET_KEY = "django-insecure-(6h3%e6i*728)bmc-@59az@55v5l%mtzh)$8&yitn#+9xo5pi+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "cloudinary",
     "cloudinary_storage",
     "payment",
+    "common"
 ]
 
 CLOUDINARY_STORAGE = {
@@ -58,7 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "costumestore.middleware.PermissionsMiddleware",
+    "common.middleware.PermissionsMiddleware",
 ]
 
 MESSAGE_TAGS = {
@@ -80,7 +81,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "website.context_processors.custom_context_processor",                
+                "common.context_processors.custom_context_processor",                
             ],
         },
     },
@@ -138,9 +139,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "vendor/static/")
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

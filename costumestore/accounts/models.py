@@ -1,5 +1,5 @@
 from django.db import models
-from costumestore.models import BaseModel
+from common.models import BaseModel
 
 
 class Address(BaseModel):

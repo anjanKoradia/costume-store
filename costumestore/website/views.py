@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, View, DetailView
 from vendor.models import Product, Color, Size
 from payment.models import OrderItem
-from costumestore.services import HandelErrors
+from common.services import HandelErrors
 from .models import CartItem, Cart, Wishlist, WishlistItem
 from .forms import CartItemForm
 
@@ -63,7 +63,7 @@ class HomePage(ListView):
                 context["object_list"],
             )
 
-        context["wishlist_products"] = wishlist_products
+        context["wishlist_products"] = list(wishlist_products)
         return context
 
 

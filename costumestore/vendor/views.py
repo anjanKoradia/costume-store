@@ -6,7 +6,7 @@ from django.views import View
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 from payment.models import OrderItem
-from costumestore.services import CloudinaryServices, HandelErrors
+from common.services import CloudinaryServices, HandelErrors
 from .models import Product, Vendor, Color, Size
 from .forms import ProductDetails
 

@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.views import View
-from costumestore.services import HandelErrors
-from .validator import is_valid_email
+from common.services import HandelErrors
+from common.validator import is_valid_email
 from .forms import RegistrationForm
 from .models import User
 

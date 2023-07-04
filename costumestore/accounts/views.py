@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from authentication.models import User
 from django.views import View
 from django.contrib import messages
-from costumestore.services import CloudinaryServices, HandelErrors
+from common.services import CloudinaryServices, HandelErrors
 from .forms import VendorProfileForm, VendorProfileFormNameOnly, VendorAddressForm
 from .models import Vendor, Address
 

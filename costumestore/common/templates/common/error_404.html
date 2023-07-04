@@ -1,0 +1,16 @@
+{% extends "common/base.html" %} 
+{% load static %} 
+{% block common_body %}
+<section class="container-fluid error_page">
+    <div>
+        <div class="title">
+            <h1>404</h1>
+            <div class="subtitle">
+                <h2>SORRY!</h2>
+                <p>The page you’re looking for was not found.</p>
+            </div>
+        </div>
+        <a href="{% url 'home_page' %}">Back To Home</a>
+    </div>
+</section>
+{% endblock common_body %}

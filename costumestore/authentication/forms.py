@@ -1,5 +1,5 @@
 from django import forms
-from .validator import password_validator
+from common.validator import password_validator
 
 
 class RegistrationForm(forms.Form):

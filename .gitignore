@@ -20,3 +20,6 @@ a.pylintrc
 
 /costumestore/payment/__pycache__
 /costumestore/payment/migrations
+
+/costumestore/common/__pycache__
+/costumestore/common/migrations
