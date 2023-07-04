@@ -35,7 +35,6 @@ class Checkout(View):
         get(request): To render the checkout page
         post(request): To place an order
     """
-    
     @method_decorator(user_passes_test(is_cart_items_available, login_url="cart_page"))
     def get(self, request):
         """

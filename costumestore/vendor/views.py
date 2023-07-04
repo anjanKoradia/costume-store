@@ -418,7 +418,7 @@ class EditProduct(View):
                 product.sizes.add(instance)
 
             messages.success(request, "Product details updated successfully")
-        except Exception as e:
+        except Exception:
             messages.error(request, "Something went wrong! Please try again.")
 
         return redirect("dashboard")

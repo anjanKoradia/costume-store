@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from authentication.models import User
 from django.views import View
 from django.contrib import messages
+from authentication.models import User
 from common.services import CloudinaryServices, HandelErrors
 from .forms import VendorProfileForm, VendorProfileFormNameOnly, VendorAddressForm
 from .models import Vendor, Address
@@ -50,7 +50,7 @@ def vendor_address(request):
             },
         )
         messages.success(request, "Address updated successfully")
-    except:
+    except Exception:
         messages.error(request, "Something went wrong! Please try again.")
 
     return redirect("vendor_profile")
@@ -169,7 +169,7 @@ class VendorProfile(View):
             User.objects.filter(id=request.user.id).update(name=data["name"])
 
             messages.success(request, "Profile updated successfully")
-        except:
+        except Exception:
             messages.error(request, "Something went wrong! Please try again.")
 
         return redirect("vendor_profile")

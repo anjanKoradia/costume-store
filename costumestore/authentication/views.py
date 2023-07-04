@@ -154,9 +154,9 @@ def register_user(request):
 
         response = render(request, "authentication/success.html")
         response["cache-control"] = "no-cache, no-store, must-revalidate"
-        return response
-    except Exception as e:
-        print(e)
+    except Exception:
+        messages.error(request, "Something went wrong! Please try again later")
+    return response
 
 
 def activate_user(request, email_token):
@@ -183,10 +183,9 @@ def activate_user(request, email_token):
         user.save()
         login(request, user)
         messages.success(request, "Login successful")
-        return redirect("/")
-
-    except Exception as e:
-        return print(e)
+    except Exception:
+        messages.error(request, "Something went wrong! Please try again later")
+    return redirect("/")
 
 
 def logout_user(request):
