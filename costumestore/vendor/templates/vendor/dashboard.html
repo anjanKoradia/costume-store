@@ -2,6 +2,17 @@
 {% load static %} 
 {% block vendor_body %}
 
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} m-4" role="alert">
+      {{ message }}
+      <button type="button" id="alert_message_close" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+{% endif %}
+
 
 <!-- ======================= Cards ================== -->
 <div class="cardBox">

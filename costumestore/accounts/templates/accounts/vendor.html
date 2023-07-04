@@ -11,6 +11,26 @@
   <div class="main-panel">
     <div class="content">
       <div class="container-fluid">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+              <button type="button" id="alert_message_close" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% if data.is_document_added and not data.is_verified %}
+        <div class="alert alert-danger" role="alert">
+          Your account verification is pending from admin side. Please wait for some days.
+        </div>
+        {% endif %}
+        {% if not data.is_document_added and not data.is_verified %}
+        <div class="alert alert-danger" role="alert">
+          Your account is not verified yet. To verify your account kindly add all required documents.
+        </div>
+        {% endif %}
         <div class="row">
           <div class="col-lg-4 col-md-5">
             <div class="card card-user">

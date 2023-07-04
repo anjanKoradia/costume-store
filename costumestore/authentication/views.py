@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.views import View
+from costumestore.services import HandelErrors
 from .validator import is_valid_email
 from .forms import RegistrationForm
 from .models import User
@@ -131,10 +132,7 @@ def register_user(request):
     form = RegistrationForm(request.POST)
 
     if not form.is_valid():
-        errors = {}
-        for field in form:
-            if field.errors:
-                errors[field.name] = field.errors[0]
+        errors = HandelErrors.form_errors(form.errors, "dict")
         return render(
             request,
             "authentication/signup.html",

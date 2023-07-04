@@ -1,8 +1,8 @@
-import uuid
 from django.db import models
+from costumestore.models import BaseModel
 
 
-class Address(models.Model):
+class Address(BaseModel):
     """
     Represents a user address.
 
@@ -11,7 +11,6 @@ class Address(models.Model):
     pin code, city, state, country, and the associated user.
 
     Attributes:
-        id (UUIDField): The unique identifier for the address (auto-generated).
         user (ForeignKey): The user associated with the address.
         address (TextField): The address details.
         pin_code (CharField): The pin code of the address.
@@ -31,9 +30,6 @@ class Address(models.Model):
         ("Default", "Default"),
     )
 
-    id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, unique=True, editable=False
-    )
     user = models.ForeignKey(
         "authentication.User", on_delete=models.CASCADE, related_name="address"
     )
@@ -50,7 +46,7 @@ class Address(models.Model):
         verbose_name_plural = "Addresses"
 
 
-class Vendor(models.Model):
+class Vendor(BaseModel):
     """
     Represents a vendor in the system.
 
@@ -59,7 +55,6 @@ class Vendor(models.Model):
     status, and other related information.
 
     Attributes:
-        id (UUIDField): The unique identifier for the vendor (automatically generated).
         user (OneToOneField): The user account associated with the vendor.
         shop_name (CharField): The name of the vendor's shop.
         aadhar_number (CharField): The Aadhar number of the vendor (optional).
@@ -77,10 +72,6 @@ class Vendor(models.Model):
                                           identification documents (default: False).
         bio (TextField): A brief biography or description of the vendor (optional).
         description (TextField): Additional description or information about the vendor (optional).
-        created_at (DateTimeField): The date and time when the vendor was 
-                                    created (automatically set).
-        updated_at (DateTimeField): The date and time when the vendor was 
-                                    last updated (automatically set).
 
     Meta:
         db_table (str): The name of the database table for the model.
@@ -88,7 +79,6 @@ class Vendor(models.Model):
         verbose_name_plural (str): The human-readable plural name for the model.
     """
 
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     user = models.OneToOneField(
         "authentication.User", on_delete=models.CASCADE, related_name="vendors"
     )
@@ -103,8 +93,6 @@ class Vendor(models.Model):
     is_document_added = models.BooleanField(default=False)
     bio = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "vendors"

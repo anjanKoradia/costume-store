@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from accounts.models import Address
+from costumestore.services import HandelErrors
 from .forms import BillingDetailsForm
 from .models import Order, OrderItem, BillingDetail
 
@@ -81,10 +82,7 @@ class Checkout(View):
         form = BillingDetailsForm(request.POST)
 
         if not form.is_valid():
-            errors = {}
-            for field in form:
-                if field.errors:
-                    errors[field.name] = field.errors[0]
+            errors = HandelErrors.form_errors(form.errors, "dict")
 
             return render(
                 request,

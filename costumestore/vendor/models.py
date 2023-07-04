@@ -73,7 +73,6 @@ class Product(BaseModel):
     and update.
 
     Attributes:
-        id (UUIDField): The unique identifier for the product.
         vendor (ForeignKey): The vendor associated with the product.
         name (CharField): The name of the product.
         colors (CharField): The available colors for the product (optional).
@@ -86,8 +85,6 @@ class Product(BaseModel):
         stock (PositiveIntegerField): The available stock quantity of the product (default: 1).
         images (ArrayField): An array of JSON fields representing the images associated with the product.
         description (TextField): The description of the product.
-        created_at (DateTimeField): The timestamp indicating when the product was created.
-        updated_at (DateTimeField): The timestamp indicating when the product was last updated.
 
     Meta:
         db_table (str): The name of the database table for the model.

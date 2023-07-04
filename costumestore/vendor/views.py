@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django.views.generic import ListView, DeleteView
 from django.views import View
 from django.contrib.auth.decorators import user_passes_test
@@ -9,7 +10,8 @@ from costumestore.services import CloudinaryServices, HandelErrors
 from .models import Product, Vendor, Color, Size
 from .forms import ProductDetails
 
-def is_vendor_verified(user):   
+
+def is_vendor_verified(user):
     """
     Check if the user's vendor account is verified.
 
@@ -19,7 +21,8 @@ def is_vendor_verified(user):
     Returns:
         bool: True if the vendor account is verified, False otherwise.
     """
-    return user.vendors.is_verified
+    return user.vendors.is_verified and user.vendors.is_document_added
+
 
 def dashboard(request):
     """
@@ -57,6 +60,7 @@ class CompletedOrders(ListView):
     Methods:
         get_queryset(): Get the queryset of completed orders.
     """
+
     model = OrderItem
     template_name = "vendor/completed_orders.html"
     context_object_name = "orders"
@@ -186,6 +190,7 @@ class DeleteProduct(DeleteView):
         slug_field (str): The field used to retrieve the Product object from the database.
         success_url (str): The URL to redirect to after successful deletion.
     """
+
     model = Product
     queryset = Product.objects.all()
     slug_url_kwarg = "id"
@@ -201,7 +206,10 @@ class AddProduct(View):
         get(request): Handle GET requests and render the product add form.
         post(request): Handle POST requests and process the submitted form data.
     """
-    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+
+    @method_decorator(
+        user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile"))
+    )
     def get(self, request):
         """
         Handle GET requests and render the product add form.
@@ -219,7 +227,9 @@ class AddProduct(View):
             request, "vendor/add_product.html", {"sizes": sizes, "colors": colors}
         )
 
-    @method_decorator(user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile")))
+    @method_decorator(
+        user_passes_test(is_vendor_verified, login_url=reverse_lazy("vendor_profile"))
+    )
     def post(self, request):
         """
         Handle POST requests and process the submitted form data.
@@ -260,7 +270,7 @@ class AddProduct(View):
                 for image in images:
                     result_dict = CloudinaryServices.store_image(
                         image=image,
-                        folder=vendor.shop_name + "/products",
+                        folder="vendors/" + vendor.shop_name + "/products",
                         tags=[data["category"], data["subcategory"]],
                     )
                     images_url.append(result_dict)
@@ -286,8 +296,9 @@ class AddProduct(View):
                 instance, created = Size.objects.get_or_create(name=size)
                 product.sizes.add(instance)
 
+            messages.success(request, "Product details added successfully")
         except Exception as e:
-            print(e)
+            messages.error(request, "Something went wrong! Please try again.")
 
         return redirect("dashboard")
 
@@ -300,6 +311,7 @@ class EditProduct(View):
         get(request, id): Handle GET requests and render the product edit form.
         post(request, id): Handle POST requests and update the product with the submitted form data.
     """
+
     def get(self, request, id):
         """
         Handle GET requests and render the product edit form.
@@ -405,7 +417,8 @@ class EditProduct(View):
                 instance, created = Size.objects.get_or_create(name=size)
                 product.sizes.add(instance)
 
+            messages.success(request, "Product details updated successfully")
         except Exception as e:
-            print(e)
+            messages.error(request, "Something went wrong! Please try again.")
 
         return redirect("dashboard")

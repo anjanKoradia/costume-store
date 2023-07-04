@@ -50,3 +50,11 @@ function delete_product(url) {
     })
   }
 }
+
+let alertCloseBtn = document.getElementById("alert_message_close")
+console.log(alertCloseBtn);
+if(alertCloseBtn){
+  setTimeout(() => {
+    alertCloseBtn.click();
+  }, 3000);
+}

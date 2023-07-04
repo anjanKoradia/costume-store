@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from authentication.models import User
 from django.views import View
-from costumestore.services import CloudinaryServices
+from django.contrib import messages
+from costumestore.services import CloudinaryServices, HandelErrors
 from .forms import VendorProfileForm, VendorProfileFormNameOnly, VendorAddressForm
 from .models import Vendor, Address
 
@@ -28,11 +29,7 @@ def vendor_address(request):
 
     form = VendorAddressForm(request.POST)
     if not form.is_valid():
-        errors = {}
-        for field in form:
-            if field.errors:
-                errors[field.name] = field.errors[0]
-
+        errors = HandelErrors.form_errors(form.errors, "dict")
         return render(
             request,
             "accounts/vendor.html",
@@ -52,8 +49,9 @@ def vendor_address(request):
                 "country": data["country"],
             },
         )
-    except Exception as e:
-        print(e)
+        messages.success(request, "Address updated successfully")
+    except:
+        messages.error(request, "Something went wrong! Please try again.")
 
     return redirect("vendor_profile")
 
@@ -114,10 +112,7 @@ class VendorProfile(View):
             form = VendorProfileFormNameOnly(request.POST)
 
             if not form.is_valid():
-                errors = {}
-                for field in form:
-                    if field.errors:
-                        errors[field.name] = field.errors[0]
+                errors = HandelErrors.form_errors(form.errors, "dict")
 
                 return render(
                     request,
@@ -132,17 +127,14 @@ class VendorProfile(View):
                 shop_name=data["shop_name"]
             )
             User.objects.filter(id=request.user.id).update(name=data["name"])
-
+            messages.success(request, "Profile updated successfully")
             return redirect("vendor_profile")
 
         # validate input data
         form = VendorProfileForm(request.POST, request.FILES)
 
         if not form.is_valid():
-            errors = {}
-            for field in form:
-                if field.errors:
-                    errors[field.name] = field.errors[0]
+            errors = HandelErrors.form_errors(form.errors, "dict")
 
             return render(
                 request,
@@ -154,13 +146,13 @@ class VendorProfile(View):
 
         # Store documents in cloudinary
         aadhar_image_url = CloudinaryServices.store_image(
-            image=data["aadhar_image"], folder=vendor.shop_name + "/documents"
+            image=data["aadhar_image"], folder="vendors/" + vendor.shop_name + "/documents"
         )
         pancard_image_url = CloudinaryServices.store_image(
-            image=data["pancard_image"], folder=vendor.shop_name + "/documents"
+            image=data["pancard_image"], folder="vendors/" + vendor.shop_name + "/documents"
         )
         business_license_url = CloudinaryServices.store_image(
-            image=data["business_license"], folder=vendor.shop_name + "/documents"
+            image=data["business_license"], folder="vendors/" + vendor.shop_name + "/documents"
         )
 
         try:
@@ -176,7 +168,8 @@ class VendorProfile(View):
             )
             User.objects.filter(id=request.user.id).update(name=data["name"])
 
-        except Exception as e:
-            print(e)
+            messages.success(request, "Profile updated successfully")
+        except:
+            messages.error(request, "Something went wrong! Please try again.")
 
         return redirect("vendor_profile")
